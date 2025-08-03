@@ -1,0 +1,14 @@
+<div class="lista-dias">
+  <div class="dias-container">
+    @for (diaCalculado of diasCalculados(); track trackByData($index, diaCalculado)) {
+      <app-dia-viagem 
+        [diaCalculado]="diaCalculado"
+        [viagemId]="viagemId()">
+      </app-dia-viagem>
+    } @empty {
+      <div class="empty-state">
+        <p>Nenhum dia encontrado para esta viagem.</p>
+      </div>
+    }
+  </div>
+</div>

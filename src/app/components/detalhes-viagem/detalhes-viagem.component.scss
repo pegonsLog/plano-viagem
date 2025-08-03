@@ -1,0 +1,133 @@
+.detalhes-viagem {
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.viagem-header {
+  background: white;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.btn-voltar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 16px;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #0056b3;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.viagem-info {
+  h1 {
+    margin: 0 0 16px 0;
+    color: #333;
+    font-size: 1.8em;
+    font-weight: 600;
+  }
+}
+
+.viagem-meta {
+  p {
+    margin: 8px 0;
+    color: #666;
+    line-height: 1.5;
+  }
+}
+
+.resumo-dias {
+  background: white;
+  padding: 20px;
+  margin: 0 20px 20px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+  h2 {
+    margin: 0 0 16px 0;
+    color: #333;
+    font-size: 1.3em;
+  }
+}
+
+.resumo-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+}
+
+.stat {
+  text-align: center;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.stat-number {
+  display: block;
+  font-size: 2em;
+  font-weight: 600;
+  color: #007bff;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #666;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .viagem-header {
+    padding: 16px;
+  }
+
+  .viagem-info h1 {
+    font-size: 1.5em;
+  }
+
+  .resumo-dias {
+    margin: 0 16px 16px 16px;
+    padding: 16px;
+  }
+
+  .resumo-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .stat {
+    padding: 12px 8px;
+  }
+
+  .stat-number {
+    font-size: 1.5em;
+  }
+
+  .stat-label {
+    font-size: 0.8em;
+  }
+}

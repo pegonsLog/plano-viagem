@@ -1,0 +1,103 @@
+<div class="formulario-container">
+  <h3>{{ isEdicao ? 'Editar Viagem' : 'Nova Viagem' }}</h3>
+  
+  <form (ngSubmit)="onSubmit()" #viagemForm="ngForm">
+    <div class="form-group">
+      <label for="titulo">Título da Viagem *</label>
+      <input 
+        type="text" 
+        id="titulo" 
+        name="titulo"
+        [(ngModel)]="viagem.titulo"
+        required
+        placeholder="Ex: Férias de verão"
+        #titulo="ngModel">
+      @if (titulo.invalid && titulo.touched) {
+        <div class="error">Título é obrigatório</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="destino">Destino *</label>
+      <input 
+        type="text" 
+        id="destino" 
+        name="destino"
+        [(ngModel)]="viagem.destino"
+        required
+        placeholder="Ex: Rio de Janeiro, Brasil"
+        #destino="ngModel">
+      @if (destino.invalid && destino.touched) {
+        <div class="error">Destino é obrigatório</div>
+      }
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="dataInicio">Data de Início *</label>
+        <input 
+          type="date" 
+          id="dataInicio" 
+          name="dataInicio"
+          [(ngModel)]="dataInicioString"
+          required
+          #dataInicio="ngModel">
+        @if (dataInicio.invalid && dataInicio.touched) {
+          <div class="error">Data de início é obrigatória</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="dataFim">Data de Fim *</label>
+        <input 
+          type="date" 
+          id="dataFim" 
+          name="dataFim"
+          [(ngModel)]="dataFimString"
+          required
+          [min]="dataInicioString"
+          #dataFim="ngModel">
+        @if (dataFim.invalid && dataFim.touched) {
+          <div class="error">Data de fim é obrigatória</div>
+        }
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="orcamento">Orçamento (R$) *</label>
+      <input 
+        type="number" 
+        id="orcamento" 
+        name="orcamento"
+        [(ngModel)]="viagem.orcamento"
+        required
+        min="0"
+        step="0.01"
+        placeholder="0,00"
+        #orcamento="ngModel">
+      @if (orcamento.invalid && orcamento.touched) {
+        <div class="error">Orçamento é obrigatório e deve ser maior que zero</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="descricao">Descrição</label>
+      <textarea 
+        id="descricao" 
+        name="descricao"
+        [(ngModel)]="viagem.descricao"
+        rows="3"
+        placeholder="Descreva sua viagem (opcional)">
+      </textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-cancelar" (click)="onCancelar()">
+        Cancelar
+      </button>
+      <button type="submit" class="btn-salvar" [disabled]="viagemForm.invalid">
+        {{ isEdicao ? 'Atualizar Viagem' : 'Salvar Viagem' }}
+      </button>
+    </div>
+  </form>
+</div>

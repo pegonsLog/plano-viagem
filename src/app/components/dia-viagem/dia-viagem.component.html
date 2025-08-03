@@ -1,0 +1,136 @@
+<div class="dia-card" [class.tem-detalhes]="diaCalculado().temDetalhes" [class.fim-semana]="isFimDeSemana()">
+  <!-- Header do Dia -->
+  <div class="dia-header">
+    <div class="dia-info">
+      <h3 class="dia-data">{{ formatarData(diaCalculado().data) }}</h3>
+      <span class="dia-semana" [class.fim-semana]="isFimDeSemana()">
+        {{ diaCalculado().diaSemana }}
+      </span>
+    </div>
+    
+    @if (diaCalculado().temDetalhes) {
+      <div class="status-badge preenchido">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 12l2 2 4-4"/>
+          <circle cx="12" cy="12" r="10"/>
+        </svg>
+        Planejado
+      </div>
+    } @else {
+      <div class="status-badge vazio">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v4l3 3"/>
+        </svg>
+        Pendente
+      </div>
+    }
+  </div>
+
+  <!-- Conteúdo do Dia -->
+  @if (diaCalculado().temDetalhes && diaCalculado().detalhes; as detalhes) {
+    <div class="dia-conteudo">
+      @if (!expandido()) {
+        <!-- Visualização Resumida -->
+        <div class="resumo-detalhes">
+          <div class="detalhe-item">
+            <strong>Cidade:</strong> {{ detalhes.cidade }}
+          </div>
+          @if (detalhes.transporte) {
+            <div class="detalhe-item">
+              <strong>Transporte:</strong> {{ formatarTransporte(detalhes.transporte) }}
+            </div>
+          }
+          @if (detalhes.nomeHospedagem) {
+            <div class="detalhe-item">
+              <strong>Hospedagem:</strong> {{ detalhes.nomeHospedagem }}
+            </div>
+          }
+        </div>
+      } @else {
+        <!-- Visualização Expandida -->
+        <div class="detalhes-completos">
+          <div class="detalhe-item">
+            <strong>Cidade:</strong> {{ detalhes.cidade }}
+          </div>
+          @if (detalhes.transporte) {
+            <div class="detalhe-item">
+              <strong>Transporte:</strong> {{ formatarTransporte(detalhes.transporte) }}
+            </div>
+          }
+          @if (detalhes.nomeHospedagem) {
+            <div class="detalhe-item">
+              <strong>Hospedagem:</strong> {{ detalhes.nomeHospedagem }}
+            </div>
+          }
+          @if (detalhes.enderecoHospedagem) {
+            <div class="detalhe-item">
+              <strong>Endereço:</strong> {{ detalhes.enderecoHospedagem }}
+            </div>
+          }
+          @if (detalhes.deslocamentoLocal) {
+            <div class="detalhe-item">
+              <strong>Deslocamento:</strong> {{ detalhes.deslocamentoLocal }}
+            </div>
+          }
+          @if (detalhes.observacoes) {
+            <div class="detalhe-item">
+              <strong>Observações:</strong> {{ detalhes.observacoes }}
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Botão Expandir/Colapsar -->
+      <button class="btn-expandir" (click)="toggleExpansao()">
+        @if (!expandido()) {
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
+          Ver mais
+        } @else {
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m18 15-6-6-6 6"/>
+          </svg>
+          Ver menos
+        }
+      </button>
+    </div>
+
+    <!-- Ações para Dia com Detalhes -->
+    <div class="dia-acoes">
+      <button class="btn-acao editar" (click)="editarDia()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Editar
+      </button>
+      <button class="btn-acao remover" (click)="removerDia()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18"/>
+          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+          <path d="M8 6V4c0-1 1-2 2-2h4c-1 0 2 1 2 2v2"/>
+        </svg>
+        Remover
+      </button>
+    </div>
+  } @else {
+    <!-- Estado Vazio -->
+    <div class="estado-vazio">
+      <div class="vazio-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v8"/>
+          <path d="M8 12h8"/>
+        </svg>
+      </div>
+      <p>Nenhum detalhe planejado para este dia</p>
+      <button class="btn-adicionar" (click)="adicionarDetalhes()">
+        Adicionar Detalhes
+      </button>
+    </div>
+  }
+
+
+</div>

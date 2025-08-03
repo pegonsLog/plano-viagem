@@ -1,0 +1,153 @@
+<div class="formulario-overlay" (click)="onOverlayClick($event)">
+  <div class="formulario-container" (click)="$event.stopPropagation()">
+    <div class="formulario-header">
+      <h3>{{ modoEdicao() ? 'Editar' : 'Adicionar' }} Detalhes do Dia</h3>
+      <button class="btn-fechar" (click)="onCancelar()" type="button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18"/>
+          <path d="M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #diaForm="ngForm" class="formulario-form">
+      <!-- Data e Dia da Semana -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="data">Data *</label>
+          <input 
+            type="date" 
+            id="data" 
+            name="data"
+            [(ngModel)]="dataString"
+            (ngModelChange)="onDataChange()"
+            required
+            #data="ngModel"
+            class="form-control">
+          @if (data.invalid && data.touched) {
+            <div class="error">Data é obrigatória</div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="diaSemana">Dia da Semana</label>
+          <input 
+            type="text" 
+            id="diaSemana" 
+            name="diaSemana"
+            [value]="diaSemanaCalculado()"
+            readonly
+            class="form-control readonly">
+        </div>
+      </div>
+
+      <!-- Cidade -->
+      <div class="form-group">
+        <label for="cidade">Cidade *</label>
+        <input 
+          type="text" 
+          id="cidade" 
+          name="cidade"
+          [(ngModel)]="formData.cidade"
+          required
+          placeholder="Ex: São Paulo, SP"
+          #cidade="ngModel"
+          class="form-control">
+        @if (cidade.invalid && cidade.touched) {
+          <div class="error">Cidade é obrigatória</div>
+        }
+      </div>
+
+      <!-- Transporte -->
+      <div class="form-group">
+        <label for="transporte">Transporte</label>
+        <select 
+          id="transporte" 
+          name="transporte"
+          [(ngModel)]="formData.transporte"
+          class="form-control">
+          <option value="">Selecione o transporte</option>
+          @for (tipo of tiposTransporte; track tipo.value) {
+            <option [value]="tipo.value">{{ tipo.label }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Hospedagem -->
+      <div class="form-group">
+        <label for="nomeHospedagem">Nome da Hospedagem</label>
+        <input 
+          type="text" 
+          id="nomeHospedagem" 
+          name="nomeHospedagem"
+          [(ngModel)]="formData.nomeHospedagem"
+          placeholder="Ex: Hotel Copacabana Palace"
+          class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label for="enderecoHospedagem">Endereço da Hospedagem</label>
+        <textarea 
+          id="enderecoHospedagem" 
+          name="enderecoHospedagem"
+          [(ngModel)]="formData.enderecoHospedagem"
+          rows="2"
+          placeholder="Endereço completo da hospedagem"
+          class="form-control">
+        </textarea>
+      </div>
+
+      <!-- Deslocamento Local -->
+      <div class="form-group">
+        <label for="deslocamentoLocal">Deslocamento Local</label>
+        <textarea 
+          id="deslocamentoLocal" 
+          name="deslocamentoLocal"
+          [(ngModel)]="formData.deslocamentoLocal"
+          rows="2"
+          placeholder="Como se deslocar pela cidade, pontos de interesse, etc."
+          class="form-control">
+        </textarea>
+      </div>
+
+      <!-- Observações -->
+      <div class="form-group">
+        <label for="observacoes">Observações</label>
+        <textarea 
+          id="observacoes" 
+          name="observacoes"
+          [(ngModel)]="formData.observacoes"
+          rows="3"
+          placeholder="Anotações adicionais, lembretes, etc."
+          class="form-control">
+        </textarea>
+      </div>
+
+      <!-- Indicador de Fim de Semana -->
+      @if (isFimDeSemana()) {
+        <div class="fim-semana-notice">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+          Este dia é um {{ diaSemanaCalculado().toLowerCase() }}
+        </div>
+      }
+
+      <!-- Ações do Formulário -->
+      <div class="form-actions">
+        <button type="button" class="btn-cancelar" (click)="onCancelar()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-salvar" [disabled]="diaForm.invalid || salvando()">
+          @if (salvando()) {
+            <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12a9 9 0 11-6.219-8.56"/>
+            </svg>
+          }
+          {{ modoEdicao() ? 'Atualizar' : 'Salvar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

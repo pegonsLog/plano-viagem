@@ -1,0 +1,228 @@
+.dia-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  z-index: 1;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+
+  &.tem-detalhes {
+    border-color: #28a745;
+  }
+
+  &.fim-semana {
+    background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+  }
+}
+
+.dia-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.dia-info {
+  h3 {
+    margin: 0 0 4px 0;
+    color: #333;
+    font-size: 1.2em;
+    font-weight: 600;
+  }
+}
+
+.dia-semana {
+  color: #666;
+  font-size: 0.9em;
+  font-weight: 500;
+
+  &.fim-semana {
+    color: #ff6b35;
+    font-weight: 600;
+  }
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 500;
+
+  &.preenchido {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  &.vazio {
+    background: #fff3cd;
+    color: #856404;
+  }
+}
+
+.dia-conteudo {
+  padding: 20px;
+}
+
+.resumo-detalhes, .detalhes-completos {
+  margin-bottom: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+.detalhe-item {
+  margin-bottom: 8px;
+  line-height: 1.5;
+  color: #555;
+
+  strong {
+    color: #333;
+    margin-right: 8px;
+  }
+}
+
+.btn-expandir {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.9em;
+  padding: 8px 0;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #0056b3;
+  }
+}
+
+.dia-acoes {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+.btn-acao {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-height: 44px; /* Touch target */
+
+  &.editar {
+    background: #ffc107;
+    color: #212529;
+
+    &:hover {
+      background: #e0a800;
+    }
+  }
+
+  &.remover {
+    background: #dc3545;
+    color: white;
+
+    &:hover {
+      background: #c82333;
+    }
+  }
+}
+
+.estado-vazio {
+  padding: 40px 20px;
+  text-align: center;
+  color: #666;
+
+  p {
+    margin: 0 0 20px 0;
+    font-size: 1em;
+  }
+}
+
+.vazio-icon {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.btn-adicionar {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  min-height: 44px; /* Touch target */
+
+  &:hover {
+    background: #0056b3;
+  }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .dia-header {
+    padding: 16px;
+  }
+
+  .dia-info h3 {
+    font-size: 1.1em;
+  }
+
+  .dia-conteudo {
+    padding: 16px;
+  }
+
+  .dia-acoes {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-acao {
+    justify-content: center;
+    padding: 12px 16px;
+  }
+
+  .estado-vazio {
+    padding: 32px 16px;
+  }
+
+  .vazio-icon svg {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Animações suaves */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
