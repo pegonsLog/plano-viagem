@@ -7,48 +7,53 @@
   </div>
 
   @if (mostrarFormulario) {
-    <app-formulario-viagem 
-      [viagemParaEditar]="viagemParaEditar"
-      (viagemCriada)="onViagemCriada()"
-      (viagemAtualizada)="onViagemAtualizada()"
-      (cancelar)="onCancelar()">
-    </app-formulario-viagem>
+  <app-formulario-viagem [viagemParaEditar]="viagemParaEditar" (viagemCriada)="onViagemCriada()"
+    (viagemAtualizada)="onViagemAtualizada()" (cancelar)="onCancelar()">
+  </app-formulario-viagem>
   }
 
   @if (viagemService.loading()) {
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <p>Carregando viagens...</p>
-    </div>
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Carregando viagens...</p>
+  </div>
   }
 
   <div class="viagens-grid">
     @for (viagem of viagemService.viagens(); track viagem.id) {
-      <div class="viagem-card clickable" [class]="'status-' + viagem.status" (click)="verDetalhesViagem(viagem.id)">
-        <div class="viagem-header">
-          <h3>{{ viagem.titulo }}</h3>
-          <span class="status-badge">{{ getStatusLabel(viagem.status) }}</span>
-        </div>
-        
-        <div class="viagem-info">
-          <p><strong>Destino:</strong> {{ viagem.destino }}</p>
-          <p><strong>Data:</strong> {{ formatarData(viagem.dataInicio) }} - {{ formatarData(viagem.dataFim) }}</p>
-          <p><strong>Orçamento:</strong> {{ formatarMoeda(viagem.orcamento) }}</p>
-          @if (viagem.descricao) {
-            <p><strong>Descrição:</strong> {{ viagem.descricao }}</p>
-          }
-        </div>
+    <div class="viagem-card clickable" [class]="'status-' + viagem.status" (click)="verDetalhesViagem(viagem.id)">
+      <div class="viagem-header">
+        <h3>{{ viagem.titulo }}</h3>
+        <span class="status-badge">{{ getStatusLabel(viagem.status) }}</span>
+      </div>
 
-        <div class="viagem-acoes" (click)="$event.stopPropagation()">
-          <button class="btn-editar" (click)="editarViagem(viagem)">Editar</button>
-          <button class="btn-remover" (click)="removerViagem(viagem.id)">Remover</button>
-        </div>
+      <div class="viagem-info">
+        <p><strong>Destino:</strong> {{ viagem.destino }}</p>
+        <p><strong>Data:</strong> {{ formatarData(viagem.dataInicio) }} - {{ formatarData(viagem.dataFim) }}</p>
+        <p><strong>Orçamento:</strong> {{ formatarMoeda(viagem.orcamento) }}</p>
+        @if (viagem.descricao) {
+        <p><strong>Descrição:</strong> {{ viagem.descricao }}</p>
+        }
       </div>
+
+      <div class="viagem-acoes" (click)="$event.stopPropagation()">
+        <button class="btn-tabela" (click)="verTabelaDias(viagem.id)" title="Ver dias planejados">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+            <line x1="9" y1="9" x2="15" y2="9" />
+            <line x1="9" y1="15" x2="15" y2="15" />
+          </svg>
+          Tabela
+        </button>
+        <button class="btn-editar" (click)="editarViagem(viagem)">Editar</button>
+        <button class="btn-remover" (click)="removerViagem(viagem.id)">Remover</button>
+      </div>
+    </div>
     } @empty {
-      <div class="empty-state">
-        <p>Nenhuma viagem cadastrada ainda.</p>
-        <p>Clique em "Nova Viagem" para começar!</p>
-      </div>
+    <div class="empty-state">
+      <p>Nenhuma viagem cadastrada ainda.</p>
+      <p>Clique em "Nova Viagem" para começar!</p>
+    </div>
     }
   </div>
 </div>

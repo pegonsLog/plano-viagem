@@ -17,13 +17,13 @@ export class DiaViagemService {
   private firebaseService = inject(FirebaseBaseService);
   private errorHandler = inject(ErrorHandlerService);
   private dateService = inject(DateService);
-  
+
   private diasSignal = signal<DiaViagem[]>([]);
   private loadingSignal = signal<boolean>(false);
-  
+
   readonly dias = this.diasSignal.asReadonly();
   readonly loading = this.loadingSignal.asReadonly();
-  
+
   private readonly COLLECTION_NAME = 'dias-viagem';
 
   constructor() {
@@ -33,7 +33,7 @@ export class DiaViagemService {
   private async carregarTodosDias(): Promise<void> {
     try {
       this.loadingSignal.set(true);
-      
+
       this.firebaseService.getAll<DiaViagem>(
         this.COLLECTION_NAME,
         orderBy('data', 'asc')
@@ -46,7 +46,7 @@ export class DiaViagemService {
             criadoEm: this.firebaseService.convertTimestampToDate(dia.criadoEm),
             atualizadoEm: this.firebaseService.convertTimestampToDate(dia.atualizadoEm)
           }));
-          
+
           this.diasSignal.set(diasConvertidos);
           this.loadingSignal.set(false);
         },
@@ -69,7 +69,7 @@ export class DiaViagemService {
   async adicionarDia(novoDia: NovoDiaViagem): Promise<void> {
     try {
       this.loadingSignal.set(true);
-      
+
       // Validar campos obrigatórios
       const validationCampos = this.validarCamposObrigatorios(novoDia);
       if (!validationCampos.isValid) {
@@ -91,15 +91,15 @@ export class DiaViagemService {
 
       const dadosPreparados = this.firebaseService.prepareDataForFirebase(diaParaFirebase);
       const id = await this.firebaseService.create(this.COLLECTION_NAME, dadosPreparados);
-      
+
       // Adicionar localmente para feedback imediato
       const novoDiaCompleto: DiaViagem = {
         ...diaParaFirebase,
         id
       };
-      
+
       this.diasSignal.update(dias => [...dias, novoDiaCompleto]);
-      
+
     } catch (error) {
       console.error('Erro ao adicionar dia:', error);
       this.errorHandler.showError(error instanceof Error ? error.message : 'Erro ao adicionar detalhes do dia.');
@@ -112,22 +112,22 @@ export class DiaViagemService {
   async atualizarDia(id: string, dadosAtualizados: Partial<DiaViagem>): Promise<void> {
     try {
       this.loadingSignal.set(true);
-      
+
       const dadosParaAtualizar = {
         ...dadosAtualizados,
         atualizadoEm: this.dateService.createBrazilDate()
       };
-      
+
       // Recalcular dia da semana se a data foi alterada
       if (dadosAtualizados.data) {
         dadosParaAtualizar.diaSemana = this.calcularDiaSemana(dadosAtualizados.data);
       }
-      
+
       const dadosPreparados = this.firebaseService.prepareDataForFirebase(dadosParaAtualizar);
       await this.firebaseService.update(this.COLLECTION_NAME, id, dadosPreparados);
-      
+
       // Atualizar localmente
-      this.diasSignal.update(dias => 
+      this.diasSignal.update(dias =>
         dias.map(dia => {
           if (dia.id === id) {
             return { ...dia, ...dadosParaAtualizar };
@@ -135,7 +135,7 @@ export class DiaViagemService {
           return dia;
         })
       );
-      
+
     } catch (error) {
       console.error('Erro ao atualizar dia:', error);
       this.errorHandler.showError('Erro ao atualizar detalhes do dia.');
@@ -148,14 +148,14 @@ export class DiaViagemService {
   async removerDia(id: string): Promise<void> {
     try {
       this.loadingSignal.set(true);
-      
+
       await this.firebaseService.delete(this.COLLECTION_NAME, id);
-      
+
       // Remover localmente
-      this.diasSignal.update(dias => 
+      this.diasSignal.update(dias =>
         dias.filter(dia => dia.id !== id)
       );
-      
+
     } catch (error) {
       console.error('Erro ao remover dia:', error);
       this.errorHandler.showError('Erro ao remover detalhes do dia.');
@@ -180,12 +180,12 @@ export class DiaViagemService {
   calcularDiasCalculados(viagem: Viagem): DiaCalculado[] {
     const todasAsDatas = this.calcularDiasViagem(viagem.dataInicio, viagem.dataFim);
     const diasComDetalhes = this.obterDiasPorViagem(viagem.id);
-    
+
     return todasAsDatas.map(data => {
-      const detalhes = diasComDetalhes.find(dia => 
+      const detalhes = diasComDetalhes.find(dia =>
         this.isSameDay(dia.data, data)
       );
-      
+
       return {
         data,
         diaSemana: this.calcularDiaSemana(data),
@@ -197,24 +197,24 @@ export class DiaViagemService {
 
   validarData(data: Date, viagem: Viagem): ValidationResult {
     const errors: string[] = [];
-    
+
     if (!data || isNaN(data.getTime())) {
       errors.push('Data inválida');
       return { isValid: false, errors };
     }
-    
+
     const dataInicio = viagem.dataInicio;
     const dataFim = viagem.dataFim;
-    
+
     // Normalizar datas para comparação (apenas dia/mês/ano)
     const dataNormalizada = this.dateService.normalizeDate(data);
     const inicioNormalizado = this.dateService.normalizeDate(dataInicio);
     const fimNormalizado = this.dateService.normalizeDate(dataFim);
-    
+
     if (dataNormalizada < inicioNormalizado || dataNormalizada > fimNormalizado) {
       errors.push(`A data deve estar entre ${this.dateService.formatDate(dataInicio)} e ${this.dateService.formatDate(dataFim)}`);
     }
-    
+
     return {
       isValid: errors.length === 0,
       errors
@@ -225,15 +225,15 @@ export class DiaViagemService {
 
   validarCamposObrigatorios(dia: NovoDiaViagem): ValidationResult {
     const errors: string[] = [];
-    
+
     if (!dia.data) {
       errors.push('Data é obrigatória');
     }
-    
+
     if (!dia.cidade || dia.cidade.trim() === '') {
       errors.push('Cidade é obrigatória');
     }
-    
+
     return {
       isValid: errors.length === 0,
       errors
@@ -243,7 +243,7 @@ export class DiaViagemService {
   validarDuplicacao(data: Date, viagemId: string): ValidationResult {
     const diasExistentes = this.obterDiasPorViagem(viagemId);
     const jaExiste = diasExistentes.some(dia => this.isSameDay(dia.data, data));
-    
+
     return {
       isValid: !jaExiste,
       errors: jaExiste ? ['Já existe um registro para esta data'] : []
@@ -256,15 +256,15 @@ export class DiaViagemService {
 
   private isSameDay(data1: Date, data2: Date): boolean {
     return data1.getFullYear() === data2.getFullYear() &&
-           data1.getMonth() === data2.getMonth() &&
-           data1.getDate() === data2.getDate();
+      data1.getMonth() === data2.getMonth() &&
+      data1.getDate() === data2.getDate();
   }
 
   // Método para carregar dias de uma viagem específica do Firebase
   async carregarDiasPorViagem(viagemId: string): Promise<void> {
     try {
       this.loadingSignal.set(true);
-      
+
       this.firebaseService.getWhere<DiaViagem>(
         this.COLLECTION_NAME,
         'viagemId',
@@ -280,13 +280,13 @@ export class DiaViagemService {
             criadoEm: this.firebaseService.convertTimestampToDate(dia.criadoEm),
             atualizadoEm: this.firebaseService.convertTimestampToDate(dia.atualizadoEm)
           }));
-          
+
           // Atualizar apenas os dias desta viagem
           this.diasSignal.update(todosOsDias => {
             const diasOutrasViagens = todosOsDias.filter(dia => dia.viagemId !== viagemId);
             return [...diasOutrasViagens, ...diasConvertidos];
           });
-          
+
           this.loadingSignal.set(false);
         },
         error: (error) => {
@@ -304,7 +304,7 @@ export class DiaViagemService {
   async obterDiaPorId(id: string): Promise<DiaViagem | null> {
     try {
       const dia = await this.firebaseService.getById<DiaViagem>(this.COLLECTION_NAME, id).toPromise();
-      
+
       if (dia) {
         // Converter timestamps
         return {
@@ -314,7 +314,7 @@ export class DiaViagemService {
           atualizadoEm: this.firebaseService.convertTimestampToDate(dia.atualizadoEm)
         };
       }
-      
+
       return null;
     } catch (error) {
       console.error('Erro ao obter dia por ID:', error);
@@ -326,5 +326,23 @@ export class DiaViagemService {
   // Método para recarregar todos os dias
   async recarregarDias(): Promise<void> {
     await this.carregarTodosDias();
+  }
+
+  // Método para buscar o dia anterior com dados preenchidos
+  async buscarDiaAnterior(viagemId: string, dataAtual: Date): Promise<DiaViagem | null> {
+    try {
+      const diasDaViagem = this.obterDiasPorViagem(viagemId);
+
+      // Filtrar dias anteriores à data atual e ordenar por data decrescente
+      const diasAnteriores = diasDaViagem
+        .filter(dia => dia.data < dataAtual)
+        .sort((a, b) => b.data.getTime() - a.data.getTime());
+
+      // Retornar o dia mais recente anterior à data atual
+      return diasAnteriores.length > 0 ? diasAnteriores[0] : null;
+    } catch (error) {
+      console.error('Erro ao buscar dia anterior:', error);
+      return null;
+    }
   }
 }

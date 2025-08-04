@@ -39,6 +39,10 @@ export class ListaViagensComponent {
     this.router.navigate(['/viagem', viagemId]);
   }
 
+  verTabelaDias(viagemId: string) {
+    this.router.navigate(['/viagem', viagemId, 'tabela-dias']);
+  }
+
   editarViagem(viagem: Viagem) {
     this.viagemParaEditar = viagem;
     this.mostrarFormulario = true;

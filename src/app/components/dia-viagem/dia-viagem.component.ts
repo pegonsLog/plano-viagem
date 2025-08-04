@@ -19,7 +19,7 @@ export class DiaViagemComponent {
   viagemId = input.required<string>();
 
   expandido = signal(false);
-  
+
   private router = inject(Router);
   private diaViagemService = inject(DiaViagemService);
   private errorHandler = inject(ErrorHandlerService);
@@ -64,17 +64,18 @@ export class DiaViagemComponent {
 
   formatarTransporte(transporte: string): string {
     const transporteMap: Record<string, string> = {
-      'aviao': 'Avião',
-      'carro': 'Carro',
-      'onibus': 'Ônibus',
-      'trem': 'Trem',
-      'metro': 'Metrô',
-      'taxi': 'Táxi',
-      'uber': 'Uber/App',
-      'a-pe': 'A pé',
-      'bicicleta': 'Bicicleta',
-      'barco': 'Barco',
-      'outro': 'Outro'
+      'Avião': 'Avião',
+      'Carro': 'Carro',
+      'Ônibus': 'Ônibus',
+      'Trem': 'Trem',
+      'Metro': 'Metrô',
+      'Táxi': 'Táxi',
+      'Uber': 'Uber/App',
+      'A pé': 'A pé',
+      'Bicicleta': 'Bicicleta',
+      'Barco': 'Barco',
+      'Outro': 'Outro',
+      'N/A': 'N/A'
     };
     return transporteMap[transporte] || transporte;
   }

@@ -13,17 +13,26 @@ export const routes: Routes = [
     path: 'viagem/:id',
     loadComponent: () => import('./components/detalhes-viagem/detalhes-viagem.component').then(m => m.DetalhesViagemComponent),
     canActivate: [viagemExistsGuard],
-    title: 'Detalhes da Viagem'
+    title: 'Detalhes da Viagem',
+    data: { prerender: false }
   },
   {
     path: 'viagem/:viagemId/dia/novo',
     loadComponent: () => import('./components/formulario-dia-page/formulario-dia-page.component').then(m => m.FormularioDiaPageComponent),
-    title: 'Adicionar Detalhes do Dia'
+    title: 'Adicionar Detalhes do Dia',
+    data: { prerender: false }
   },
   {
     path: 'viagem/:viagemId/dia/:diaId/editar',
     loadComponent: () => import('./components/formulario-dia-page/formulario-dia-page.component').then(m => m.FormularioDiaPageComponent),
-    title: 'Editar Detalhes do Dia'
+    title: 'Editar Detalhes do Dia',
+    data: { prerender: false }
+  },
+  {
+    path: 'viagem/:viagemId/tabela-dias',
+    loadComponent: () => import('./components/tabela-dias-planejados/tabela-dias-planejados').then(m => m.TabelaDiasPlanejadosComponent),
+    title: 'Dias Planejados',
+    data: { prerender: false }
   },
   {
     path: '**',

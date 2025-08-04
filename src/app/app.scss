@@ -12,16 +12,103 @@
   padding: 0 20px;
 }
 
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.mobile-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  display: none; /* Hidden by default (desktop) */
+}
+
+.header-text {
+  flex: 1;
+}
+
 .app-header h1 {
   margin: 0 0 10px 0;
   font-size: 2.5em;
   font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .app-header p {
   margin: 0;
   font-size: 1.1em;
   opacity: 0.9;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0; /* Remove all padding */
+    position: relative;
+  }
+  
+  .mobile-logo {
+    display: block; /* Show only on mobile */
+    width: 100vw; /* Full viewport width */
+    height: auto; /* Maintain aspect ratio */
+    max-width: none; /* Remove size limit */
+    border-radius: 0; /* No border radius */
+    margin: 0; /* Remove margins */
+    padding: 0; /* Remove padding */
+    object-fit: cover; /* Better scaling */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
+  
+  .app-header .container {
+    padding: 15px 20px; /* Padding only for text content */
+    max-width: 1200px; /* Keep container limit for text */
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+  }
+  
+  .header-text {
+    text-align: center;
+  }
+  
+  .app-header h1 {
+    font-size: 1.5em;
+    margin: 0 0 5px 0;
+  }
+  
+  .app-header p {
+    font-size: 0.9em;
+    margin: 0;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 480px) {
+  .app-header h1 {
+    font-size: 1.3em;
+  }
+  
+  .app-header p {
+    font-size: 0.8em;
+  }
+  
+  .app-header .container {
+    padding: 10px 15px;
+  }
 }
 
 .app-main {

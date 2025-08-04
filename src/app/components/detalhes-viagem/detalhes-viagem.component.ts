@@ -24,7 +24,7 @@ export class DetalhesViagemComponent implements OnInit {
   private dateService = inject(DateService);
 
   viagem = signal<Viagem | null>(null);
-  
+
   diasCalculados = computed(() => {
     const viagemData = this.viagem();
     if (!viagemData) return [];
@@ -68,5 +68,12 @@ export class DetalhesViagemComponent implements OnInit {
       style: 'currency',
       currency: 'BRL'
     }).format(valor);
+  }
+
+  verTabelaDias() {
+    const viagemData = this.viagem();
+    if (viagemData) {
+      this.router.navigate(['/viagem', viagemData.id, 'tabela']);
+    }
   }
 }

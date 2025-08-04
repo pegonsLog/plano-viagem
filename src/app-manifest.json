@@ -1,0 +1,24 @@
+{
+    "name": "Plano de Viagem",
+    "short_name": "PlanoViagem",
+    "description": "Aplicativo para planejamento e organização de viagens",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2196F3",
+    "orientation": "portrait-primary",
+    "scope": "/",
+    "lang": "pt-BR",
+    "categories": [
+        "travel",
+        "productivity"
+    ],
+    "icons": [
+        {
+            "src": "assets/icons/bear-family.png",
+            "sizes": "any",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ]
+}

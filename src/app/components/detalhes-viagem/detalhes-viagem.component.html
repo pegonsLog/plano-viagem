@@ -1,55 +1,56 @@
 <div class="detalhes-viagem">
   @if (viagem(); as viagemData) {
-    <!-- Header da Viagem -->
-    <div class="viagem-header">
+  <!-- Header da Viagem -->
+  <div class="viagem-header">
+    <div class="header-actions">
       <button class="btn-voltar" (click)="voltarParaLista()">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="m15 18-6-6 6-6"/>
+          <path d="m15 18-6-6 6-6" />
         </svg>
         Voltar
       </button>
-      
-      <div class="viagem-info">
-        <h1>{{ viagemData.titulo }}</h1>
-        <div class="viagem-meta">
-          <p><strong>Destino:</strong> {{ viagemData.destino }}</p>
-          <p><strong>Período:</strong> {{ formatarData(viagemData.dataInicio) }} - {{ formatarData(viagemData.dataFim) }}</p>
-          <p><strong>Duração:</strong> {{ totalDias() }} dias</p>
-          <p><strong>Orçamento:</strong> {{ formatarMoeda(viagemData.orcamento) }}</p>
-          @if (viagemData.descricao) {
-            <p><strong>Descrição:</strong> {{ viagemData.descricao }}</p>
-          }
-        </div>
-      </div>
     </div>
 
-    <!-- Resumo dos Dias -->
-    <div class="resumo-dias">
-      <h2>Itinerário da Viagem</h2>
-      <div class="resumo-stats">
-        <div class="stat">
-          <span class="stat-number">{{ totalDias() }}</span>
-          <span class="stat-label">Total de dias</span>
-        </div>
-        <div class="stat">
-          <span class="stat-number">{{ diasComDetalhes() }}</span>
-          <span class="stat-label">Dias planejados</span>
-        </div>
-        <div class="stat">
-          <span class="stat-number">{{ diasSemDetalhes() }}</span>
-          <span class="stat-label">Dias pendentes</span>
-        </div>
+    <div class="viagem-info">
+      <h1>{{ viagemData.titulo }}</h1>
+      <div class="viagem-meta">
+        <p><strong>Destino:</strong> {{ viagemData.destino }}</p>
+        <p><strong>Período:</strong> {{ formatarData(viagemData.dataInicio) }} - {{ formatarData(viagemData.dataFim) }}
+        </p>
+        <p><strong>Duração:</strong> {{ totalDias() }} dias</p>
+        <p><strong>Orçamento:</strong> {{ formatarMoeda(viagemData.orcamento) }}</p>
+        @if (viagemData.descricao) {
+        <p><strong>Descrição:</strong> {{ viagemData.descricao }}</p>
+        }
       </div>
     </div>
+  </div>
 
-    <!-- Lista de Dias -->
-    <app-lista-dias 
-      [diasCalculados]="diasCalculados()"
-      [viagemId]="viagemData.id">
-    </app-lista-dias>
+  <!-- Resumo dos Dias -->
+  <div class="resumo-dias">
+    <h2>Itinerário da Viagem</h2>
+    <div class="resumo-stats">
+      <div class="stat">
+        <span class="stat-number">{{ totalDias() }}</span>
+        <span class="stat-label">Total de dias</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">{{ diasComDetalhes() }}</span>
+        <span class="stat-label">Dias planejados</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">{{ diasSemDetalhes() }}</span>
+        <span class="stat-label">Dias pendentes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de Dias -->
+  <app-lista-dias [diasCalculados]="diasCalculados()" [viagemId]="viagemData.id">
+  </app-lista-dias>
   } @else {
-    <div class="loading">
-      <p>Carregando detalhes da viagem...</p>
-    </div>
+  <div class="loading">
+    <p>Carregando detalhes da viagem...</p>
+  </div>
   }
 </div>

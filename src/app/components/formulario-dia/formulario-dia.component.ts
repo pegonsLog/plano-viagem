@@ -25,14 +25,19 @@ export class FormularioDiaComponent implements OnInit {
 
   salvando = signal(false);
   dataString = signal('');
-  
+
   formData = {
     cidade: '',
     transporte: '',
     nomeHospedagem: '',
     enderecoHospedagem: '',
     deslocamentoLocal: '',
-    observacoes: ''
+    detalhesVoo: '',
+    observacoes: '',
+    formaPagamento: '',
+    titularCartao: '',
+    finalCartao: '',
+    quantidadeParcelas: undefined as number | undefined
   };
 
   tiposTransporte = TIPOS_TRANSPORTE;
@@ -69,7 +74,12 @@ export class FormularioDiaComponent implements OnInit {
         nomeHospedagem: dia.nomeHospedagem || '',
         enderecoHospedagem: dia.enderecoHospedagem || '',
         deslocamentoLocal: dia.deslocamentoLocal || '',
-        observacoes: dia.observacoes || ''
+        detalhesVoo: dia.detalhesVoo || '',
+        observacoes: dia.observacoes || '',
+        formaPagamento: dia.formaPagamento || '',
+        titularCartao: dia.titularCartao || '',
+        finalCartao: dia.finalCartao || '',
+        quantidadeParcelas: dia.quantidadeParcelas
       };
     }
   }
@@ -77,6 +87,16 @@ export class FormularioDiaComponent implements OnInit {
   onDataChange() {
     // Recalcular dia da semana quando data muda
     // O computed já fará isso automaticamente
+  }
+
+  private limparCamposVazios(obj: any): any {
+    const resultado: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (value !== '' && value !== null && value !== undefined) {
+        resultado[key] = value;
+      }
+    }
+    return resultado;
   }
 
   onSubmit() {
@@ -89,28 +109,46 @@ export class FormularioDiaComponent implements OnInit {
 
       if (this.modoEdicao()) {
         // Modo edição
+        const dadosLimpos = this.limparCamposVazios({
+          transporte: this.formData.transporte,
+          nomeHospedagem: this.formData.nomeHospedagem,
+          enderecoHospedagem: this.formData.enderecoHospedagem,
+          deslocamentoLocal: this.formData.deslocamentoLocal,
+          detalhesVoo: this.formData.detalhesVoo,
+          observacoes: this.formData.observacoes,
+          formaPagamento: this.formData.formaPagamento,
+          titularCartao: this.formData.titularCartao,
+          finalCartao: this.formData.finalCartao,
+          quantidadeParcelas: this.formData.quantidadeParcelas
+        });
+
         const diaAtualizado: DiaViagem = {
           ...this.diaViagem()!,
           data: dataForm,
           cidade: this.formData.cidade,
-          transporte: this.formData.transporte || undefined,
-          nomeHospedagem: this.formData.nomeHospedagem || undefined,
-          enderecoHospedagem: this.formData.enderecoHospedagem || undefined,
-          deslocamentoLocal: this.formData.deslocamentoLocal || undefined,
-          observacoes: this.formData.observacoes || undefined
+          ...dadosLimpos
         };
         this.salvar.emit(diaAtualizado);
       } else {
         // Modo criação
+        const dadosLimpos = this.limparCamposVazios({
+          transporte: this.formData.transporte,
+          nomeHospedagem: this.formData.nomeHospedagem,
+          enderecoHospedagem: this.formData.enderecoHospedagem,
+          deslocamentoLocal: this.formData.deslocamentoLocal,
+          detalhesVoo: this.formData.detalhesVoo,
+          observacoes: this.formData.observacoes,
+          formaPagamento: this.formData.formaPagamento,
+          titularCartao: this.formData.titularCartao,
+          finalCartao: this.formData.finalCartao,
+          quantidadeParcelas: this.formData.quantidadeParcelas
+        });
+
         const novoDia: NovoDiaViagem = {
           viagemId: this.viagemId(),
           data: dataForm,
           cidade: this.formData.cidade,
-          transporte: this.formData.transporte || undefined,
-          nomeHospedagem: this.formData.nomeHospedagem || undefined,
-          enderecoHospedagem: this.formData.enderecoHospedagem || undefined,
-          deslocamentoLocal: this.formData.deslocamentoLocal || undefined,
-          observacoes: this.formData.observacoes || undefined
+          ...dadosLimpos
         };
         this.salvar.emit(novoDia);
       }
@@ -131,5 +169,20 @@ export class FormularioDiaComponent implements OnInit {
     }
   }
 
+  async preencherIdem(campo: string) {
+    try {
+      // Buscar o dia anterior baseado na data atual do formulário
+      const dataAtual = this.dateService.createDateFromInput(this.dataString());
+      const diaAnterior = await this.diaViagemService.buscarDiaAnterior(this.viagemId(), dataAtual);
 
+      if (diaAnterior && diaAnterior[campo as keyof DiaViagem]) {
+        const valor = diaAnterior[campo as keyof DiaViagem];
+        if (valor !== undefined && valor !== null && valor !== '') {
+          (this.formData as any)[campo] = valor;
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dia anterior:', error);
+    }
+  }
 }

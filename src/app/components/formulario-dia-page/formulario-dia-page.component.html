@@ -2,8 +2,8 @@
   <div class="page-header">
     <button class="btn-voltar" (click)="voltarParaViagem()" type="button">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M19 12H5"/>
-        <path d="M12 19l-7-7 7-7"/>
+        <path d="M19 12H5" />
+        <path d="M12 19l-7-7 7-7" />
       </svg>
       Voltar
     </button>
@@ -16,123 +16,203 @@
       <div class="form-row">
         <div class="form-group">
           <label for="data">Data *</label>
-          <input 
-            type="date" 
-            id="data" 
-            name="data"
-            [(ngModel)]="dataString"
-            (ngModelChange)="onDataChange()"
-            required
-            #data="ngModel"
-            class="form-control">
+          <input type="date" id="data" name="data" [(ngModel)]="dataString" (ngModelChange)="onDataChange()" required
+            #data="ngModel" class="form-control">
           @if (data.invalid && data.touched) {
-            <div class="error">Data é obrigatória</div>
+          <div class="error">Data é obrigatória</div>
           }
         </div>
 
         <div class="form-group">
           <label for="diaSemana">Dia da Semana</label>
-          <input 
-            type="text" 
-            id="diaSemana" 
-            name="diaSemana"
-            [value]="diaSemanaCalculado()"
-            readonly
+          <input type="text" id="diaSemana" name="diaSemana" [value]="diaSemanaCalculado()" readonly
             class="form-control readonly">
         </div>
       </div>
 
       <!-- Cidade -->
       <div class="form-group">
-        <label for="cidade">Cidade *</label>
-        <input 
-          type="text" 
-          id="cidade" 
-          name="cidade"
-          [(ngModel)]="formData.cidade"
-          required
-          placeholder="Ex: São Paulo, SP"
-          #cidade="ngModel"
-          class="form-control">
+        <div class="form-label-with-button">
+          <label for="cidade">Cidade *</label>
+          <button type="button" class="btn-idem" (click)="preencherIdem('cidade')" title="Idem dia anterior">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <input type="text" id="cidade" name="cidade" [(ngModel)]="formData.cidade" required
+          placeholder="Ex: São Paulo, SP" #cidade="ngModel" class="form-control">
         @if (cidade.invalid && cidade.touched) {
-          <div class="error">Cidade é obrigatória</div>
+        <div class="error">Cidade é obrigatória</div>
         }
       </div>
 
       <!-- Transporte -->
       <div class="form-group">
-        <label for="transporte">Transporte</label>
-        <select 
-          id="transporte" 
-          name="transporte"
-          [(ngModel)]="formData.transporte"
-          class="form-control">
+        <div class="form-label-with-button">
+          <label for="transporte">Transporte</label>
+          <button type="button" class="btn-idem-icon" (click)="preencherIdem('transporte')" title="Idem dia anterior">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <select id="transporte" name="transporte" [(ngModel)]="formData.transporte" class="form-control">
           <option value="">Selecione o transporte</option>
           @for (tipo of tiposTransporte; track tipo.value) {
-            <option [value]="tipo.value">{{ tipo.label }}</option>
+          <option [value]="tipo.value">{{ tipo.label }}</option>
           }
         </select>
       </div>
 
+      <!-- Detalhes do Voo -->
+      <div class="form-group">
+        <div class="form-label-with-button">
+          <label for="detalhesVoo">Detalhes do Voo</label>
+          <button type="button" class="btn-idem-icon" (click)="preencherIdem('detalhesVoo')" title="Idem dia anterior">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <textarea id="detalhesVoo" name="detalhesVoo" [(ngModel)]="formData.detalhesVoo" rows="3"
+          placeholder="Ex: Voo TAM 3054, Saída: 14:30, Chegada: 16:45, Portão A12" class="form-control">
+        </textarea>
+      </div>
+
       <!-- Hospedagem -->
       <div class="form-group">
-        <label for="nomeHospedagem">Nome da Hospedagem</label>
-        <input 
-          type="text" 
-          id="nomeHospedagem" 
-          name="nomeHospedagem"
-          [(ngModel)]="formData.nomeHospedagem"
-          placeholder="Ex: Hotel Copacabana Palace"
-          class="form-control">
+        <div class="form-label-with-button">
+          <label for="nomeHospedagem">Nome da Hospedagem</label>
+          <button type="button" class="btn-idem-icon" (click)="preencherIdem('nomeHospedagem')"
+            title="Idem dia anterior">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <input type="text" id="nomeHospedagem" name="nomeHospedagem" [(ngModel)]="formData.nomeHospedagem"
+          placeholder="Ex: Hotel Copacabana Palace" class="form-control">
       </div>
 
       <div class="form-group">
-        <label for="enderecoHospedagem">Endereço da Hospedagem</label>
-        <textarea 
-          id="enderecoHospedagem" 
-          name="enderecoHospedagem"
-          [(ngModel)]="formData.enderecoHospedagem"
-          rows="2"
-          placeholder="Endereço completo da hospedagem"
-          class="form-control">
+        <div class="form-label-with-button">
+          <label for="enderecoHospedagem">Endereço da Hospedagem</label>
+          <button type="button" class="btn-idem-icon" (click)="preencherIdem('enderecoHospedagem')"
+            title="Idem dia anterior">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <textarea id="enderecoHospedagem" name="enderecoHospedagem" [(ngModel)]="formData.enderecoHospedagem" rows="2"
+          placeholder="Endereço completo da hospedagem" class="form-control">
         </textarea>
       </div>
 
       <!-- Deslocamento Local -->
       <div class="form-group">
-        <label for="deslocamentoLocal">Deslocamento Local</label>
-        <textarea 
-          id="deslocamentoLocal" 
-          name="deslocamentoLocal"
-          [(ngModel)]="formData.deslocamentoLocal"
-          rows="2"
-          placeholder="Como se deslocar pela cidade, pontos de interesse, etc."
-          class="form-control">
+        <div class="form-label-with-button">
+          <label for="deslocamentoLocal">Deslocamento Local</label>
+          <button type="button" class="btn-idem-icon" (click)="preencherIdem('deslocamentoLocal')"
+            title="Idem dia anterior">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <textarea id="deslocamentoLocal" name="deslocamentoLocal" [(ngModel)]="formData.deslocamentoLocal" rows="2"
+          placeholder="Como se deslocar pela cidade, pontos de interesse, etc." class="form-control">
         </textarea>
       </div>
 
       <!-- Observações -->
       <div class="form-group">
-        <label for="observacoes">Observações</label>
-        <textarea 
-          id="observacoes" 
-          name="observacoes"
-          [(ngModel)]="formData.observacoes"
-          rows="3"
-          placeholder="Anotações adicionais, lembretes, etc."
-          class="form-control">
+        <div class="form-label-with-button">
+          <label for="observacoes">Observações</label>
+          <button type="button" class="btn-idem-icon" (click)="preencherIdem('observacoes')" title="Idem dia anterior">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <textarea id="observacoes" name="observacoes" [(ngModel)]="formData.observacoes" rows="3"
+          placeholder="Anotações adicionais, lembretes, etc." class="form-control">
         </textarea>
+      </div>
+
+      <!-- Informações de Pagamento -->
+      <div class="form-section">
+        <h4>Informações de Pagamento</h4>
+
+        <div class="form-group">
+          <div class="form-label-with-button">
+            <label for="formaPagamento">Forma de Pagamento</label>
+            <button type="button" class="btn-idem-icon" (click)="preencherIdem('formaPagamento')"
+              title="Idem dia anterior">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18m-9-9l9 9-9 9" />
+              </svg>
+            </button>
+          </div>
+          <input type="text" id="formaPagamento" name="formaPagamento" [(ngModel)]="formData.formaPagamento"
+            placeholder="Ex: Cartão de Crédito, Dinheiro, PIX" class="form-control">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <div class="form-label-with-button">
+              <label for="titularCartao">Titular do Cartão</label>
+              <button type="button" class="btn-idem-icon" (click)="preencherIdem('titularCartao')"
+                title="Idem dia anterior">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12h18m-9-9l9 9-9 9" />
+                </svg>
+              </button>
+            </div>
+            <input type="text" id="titularCartao" name="titularCartao" [(ngModel)]="formData.titularCartao"
+              placeholder="Nome do titular" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <div class="form-label-with-button">
+              <label for="finalCartao">Final do Cartão</label>
+              <button type="button" class="btn-idem-icon" (click)="preencherIdem('finalCartao')"
+                title="Idem dia anterior">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12h18m-9-9l9 9-9 9" />
+                </svg>
+              </button>
+            </div>
+            <input type="text" id="finalCartao" name="finalCartao" [(ngModel)]="formData.finalCartao"
+              placeholder="Ex: 1234" maxlength="4" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label-with-button">
+            <label for="quantidadeParcelas">Quantidade de Parcelas</label>
+            <button type="button" class="btn-idem-icon" (click)="preencherIdem('quantidadeParcelas')"
+              title="Idem dia anterior">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18m-9-9l9 9-9 9" />
+              </svg>
+            </button>
+          </div>
+          <input type="number" id="quantidadeParcelas" name="quantidadeParcelas"
+            [(ngModel)]="formData.quantidadeParcelas" min="1" max="24" placeholder="Ex: 3" class="form-control">
+        </div>
       </div>
 
       <!-- Indicador de Fim de Semana -->
       @if (isFimDeSemana()) {
-        <div class="fim-semana-notice">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M12 6v6l4 2"/>
-          </svg>
-          Este dia é um {{ diaSemanaCalculado().toLowerCase() }}
-        </div>
+      <div class="fim-semana-notice">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 6v6l4 2" />
+        </svg>
+        Este dia é um {{ diaSemanaCalculado().toLowerCase() }}
+      </div>
       }
 
       <!-- Ações do Formulário -->
@@ -142,9 +222,10 @@
         </button>
         <button type="submit" class="btn-salvar" [disabled]="diaForm.invalid || salvando()">
           @if (salvando()) {
-            <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 12a9 9 0 11-6.219-8.56"/>
-            </svg>
+          <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M21 12a9 9 0 11-6.219-8.56" />
+          </svg>
           }
           {{ modoEdicao() ? 'Atualizar' : 'Salvar' }}
         </button>
