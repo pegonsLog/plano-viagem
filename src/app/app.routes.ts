@@ -29,9 +29,17 @@ export const routes: Routes = [
     data: { prerender: false }
   },
   {
-    path: 'viagem/:viagemId/tabela-dias',
+    path: 'viagem/:id/tabela-dias',
     loadComponent: () => import('./components/tabela-dias-planejados/tabela-dias-planejados').then(m => m.TabelaDiasPlanejadosComponent),
+    canActivate: [viagemExistsGuard],
     title: 'Dias Planejados',
+    data: { prerender: false }
+  },
+  {
+    path: 'viagem/:id/relatorio',
+    loadComponent: () => import('./components/relatorio-viagem/relatorio-viagem').then(m => m.RelatorioViagem),
+    canActivate: [viagemExistsGuard],
+    title: 'Relatório da Viagem',
     data: { prerender: false }
   },
   {

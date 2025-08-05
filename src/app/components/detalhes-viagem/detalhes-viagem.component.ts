@@ -73,7 +73,14 @@ export class DetalhesViagemComponent implements OnInit {
   verTabelaDias() {
     const viagemData = this.viagem();
     if (viagemData) {
-      this.router.navigate(['/viagem', viagemData.id, 'tabela']);
+      this.router.navigate(['/viagem', viagemData.id, 'tabela-dias']);
+    }
+  }
+
+  verRelatorio() {
+    const viagemData = this.viagem();
+    if (viagemData) {
+      this.router.navigate(['/viagem', viagemData.id, 'relatorio']);
     }
   }
 }

@@ -43,6 +43,16 @@
         navigator.serviceWorker.register('/sw.js')
           .then(registration => {
             console.log('SW registered: ', registration);
+            // Forçar atualização se houver uma nova versão
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('Nova versão do SW disponível, recarregando...');
+                  window.location.reload();
+                }
+              });
+            });
           })
           .catch(registrationError => {
             console.log('SW registration failed: ', registrationError);

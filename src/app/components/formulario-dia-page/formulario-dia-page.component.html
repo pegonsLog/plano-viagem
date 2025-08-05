@@ -16,9 +16,9 @@
       <div class="form-row">
         <div class="form-group">
           <label for="data">Data *</label>
-          <input type="date" id="data" name="data" [(ngModel)]="dataString" (ngModelChange)="onDataChange()" required
-            #data="ngModel" class="form-control">
-          @if (data.invalid && data.touched) {
+          <input type="date" id="data" formControlName="data" (change)="onDataChange()" 
+            class="form-control">
+          @if (formulario.get('data')?.invalid && formulario.get('data')?.touched) {
           <div class="error">Data é obrigatória</div>
           }
         </div>
@@ -78,6 +78,24 @@
         <textarea id="detalhesVoo" formControlName="detalhesVoo" rows="3"
           placeholder="Ex: Voo TAM 3054, Saída: 14:30, Chegada: 16:45, Portão A12" class="form-control">
         </textarea>
+      </div>
+
+      <!-- Custo do Transporte -->
+      <div class="form-group">
+        <div class="form-label-with-button">
+          <label for="custoTransporte">Custo do Transporte (R$)</label>
+          <button type="button" class="btn-idem-icon" (click)="preencherIdem('custoTransporte')"
+            title="Idem dia anterior">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <input type="number" id="custoTransporte" formControlName="custoTransporte"
+          min="0" step="0.01" placeholder="Ex: 150.00" class="form-control">
+        @if (formulario.get('custoTransporte')?.invalid && formulario.get('custoTransporte')?.touched) {
+        <div class="error">Valor deve ser maior ou igual a zero</div>
+        }
       </div>
 
       <!-- Hospedagem -->
@@ -246,6 +264,42 @@
           </div>
           <input type="number" id="quantidadeParcelas" formControlName="quantidadeParcelas"
             min="1" max="24" placeholder="Ex: 3" class="form-control">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <div class="form-label-with-button">
+              <label for="valorHospedagem">Valor da Hospedagem (R$)</label>
+              <button type="button" class="btn-idem-icon" (click)="preencherIdem('valorHospedagem')"
+                title="Idem dia anterior">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12h18m-9-9l9 9-9 9" />
+                </svg>
+              </button>
+            </div>
+            <input type="number" id="valorHospedagem" formControlName="valorHospedagem"
+              min="0" step="0.01" placeholder="Ex: 250.00" class="form-control">
+            @if (formulario.get('valorHospedagem')?.invalid && formulario.get('valorHospedagem')?.touched) {
+            <div class="error">Valor deve ser maior ou igual a zero</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <div class="form-label-with-button">
+              <label for="valorParcela">Valor da Parcela (R$)</label>
+              <button type="button" class="btn-idem-icon" (click)="preencherIdem('valorParcela')"
+                title="Idem dia anterior">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12h18m-9-9l9 9-9 9" />
+                </svg>
+              </button>
+            </div>
+            <input type="text" id="valorParcela" formControlName="valorParcela" readonly
+              placeholder="R$ 0,00" class="form-control readonly">
+            @if (formulario.get('valorParcela')?.invalid && formulario.get('valorParcela')?.touched) {
+            <div class="error">Valor deve ser maior ou igual a zero</div>
+            }
+          </div>
         </div>
       </div>
 

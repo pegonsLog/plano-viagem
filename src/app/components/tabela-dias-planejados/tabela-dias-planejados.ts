@@ -36,7 +36,7 @@ export class TabelaDiasPlanejadosComponent implements OnInit {
   });
 
   ngOnInit() {
-    const viagemIdParam = this.route.snapshot.paramMap.get('viagemId');
+    const viagemIdParam = this.route.snapshot.paramMap.get('id');
     if (viagemIdParam) {
       this.viagemId.set(viagemIdParam);
       this.carregarDados();
@@ -51,7 +51,7 @@ export class TabelaDiasPlanejadosComponent implements OnInit {
       this.loading.set(true);
 
       // Carregar dados da viagem
-      const viagem = await this.viagemService.obterViagemPorId(this.viagemId());
+      const viagem = this.viagemService.obterViagem(this.viagemId());
       if (viagem) {
         this.viagem.set(viagem);
 
@@ -93,6 +93,6 @@ export class TabelaDiasPlanejadosComponent implements OnInit {
   }
 
   voltarParaViagem() {
-    this.router.navigate(['/', this.viagemId()]);
+    this.router.navigate(['/viagem', this.viagemId()]);
   }
 }

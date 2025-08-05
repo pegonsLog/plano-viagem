@@ -17,6 +17,9 @@ export interface DiaViagem {
   titularCartao?: string;
   finalCartao?: string;
   quantidadeParcelas?: number;
+  valorHospedagem?: number;
+  valorParcela?: number;
+  custoTransporte?: number;
   criadoEm: Date;
   atualizadoEm: Date;
 }
@@ -38,6 +41,9 @@ export interface NovoDiaViagem {
   titularCartao?: string;
   finalCartao?: string;
   quantidadeParcelas?: number;
+  valorHospedagem?: number;
+  valorParcela?: number;
+  custoTransporte?: number;
 }
 
 export interface DiaCalculado {

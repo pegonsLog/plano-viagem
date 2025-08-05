@@ -1,0 +1,277 @@
+<div class="relatorio-page">
+    <!-- Cabeçalho com ações -->
+    <div class="page-header">
+        <button class="btn-voltar" (click)="voltarParaViagem()" type="button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="M12 19l-7-7 7-7" />
+            </svg>
+            Voltar
+        </button>
+
+        <h1>Relatório de Viagem</h1>
+
+        <button class="btn-pdf" (click)="gerarPDF()" [disabled]="gerandoPdf()">
+            @if (gerandoPdf()) {
+            <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <path d="M21 12a9 9 0 11-6.219-8.56" />
+            </svg>
+            Gerando...
+            } @else {
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14,2 14,8 20,8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10,9 9,9 8,9" />
+            </svg>
+            Gerar PDF
+            }
+        </button>
+    </div>
+
+    <!-- Conteúdo do relatório -->
+    <div id="relatorio-content" class="relatorio-content">
+        @if (viagem(); as viagemData) {
+        <!-- Cabeçalho do relatório -->
+        <div class="relatorio-header">
+            <div class="logo-area">
+                <div class="logo-placeholder">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                    </svg>
+                </div>
+                <div class="empresa-info">
+                    <h1>Relatório de Viagem</h1>
+                    <p>Documento gerado em {{ formatarData(dataAtual) }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações da viagem -->
+        <div class="viagem-info">
+            <h2>{{ viagemData.titulo }}</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Destino:</label>
+                    <span>{{ viagemData.destino }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Período:</label>
+                    <span>{{ formatarData(viagemData.dataInicio) }} a {{ formatarData(viagemData.dataFim) }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Duração:</label>
+                    <span>{{ totalDias() }} dias</span>
+                </div>
+                <div class="info-item">
+                    <label>Orçamento:</label>
+                    <span>{{ formatarMoeda(viagemData.orcamento) }}</span>
+                </div>
+            </div>
+            @if (viagemData.descricao) {
+            <div class="descricao">
+                <label>Descrição:</label>
+                <p>{{ viagemData.descricao }}</p>
+            </div>
+            }
+        </div>
+
+        <!-- Resumo financeiro -->
+        <div class="resumo-financeiro">
+            <h3>Resumo Financeiro</h3>
+
+            <!-- Orçamento -->
+            <div class="orcamento-section">
+                <div class="orcamento-item">
+                    <div class="orcamento-label">Orçamento Total da Viagem</div>
+                    <div class="orcamento-valor">{{ formatarMoeda(viagemData.orcamento) }}</div>
+                </div>
+            </div>
+
+            <!-- Gastos por categoria -->
+            <div class="gastos-section">
+                <h4>Gastos por Categoria</h4>
+                <div class="gastos-grid">
+                    <div class="gasto-categoria">
+                        <div class="categoria-icon hospedagem">🏨</div>
+                        <div class="categoria-info">
+                            <div class="categoria-label">Hospedagem</div>
+                            <div class="categoria-valor">{{ formatarMoeda(valorTotalHospedagem()) }}</div>
+                        </div>
+                    </div>
+
+                    <div class="gasto-categoria">
+                        <div class="categoria-icon transporte">🚗</div>
+                        <div class="categoria-info">
+                            <div class="categoria-label">Transporte</div>
+                            <div class="categoria-valor">{{ formatarMoeda(valorTotalTransporte()) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total geral -->
+            <div class="total-section">
+                <div class="total-item">
+                    <div class="total-label">Total de Gastos Registrados</div>
+                    <div class="total-valor">{{ formatarMoeda(valorTotalHospedagem() + valorTotalTransporte()) }}</div>
+                </div>
+                <div class="saldo-item" [class.positivo]="temSaldoPositivo()" [class.negativo]="!temSaldoPositivo()">
+                    <div class="saldo-label">
+                        {{ temSaldoPositivo() ? 'Saldo Restante' : 'Valor Excedido' }}
+                    </div>
+                    <div class="saldo-valor">
+                        {{ formatarMoeda(calcularSaldo()) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detalhes dos dias -->
+        <div class="dias-detalhes">
+            <h3>Detalhes por Dia</h3>
+
+            @if (diasOrdenados().length === 0) {
+            <div class="sem-detalhes">
+                <p>Nenhum detalhe foi registrado para os dias desta viagem.</p>
+            </div>
+            } @else {
+            @for (dia of diasOrdenados(); track dia.id) {
+            <div class="dia-card">
+                <div class="dia-header">
+                    <h4>{{ formatarData(dia.data) }} - {{ dia.diaSemana }}</h4>
+                    <span class="cidade">{{ dia.cidade }}</span>
+                </div>
+
+                <div class="dia-content">
+                    <div class="secao">
+                        <h5>Transporte e Deslocamento</h5>
+                        <div class="detalhes-grid">
+                            <div class="detalhe">
+                                <label>Transporte:</label>
+                                <span [class.campo-vazio]="!dia.transporte">
+                                    {{ dia.transporte ? formatarTransporte(dia.transporte) : '(Não informado)' }}
+                                </span>
+                            </div>
+                            <div class="detalhe full-width">
+                                <label>Detalhes do Voo:</label>
+                                <span [class.campo-vazio]="!dia.detalhesVoo">
+                                    {{ dia.detalhesVoo || '(Não informado)' }}
+                                </span>
+                            </div>
+                            <div class="detalhe">
+                                <label>Custo do Transporte:</label>
+                                <span class="valor" [class.campo-vazio]="!dia.custoTransporte">
+                                    {{ dia.custoTransporte ? formatarMoeda(dia.custoTransporte) : '(Não informado)' }}
+                                </span>
+                            </div>
+                            <div class="detalhe full-width">
+                                <label>Deslocamento Local:</label>
+                                <span [class.campo-vazio]="!dia.deslocamentoLocal">
+                                    {{ dia.deslocamentoLocal || '(Não informado)' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="secao">
+                        <h5>Hospedagem</h5>
+                        <div class="detalhes-grid">
+                            <div class="detalhe full-width">
+                                <label>Nome:</label>
+                                <span class="preserve-lines" [class.campo-vazio]="!dia.nomeHospedagem">
+                                    {{ dia.nomeHospedagem || '(Não informado)' }}
+                                </span>
+                            </div>
+                            <div class="detalhe full-width">
+                                <label>Endereço:</label>
+                                <span class="preserve-lines" [class.campo-vazio]="!dia.enderecoHospedagem">
+                                    {{ dia.enderecoHospedagem || '(Não informado)' }}
+                                </span>
+                            </div>
+                            <div class="detalhe">
+                                <label>Contato:</label>
+                                <span class="preserve-lines" [class.campo-vazio]="!dia.contatoHospedagem">
+                                    {{ dia.contatoHospedagem || '(Não informado)' }}
+                                </span>
+                            </div>
+                            <div class="detalhe">
+                                <label>Reserva:</label>
+                                <span class="preserve-lines" [class.campo-vazio]="!dia.numeroReserva">
+                                    {{ dia.numeroReserva || '(Não informado)' }}
+                                </span>
+                            </div>
+                            <div class="detalhe full-width">
+                                <label>Check-in/out:</label>
+                                <span class="preserve-lines" [class.campo-vazio]="!dia.horarioChecks">
+                                    {{ dia.horarioChecks || '(Não informado)' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="secao">
+                        <h5>Informações Financeiras</h5>
+                        <div class="detalhes-grid">
+                            <div class="detalhe">
+                                <label>Forma de Pagamento:</label>
+                                <span [class.campo-vazio]="!dia.formaPagamento">
+                                    {{ dia.formaPagamento || '(Não informado)' }}
+                                </span>
+                            </div>
+                            <div class="detalhe">
+                                <label>Titular:</label>
+                                <span [class.campo-vazio]="!dia.titularCartao">
+                                    {{ dia.titularCartao || '(Não informado)' }}
+                                </span>
+                            </div>
+                            <div class="detalhe">
+                                <label>Final do Cartão:</label>
+                                <span [class.campo-vazio]="!dia.finalCartao">
+                                    {{ dia.finalCartao ? ('**** ' + dia.finalCartao) : '(Não informado)' }}
+                                </span>
+                            </div>
+                            <div class="detalhe">
+                                <label>Parcelas:</label>
+                                <span [class.campo-vazio]="!dia.quantidadeParcelas">
+                                    {{ dia.quantidadeParcelas ? (dia.quantidadeParcelas + 'x') : '(Não informado)' }}
+                                </span>
+                            </div>
+                            <div class="detalhe">
+                                <label>Valor Hospedagem:</label>
+                                <span class="valor" [class.campo-vazio]="!dia.valorHospedagem">
+                                    {{ dia.valorHospedagem ? formatarMoeda(dia.valorHospedagem) : '(Não informado)' }}
+                                </span>
+                            </div>
+                            <div class="detalhe">
+                                <label>Valor Parcela:</label>
+                                <span class="valor" [class.campo-vazio]="!dia.valorParcela">
+                                    {{ dia.valorParcela ? formatarValorParcela(dia.valorParcela) : '(Não informado)' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="secao">
+                        <h5>Observações</h5>
+                        <p class="observacoes" [class.campo-vazio]="!dia.observacoes">
+                            {{ dia.observacoes || '(Nenhuma observação)' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            }
+            }
+        </div>
+
+        <!-- Rodapé -->
+        <div class="relatorio-footer">
+            <p>Relatório gerado automaticamente pelo Sistema de Planejamento de Viagens</p>
+            <p>{{ formatarData(dataAtual) }} - {{ horaAtual }}</p>
+        </div>
+        }
+    </div>
+</div>

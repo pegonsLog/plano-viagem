@@ -36,36 +36,42 @@
       <div class="detalhe-item">
         <strong>Cidade:</strong> {{ detalhes.cidade }}
       </div>
-      @if (detalhes.transporte) {
       <div class="detalhe-item">
-        <strong>Transporte:</strong> {{ formatarTransporte(detalhes.transporte) }}
+        <strong>Transporte:</strong> 
+        <span [class.campo-vazio]="!detalhes.transporte">
+          {{ detalhes.transporte ? formatarTransporte(detalhes.transporte) : '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.nomeHospedagem) {
       <div class="detalhe-item">
-        <strong>Hospedagem:</strong> <span class="preserve-lines">{{ detalhes.nomeHospedagem }}</span>
+        <strong>Hospedagem:</strong> 
+        <span class="preserve-lines" [class.campo-vazio]="!detalhes.nomeHospedagem">
+          {{ detalhes.nomeHospedagem || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.contatoHospedagem) {
       <div class="detalhe-item">
-        <strong>Contato:</strong> <span class="preserve-lines">{{ detalhes.contatoHospedagem }}</span>
+        <strong>Contato:</strong> 
+        <span class="preserve-lines" [class.campo-vazio]="!detalhes.contatoHospedagem">
+          {{ detalhes.contatoHospedagem || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.numeroReserva) {
       <div class="detalhe-item">
-        <strong>Reserva:</strong> <span class="preserve-lines">{{ detalhes.numeroReserva }}</span>
+        <strong>Reserva:</strong> 
+        <span class="preserve-lines" [class.campo-vazio]="!detalhes.numeroReserva">
+          {{ detalhes.numeroReserva || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.horarioChecks) {
       <div class="detalhe-item">
-        <strong>Check-in/out:</strong> <span class="preserve-lines">{{ detalhes.horarioChecks }}</span>
+        <strong>Check-in/out:</strong> 
+        <span class="preserve-lines" [class.campo-vazio]="!detalhes.horarioChecks">
+          {{ detalhes.horarioChecks || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.observacoes) {
       <div class="detalhe-item">
-        <strong>Observações:</strong> {{ detalhes.observacoes }}
+        <strong>Observações:</strong> 
+        <span [class.campo-vazio]="!detalhes.observacoes">
+          {{ detalhes.observacoes || '(Nenhuma observação)' }}
+        </span>
       </div>
-      }
     </div>
     } @else {
     <!-- Visualização Expandida -->
@@ -73,71 +79,102 @@
       <div class="detalhe-item">
         <strong>Cidade:</strong> {{ detalhes.cidade }}
       </div>
-      @if (detalhes.transporte) {
       <div class="detalhe-item">
-        <strong>Transporte:</strong> {{ formatarTransporte(detalhes.transporte) }}
+        <strong>Transporte:</strong> 
+        <span [class.campo-vazio]="!detalhes.transporte">
+          {{ detalhes.transporte ? formatarTransporte(detalhes.transporte) : '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.detalhesVoo) {
       <div class="detalhe-item">
-        <strong>Detalhes do Voo:</strong> {{ detalhes.detalhesVoo }}
+        <strong>Detalhes do Voo:</strong> 
+        <span [class.campo-vazio]="!detalhes.detalhesVoo">
+          {{ detalhes.detalhesVoo || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.nomeHospedagem) {
       <div class="detalhe-item">
-        <strong>Hospedagem:</strong> <span class="preserve-lines">{{ detalhes.nomeHospedagem }}</span>
+        <strong>Custo do Transporte:</strong> 
+        <span [class.campo-vazio]="!detalhes.custoTransporte">
+          {{ detalhes.custoTransporte ? formatarMoeda(detalhes.custoTransporte) : '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.enderecoHospedagem) {
       <div class="detalhe-item">
-        <strong>Endereço:</strong> <span class="preserve-lines">{{ detalhes.enderecoHospedagem }}</span>
+        <strong>Hospedagem:</strong> 
+        <span class="preserve-lines" [class.campo-vazio]="!detalhes.nomeHospedagem">
+          {{ detalhes.nomeHospedagem || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.contatoHospedagem) {
       <div class="detalhe-item">
-        <strong>Contato Hospedagem:</strong> <span class="preserve-lines">{{ detalhes.contatoHospedagem }}</span>
+        <strong>Endereço:</strong> 
+        <span class="preserve-lines" [class.campo-vazio]="!detalhes.enderecoHospedagem">
+          {{ detalhes.enderecoHospedagem || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.numeroReserva) {
       <div class="detalhe-item">
-        <strong>Número Reserva:</strong> <span class="preserve-lines">{{ detalhes.numeroReserva }}</span>
+        <strong>Contato Hospedagem:</strong> 
+        <span class="preserve-lines" [class.campo-vazio]="!detalhes.contatoHospedagem">
+          {{ detalhes.contatoHospedagem || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.horarioChecks) {
       <div class="detalhe-item">
-        <strong>Horário Check-in/out:</strong> <span class="preserve-lines">{{ detalhes.horarioChecks }}</span>
+        <strong>Número Reserva:</strong> 
+        <span class="preserve-lines" [class.campo-vazio]="!detalhes.numeroReserva">
+          {{ detalhes.numeroReserva || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.deslocamentoLocal) {
       <div class="detalhe-item">
-        <strong>Deslocamento:</strong> {{ detalhes.deslocamentoLocal }}
+        <strong>Horário Check-in/out:</strong> 
+        <span class="preserve-lines" [class.campo-vazio]="!detalhes.horarioChecks">
+          {{ detalhes.horarioChecks || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.observacoes) {
       <div class="detalhe-item">
-        <strong>Observações:</strong> {{ detalhes.observacoes }}
+        <strong>Deslocamento:</strong> 
+        <span [class.campo-vazio]="!detalhes.deslocamentoLocal">
+          {{ detalhes.deslocamentoLocal || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.formaPagamento) {
       <div class="detalhe-item">
-        <strong>Forma de Pagamento:</strong> {{ detalhes.formaPagamento }}
+        <strong>Observações:</strong> 
+        <span [class.campo-vazio]="!detalhes.observacoes">
+          {{ detalhes.observacoes || '(Nenhuma observação)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.titularCartao) {
       <div class="detalhe-item">
-        <strong>Titular do Cartão:</strong> {{ detalhes.titularCartao }}
+        <strong>Forma de Pagamento:</strong> 
+        <span [class.campo-vazio]="!detalhes.formaPagamento">
+          {{ detalhes.formaPagamento || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.finalCartao) {
       <div class="detalhe-item">
-        <strong>Final do Cartão:</strong> **** {{ detalhes.finalCartao }}
+        <strong>Titular do Cartão:</strong> 
+        <span [class.campo-vazio]="!detalhes.titularCartao">
+          {{ detalhes.titularCartao || '(Não informado)' }}
+        </span>
       </div>
-      }
-      @if (detalhes.quantidadeParcelas) {
       <div class="detalhe-item">
-        <strong>Parcelas:</strong> {{ detalhes.quantidadeParcelas }}x
+        <strong>Final do Cartão:</strong> 
+        <span [class.campo-vazio]="!detalhes.finalCartao">
+          {{ detalhes.finalCartao ? ('**** ' + detalhes.finalCartao) : '(Não informado)' }}
+        </span>
       </div>
-      }
+      <div class="detalhe-item">
+        <strong>Parcelas:</strong> 
+        <span [class.campo-vazio]="!detalhes.quantidadeParcelas">
+          {{ detalhes.quantidadeParcelas ? (detalhes.quantidadeParcelas + 'x') : '(Não informado)' }}
+        </span>
+      </div>
+      <div class="detalhe-item">
+        <strong>Valor da Hospedagem:</strong> 
+        <span [class.campo-vazio]="!detalhes.valorHospedagem">
+          {{ detalhes.valorHospedagem ? formatarMoeda(detalhes.valorHospedagem) : '(Não informado)' }}
+        </span>
+      </div>
+      <div class="detalhe-item">
+        <strong>Valor da Parcela:</strong> 
+        <span [class.campo-vazio]="!detalhes.valorParcela">
+          {{ detalhes.valorParcela ? formatarMoeda(detalhes.valorParcela) : '(Não informado)' }}
+        </span>
+      </div>
     </div>
     }
 

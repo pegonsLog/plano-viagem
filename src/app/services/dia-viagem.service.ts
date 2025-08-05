@@ -113,6 +113,8 @@ export class DiaViagemService {
     try {
       this.loadingSignal.set(true);
 
+
+
       const dadosParaAtualizar = {
         ...dadosAtualizados,
         atualizadoEm: this.dateService.createBrazilDate()
@@ -123,18 +125,26 @@ export class DiaViagemService {
         dadosParaAtualizar.diaSemana = this.calcularDiaSemana(dadosAtualizados.data);
       }
 
+      console.log('Dados após processamento:', dadosParaAtualizar);
+
       const dadosPreparados = this.firebaseService.prepareDataForFirebase(dadosParaAtualizar);
+      console.log('Dados preparados para Firebase:', dadosPreparados);
+
       await this.firebaseService.update(this.COLLECTION_NAME, id, dadosPreparados);
 
       // Atualizar localmente
       this.diasSignal.update(dias =>
         dias.map(dia => {
           if (dia.id === id) {
-            return { ...dia, ...dadosParaAtualizar };
+            const diaAtualizado = { ...dia, ...dadosParaAtualizar };
+            console.log('Dia atualizado localmente:', diaAtualizado);
+            return diaAtualizado;
           }
           return dia;
         })
       );
+
+      console.log('=== FIM DEBUG ATUALIZAÇÃO ===');
 
     } catch (error) {
       console.error('Erro ao atualizar dia:', error);
@@ -303,16 +313,25 @@ export class DiaViagemService {
 
   async obterDiaPorId(id: string): Promise<DiaViagem | null> {
     try {
+      // Primeiro tentar buscar no cache local
+      const diaLocal = this.obterDia(id);
+      if (diaLocal) {
+        return diaLocal;
+      }
+
+      // Se não encontrar localmente, buscar no Firebase
       const dia = await this.firebaseService.getById<DiaViagem>(this.COLLECTION_NAME, id).toPromise();
 
       if (dia) {
         // Converter timestamps
-        return {
+        const diaConvertido = {
           ...dia,
           data: this.firebaseService.convertTimestampToDate(dia.data),
           criadoEm: this.firebaseService.convertTimestampToDate(dia.criadoEm),
           atualizadoEm: this.firebaseService.convertTimestampToDate(dia.atualizadoEm)
         };
+        
+        return diaConvertido;
       }
 
       return null;
