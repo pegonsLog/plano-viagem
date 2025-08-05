@@ -167,6 +167,27 @@
                 </div>
                 }
 
+                @if (diaDetalhes()!.contatoHospedagem) {
+                <div class="detalhe-item full-width">
+                    <label>Contato Hospedagem:</label>
+                    <span class="preserve-lines">{{ diaDetalhes()!.contatoHospedagem }}</span>
+                </div>
+                }
+
+                @if (diaDetalhes()!.numeroReserva) {
+                <div class="detalhe-item full-width">
+                    <label>Número da Reserva:</label>
+                    <span class="preserve-lines">{{ diaDetalhes()!.numeroReserva }}</span>
+                </div>
+                }
+
+                @if (diaDetalhes()!.horarioChecks) {
+                <div class="detalhe-item full-width">
+                    <label>Horário Check-in/out:</label>
+                    <span class="preserve-lines">{{ diaDetalhes()!.horarioChecks }}</span>
+                </div>
+                }
+
                 @if (diaDetalhes()!.deslocamentoLocal) {
                 <div class="detalhe-item full-width">
                     <label>Deslocamento Local:</label>

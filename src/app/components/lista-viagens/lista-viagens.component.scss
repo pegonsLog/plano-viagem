@@ -53,6 +53,8 @@
   &.clickable {
     cursor: pointer;
     position: relative;
+    border-left-color: #007bff;
+    border-left-width: 5px;
 
     &::after {
       content: '';
@@ -60,15 +62,20 @@
       top: 50%;
       right: 16px;
       transform: translateY(-50%);
-      width: 20px;
-      height: 20px;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>') no-repeat center;
-      opacity: 0.5;
-      transition: opacity 0.2s;
+      width: 24px;
+      height: 24px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23007bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>') no-repeat center;
+      opacity: 0.7;
+      transition: all 0.2s;
     }
 
-    &:hover::after {
-      opacity: 1;
+    &:hover {
+      border-left-color: #0056b3;
+      
+      &::after {
+        opacity: 1;
+        transform: translateY(-50%) translateX(2px);
+      }
     }
   }
 
@@ -95,13 +102,28 @@
   align-items: flex-start;
   margin-bottom: 15px;
   padding-right: 30px; /* Espaço para a seta */
+}
 
+.titulo-container {
+  flex: 1;
+  
   h3 {
-    margin: 0;
+    margin: 0 0 4px 0;
     color: #333;
     font-size: 1.2em;
-    flex: 1;
     margin-right: 10px;
+  }
+}
+
+.clique-detalhes {
+  font-size: 0.8em;
+  color: #007bff;
+  font-weight: 500;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+  
+  .viagem-card.clickable:hover & {
+    opacity: 1;
   }
 }
 
@@ -134,32 +156,39 @@
 }
 
 .btn-tabela, .btn-editar, .btn-remover {
-  padding: 8px 16px;
+  padding: 6px 12px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.8em;
   transition: background-color 0.2s;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .btn-editar {
-  background: #ffc107;
-  color: #212529;
+  background: #007bff;
+  color: white;
+  padding: 6px 12px;
+  font-weight: 500;
+  font-size: 0.85em;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 123, 255, 0.2);
+  transition: all 0.2s;
 
   &:hover {
-    background: #e0a800;
+    background: #0056b3;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
   }
 }
 
 .btn-tabela {
-  background: #17a2b8;
+  background: #28a745;
   color: white;
 
   &:hover {
-    background: #138496;
+    background: #218838;
   }
 }
 

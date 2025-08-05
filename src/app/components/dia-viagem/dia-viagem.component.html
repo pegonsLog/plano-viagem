@@ -43,7 +43,27 @@
       }
       @if (detalhes.nomeHospedagem) {
       <div class="detalhe-item">
-        <strong>Hospedagem:</strong> {{ detalhes.nomeHospedagem }}
+        <strong>Hospedagem:</strong> <span class="preserve-lines">{{ detalhes.nomeHospedagem }}</span>
+      </div>
+      }
+      @if (detalhes.contatoHospedagem) {
+      <div class="detalhe-item">
+        <strong>Contato:</strong> <span class="preserve-lines">{{ detalhes.contatoHospedagem }}</span>
+      </div>
+      }
+      @if (detalhes.numeroReserva) {
+      <div class="detalhe-item">
+        <strong>Reserva:</strong> <span class="preserve-lines">{{ detalhes.numeroReserva }}</span>
+      </div>
+      }
+      @if (detalhes.horarioChecks) {
+      <div class="detalhe-item">
+        <strong>Check-in/out:</strong> <span class="preserve-lines">{{ detalhes.horarioChecks }}</span>
+      </div>
+      }
+      @if (detalhes.observacoes) {
+      <div class="detalhe-item">
+        <strong>Observações:</strong> {{ detalhes.observacoes }}
       </div>
       }
     </div>
@@ -65,12 +85,27 @@
       }
       @if (detalhes.nomeHospedagem) {
       <div class="detalhe-item">
-        <strong>Hospedagem:</strong> {{ detalhes.nomeHospedagem }}
+        <strong>Hospedagem:</strong> <span class="preserve-lines">{{ detalhes.nomeHospedagem }}</span>
       </div>
       }
       @if (detalhes.enderecoHospedagem) {
       <div class="detalhe-item">
-        <strong>Endereço:</strong> {{ detalhes.enderecoHospedagem }}
+        <strong>Endereço:</strong> <span class="preserve-lines">{{ detalhes.enderecoHospedagem }}</span>
+      </div>
+      }
+      @if (detalhes.contatoHospedagem) {
+      <div class="detalhe-item">
+        <strong>Contato Hospedagem:</strong> <span class="preserve-lines">{{ detalhes.contatoHospedagem }}</span>
+      </div>
+      }
+      @if (detalhes.numeroReserva) {
+      <div class="detalhe-item">
+        <strong>Número Reserva:</strong> <span class="preserve-lines">{{ detalhes.numeroReserva }}</span>
+      </div>
+      }
+      @if (detalhes.horarioChecks) {
+      <div class="detalhe-item">
+        <strong>Horário Check-in/out:</strong> <span class="preserve-lines">{{ detalhes.horarioChecks }}</span>
       </div>
       }
       @if (detalhes.deslocamentoLocal) {

@@ -7,6 +7,9 @@ export interface DiaViagem {
   cidade: string;
   nomeHospedagem?: string;
   enderecoHospedagem?: string;
+  contatoHospedagem?: string;
+  numeroReserva?: string;
+  horarioChecks?: string;
   deslocamentoLocal?: string;
   detalhesVoo?: string;
   observacoes?: string;
@@ -25,6 +28,9 @@ export interface NovoDiaViagem {
   cidade: string;
   nomeHospedagem?: string;
   enderecoHospedagem?: string;
+  contatoHospedagem?: string;
+  numeroReserva?: string;
+  horarioChecks?: string;
   deslocamentoLocal?: string;
   detalhesVoo?: string;
   observacoes?: string;
@@ -47,32 +53,32 @@ export interface ValidationResult {
 }
 
 export type TipoTransporte =
-  | 'aviao'
-  | 'carro'
-  | 'onibus'
-  | 'trem'
-  | 'metro'
-  | 'taxi'
-  | 'uber'
-  | 'a-pe'
-  | 'bicicleta'
-  | 'barco'
-  | 'outro'
-  | 'na';
+  | 'Avião'
+  | 'Carro'
+  | 'Ônibus'
+  | 'Trem'
+  | 'Metrô'
+  | 'Táxi'
+  | 'Uber/App'
+  | 'A pé'
+  | 'Bicicleta'
+  | 'Barco'
+  | 'Outro'
+  | 'N/A';
 
 export const TIPOS_TRANSPORTE: { value: TipoTransporte; label: string }[] = [
-  { value: 'aviao', label: 'Avião' },
-  { value: 'carro', label: 'Carro' },
-  { value: 'onibus', label: 'Ônibus' },
-  { value: 'trem', label: 'Trem' },
-  { value: 'metro', label: 'Metrô' },
-  { value: 'taxi', label: 'Táxi' },
-  { value: 'uber', label: 'Uber/App' },
-  { value: 'a-pe', label: 'A pé' },
-  { value: 'bicicleta', label: 'Bicicleta' },
-  { value: 'barco', label: 'Barco' },
-  { value: 'outro', label: 'Outro' },
-  { value: 'na', label: 'N/A' }
+  { value: 'Avião', label: 'Avião' },
+  { value: 'Carro', label: 'Carro' },
+  { value: 'Ônibus', label: 'Ônibus' },
+  { value: 'Trem', label: 'Trem' },
+  { value: 'Metrô', label: 'Metrô' },
+  { value: 'Táxi', label: 'Táxi' },
+  { value: 'Uber/App', label: 'Uber/App' },
+  { value: 'A pé', label: 'A pé' },
+  { value: 'Bicicleta', label: 'Bicicleta' },
+  { value: 'Barco', label: 'Barco' },
+  { value: 'Outro', label: 'Outro' },
+  { value: 'N/A', label: 'N/A' }
 ];
 
 export const DIAS_SEMANA = [

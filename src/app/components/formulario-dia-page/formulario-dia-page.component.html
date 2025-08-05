@@ -11,7 +11,7 @@
   </div>
 
   <div class="formulario-container">
-    <form (ngSubmit)="onSubmit()" #diaForm="ngForm" class="formulario-form">
+    <form [formGroup]="formulario" (ngSubmit)="onSubmit()" class="formulario-form">
       <!-- Data e Dia da Semana -->
       <div class="form-row">
         <div class="form-group">
@@ -40,9 +40,9 @@
             </svg>
           </button>
         </div>
-        <input type="text" id="cidade" name="cidade" [(ngModel)]="formData.cidade" required
-          placeholder="Ex: São Paulo, SP" #cidade="ngModel" class="form-control">
-        @if (cidade.invalid && cidade.touched) {
+        <input type="text" id="cidade" formControlName="cidade" required
+          placeholder="Ex: São Paulo, SP" class="form-control">
+        @if (formulario.get('cidade')?.invalid && formulario.get('cidade')?.touched) {
         <div class="error">Cidade é obrigatória</div>
         }
       </div>
@@ -57,7 +57,7 @@
             </svg>
           </button>
         </div>
-        <select id="transporte" name="transporte" [(ngModel)]="formData.transporte" class="form-control">
+        <select id="transporte" formControlName="transporte" class="form-control">
           <option value="">Selecione o transporte</option>
           @for (tipo of tiposTransporte; track tipo.value) {
           <option [value]="tipo.value">{{ tipo.label }}</option>
@@ -75,7 +75,7 @@
             </svg>
           </button>
         </div>
-        <textarea id="detalhesVoo" name="detalhesVoo" [(ngModel)]="formData.detalhesVoo" rows="3"
+        <textarea id="detalhesVoo" formControlName="detalhesVoo" rows="3"
           placeholder="Ex: Voo TAM 3054, Saída: 14:30, Chegada: 16:45, Portão A12" class="form-control">
         </textarea>
       </div>
@@ -91,8 +91,8 @@
             </svg>
           </button>
         </div>
-        <input type="text" id="nomeHospedagem" name="nomeHospedagem" [(ngModel)]="formData.nomeHospedagem"
-          placeholder="Ex: Hotel Copacabana Palace" class="form-control">
+        <textarea id="nomeHospedagem" formControlName="nomeHospedagem"
+          placeholder="Ex: Hotel Copacabana Palace" class="form-control" rows="2"></textarea>
       </div>
 
       <div class="form-group">
@@ -105,9 +105,54 @@
             </svg>
           </button>
         </div>
-        <textarea id="enderecoHospedagem" name="enderecoHospedagem" [(ngModel)]="formData.enderecoHospedagem" rows="2"
+        <textarea id="enderecoHospedagem" formControlName="enderecoHospedagem" rows="2"
           placeholder="Endereço completo da hospedagem" class="form-control">
         </textarea>
+      </div>
+
+      <!-- Contato da Hospedagem -->
+      <div class="form-group">
+        <div class="form-label-with-button">
+          <label for="contatoHospedagem">Contato da Hospedagem</label>
+          <button type="button" class="btn-idem-icon" (click)="preencherIdem('contatoHospedagem')"
+            title="Idem dia anterior">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <textarea id="contatoHospedagem" formControlName="contatoHospedagem"
+          placeholder="Telefone, email ou WhatsApp da hospedagem" class="form-control" rows="2"></textarea>
+      </div>
+
+      <!-- Número da Reserva -->
+      <div class="form-group">
+        <div class="form-label-with-button">
+          <label for="numeroReserva">Número da Reserva</label>
+          <button type="button" class="btn-idem-icon" (click)="preencherIdem('numeroReserva')"
+            title="Idem dia anterior">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <textarea id="numeroReserva" formControlName="numeroReserva"
+          placeholder="Número de confirmação da reserva" class="form-control" rows="2"></textarea>
+      </div>
+
+      <!-- Horário Check-in/out -->
+      <div class="form-group">
+        <div class="form-label-with-button">
+          <label for="horarioChecks">Horário Check-in/out</label>
+          <button type="button" class="btn-idem-icon" (click)="preencherIdem('horarioChecks')"
+            title="Idem dia anterior">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <textarea id="horarioChecks" formControlName="horarioChecks"
+          placeholder="Ex: Check-in 15h, Check-out 11h" class="form-control" rows="2"></textarea>
       </div>
 
       <!-- Deslocamento Local -->
@@ -121,7 +166,7 @@
             </svg>
           </button>
         </div>
-        <textarea id="deslocamentoLocal" name="deslocamentoLocal" [(ngModel)]="formData.deslocamentoLocal" rows="2"
+        <textarea id="deslocamentoLocal" formControlName="deslocamentoLocal" rows="2"
           placeholder="Como se deslocar pela cidade, pontos de interesse, etc." class="form-control">
         </textarea>
       </div>
@@ -136,7 +181,7 @@
             </svg>
           </button>
         </div>
-        <textarea id="observacoes" name="observacoes" [(ngModel)]="formData.observacoes" rows="3"
+        <textarea id="observacoes" formControlName="observacoes" rows="3"
           placeholder="Anotações adicionais, lembretes, etc." class="form-control">
         </textarea>
       </div>
@@ -155,7 +200,7 @@
               </svg>
             </button>
           </div>
-          <input type="text" id="formaPagamento" name="formaPagamento" [(ngModel)]="formData.formaPagamento"
+          <input type="text" id="formaPagamento" formControlName="formaPagamento"
             placeholder="Ex: Cartão de Crédito, Dinheiro, PIX" class="form-control">
         </div>
 
@@ -170,7 +215,7 @@
                 </svg>
               </button>
             </div>
-            <input type="text" id="titularCartao" name="titularCartao" [(ngModel)]="formData.titularCartao"
+            <input type="text" id="titularCartao" formControlName="titularCartao"
               placeholder="Nome do titular" class="form-control">
           </div>
 
@@ -184,7 +229,7 @@
                 </svg>
               </button>
             </div>
-            <input type="text" id="finalCartao" name="finalCartao" [(ngModel)]="formData.finalCartao"
+            <input type="text" id="finalCartao" formControlName="finalCartao"
               placeholder="Ex: 1234" maxlength="4" class="form-control">
           </div>
         </div>
@@ -199,8 +244,8 @@
               </svg>
             </button>
           </div>
-          <input type="number" id="quantidadeParcelas" name="quantidadeParcelas"
-            [(ngModel)]="formData.quantidadeParcelas" min="1" max="24" placeholder="Ex: 3" class="form-control">
+          <input type="number" id="quantidadeParcelas" formControlName="quantidadeParcelas"
+            min="1" max="24" placeholder="Ex: 3" class="form-control">
         </div>
       </div>
 
@@ -220,7 +265,7 @@
         <button type="button" class="btn-cancelar" (click)="onCancelar()">
           Cancelar
         </button>
-        <button type="submit" class="btn-salvar" [disabled]="diaForm.invalid || salvando()">
+        <button type="submit" class="btn-salvar" [disabled]="formulario.invalid || salvando()">
           @if (salvando()) {
           <svg class="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             stroke-width="2">

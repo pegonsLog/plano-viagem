@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DiaViagem, NovoDiaViagem, TIPOS_TRANSPORTE } from '../../models/dia-viagem.model';
 import { DiaViagemService } from '../../services/dia-viagem.service';
@@ -11,7 +11,7 @@ import { ErrorHandlerService } from '../../utils/error-handler.service';
 @Component({
     selector: 'app-formulario-dia-page',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, ReactiveFormsModule, FormsModule],
     templateUrl: './formulario-dia-page.component.html',
     styleUrl: './formulario-dia-page.component.scss'
 })
@@ -22,25 +22,29 @@ export class FormularioDiaPageComponent implements OnInit {
     private viagemService = inject(ViagemService);
     private dateService = inject(DateService);
     private errorHandler = inject(ErrorHandlerService);
+    private fb = inject(FormBuilder);
 
     salvando = signal(false);
     dataString = signal('');
     viagemId = signal('');
     diaId = signal<string | null>(null);
 
-    formData = {
-        cidade: '',
-        transporte: '',
-        nomeHospedagem: '',
-        enderecoHospedagem: '',
-        deslocamentoLocal: '',
-        detalhesVoo: '',
-        observacoes: '',
-        formaPagamento: '',
-        titularCartao: '',
-        finalCartao: '',
-        quantidadeParcelas: undefined as number | undefined
-    };
+    formulario: FormGroup = this.fb.group({
+        cidade: ['', [Validators.required]],
+        transporte: ['', [Validators.required]],
+        nomeHospedagem: ['', [Validators.required]],
+        enderecoHospedagem: ['', [Validators.required]],
+        contatoHospedagem: [''],
+        numeroReserva: [''],
+        horarioChecks: [''],
+        deslocamentoLocal: ['', [Validators.required]],
+        detalhesVoo: [''],
+        observacoes: [''],
+        formaPagamento: ['', [Validators.required]],
+        titularCartao: [''],
+        finalCartao: [''],
+        quantidadeParcelas: [null]
+    });
 
     tiposTransporte = TIPOS_TRANSPORTE;
 
@@ -87,11 +91,14 @@ export class FormularioDiaPageComponent implements OnInit {
             const dia = await this.diaViagemService.obterDiaPorId(diaId);
             if (dia) {
                 this.dataString.set(this.dateService.formatDateForInput(dia.data));
-                this.formData = {
+                this.formulario.patchValue({
                     cidade: dia.cidade,
                     transporte: dia.transporte || '',
                     nomeHospedagem: dia.nomeHospedagem || '',
                     enderecoHospedagem: dia.enderecoHospedagem || '',
+                    contatoHospedagem: dia.contatoHospedagem || '',
+                    numeroReserva: dia.numeroReserva || '',
+                    horarioChecks: dia.horarioChecks || '',
                     deslocamentoLocal: dia.deslocamentoLocal || '',
                     detalhesVoo: dia.detalhesVoo || '',
                     observacoes: dia.observacoes || '',
@@ -99,7 +106,7 @@ export class FormularioDiaPageComponent implements OnInit {
                     titularCartao: dia.titularCartao || '',
                     finalCartao: dia.finalCartao || '',
                     quantidadeParcelas: dia.quantidadeParcelas
-                };
+                });
             }
         } catch (error) {
             console.error('Erro ao carregar dados do dia:', error);
@@ -122,31 +129,40 @@ export class FormularioDiaPageComponent implements OnInit {
     }
 
     async onSubmit() {
+        if (this.formulario.invalid) {
+            this.formulario.markAllAsTouched();
+            return;
+        }
+
         if (this.salvando()) return;
 
         this.salvando.set(true);
 
         try {
             const dataForm = this.dateService.createDateFromInput(this.dataString());
+            const formValues = this.formulario.value;
 
             if (this.modoEdicao() && this.diaId()) {
                 // Modo edição
                 const dadosLimpos = this.limparCamposVazios({
-                    transporte: this.formData.transporte,
-                    nomeHospedagem: this.formData.nomeHospedagem,
-                    enderecoHospedagem: this.formData.enderecoHospedagem,
-                    deslocamentoLocal: this.formData.deslocamentoLocal,
-                    detalhesVoo: this.formData.detalhesVoo,
-                    observacoes: this.formData.observacoes,
-                    formaPagamento: this.formData.formaPagamento,
-                    titularCartao: this.formData.titularCartao,
-                    finalCartao: this.formData.finalCartao,
-                    quantidadeParcelas: this.formData.quantidadeParcelas
+                    transporte: formValues.transporte,
+                    nomeHospedagem: formValues.nomeHospedagem,
+                    enderecoHospedagem: formValues.enderecoHospedagem,
+                    contatoHospedagem: formValues.contatoHospedagem,
+                    numeroReserva: formValues.numeroReserva,
+                    horarioChecks: formValues.horarioChecks,
+                    deslocamentoLocal: formValues.deslocamentoLocal,
+                    detalhesVoo: formValues.detalhesVoo,
+                    observacoes: formValues.observacoes,
+                    formaPagamento: formValues.formaPagamento,
+                    titularCartao: formValues.titularCartao,
+                    finalCartao: formValues.finalCartao,
+                    quantidadeParcelas: formValues.quantidadeParcelas
                 });
 
                 const diaAtualizado: Partial<DiaViagem> = {
                     data: dataForm,
-                    cidade: this.formData.cidade,
+                    cidade: formValues.cidade,
                     ...dadosLimpos
                 };
 
@@ -155,22 +171,25 @@ export class FormularioDiaPageComponent implements OnInit {
             } else {
                 // Modo criação
                 const dadosLimpos = this.limparCamposVazios({
-                    transporte: this.formData.transporte,
-                    nomeHospedagem: this.formData.nomeHospedagem,
-                    enderecoHospedagem: this.formData.enderecoHospedagem,
-                    deslocamentoLocal: this.formData.deslocamentoLocal,
-                    detalhesVoo: this.formData.detalhesVoo,
-                    observacoes: this.formData.observacoes,
-                    formaPagamento: this.formData.formaPagamento,
-                    titularCartao: this.formData.titularCartao,
-                    finalCartao: this.formData.finalCartao,
-                    quantidadeParcelas: this.formData.quantidadeParcelas
+                    transporte: formValues.transporte,
+                    nomeHospedagem: formValues.nomeHospedagem,
+                    enderecoHospedagem: formValues.enderecoHospedagem,
+                    contatoHospedagem: formValues.contatoHospedagem,
+                    numeroReserva: formValues.numeroReserva,
+                    horarioChecks: formValues.horarioChecks,
+                    deslocamentoLocal: formValues.deslocamentoLocal,
+                    detalhesVoo: formValues.detalhesVoo,
+                    observacoes: formValues.observacoes,
+                    formaPagamento: formValues.formaPagamento,
+                    titularCartao: formValues.titularCartao,
+                    finalCartao: formValues.finalCartao,
+                    quantidadeParcelas: formValues.quantidadeParcelas
                 });
 
                 const novoDia: NovoDiaViagem = {
                     viagemId: this.viagemId(),
                     data: dataForm,
-                    cidade: this.formData.cidade,
+                    cidade: formValues.cidade,
                     ...dadosLimpos
                 };
 
@@ -205,7 +224,7 @@ export class FormularioDiaPageComponent implements OnInit {
             if (diaAnterior && diaAnterior[campo as keyof DiaViagem]) {
                 const valor = diaAnterior[campo as keyof DiaViagem];
                 if (valor !== undefined && valor !== null && valor !== '') {
-                    (this.formData as any)[campo] = valor;
+                    this.formulario.patchValue({ [campo]: valor });
                 }
             }
         } catch (error) {

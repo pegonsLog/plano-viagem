@@ -1,4 +1,4 @@
-const CACHE_NAME = 'plano-viagem-v3';
+const CACHE_NAME = 'plano-viagem-v4';
 const urlsToCache = [
   '/',
   '/app-manifest.json',
@@ -17,15 +17,28 @@ self.addEventListener('install', event => {
   );
 });
 
-// Fetch event
+// Fetch event - Melhorado para Safari
 self.addEventListener('fetch', event => {
+  // Skip non-GET requests and chrome-extension requests
+  if (event.request.method !== 'GET' || event.request.url.startsWith('chrome-extension://')) {
+    return;
+  }
+  
   event.respondWith(
     caches.match(event.request)
       .then(response => {
         // Return cached version or fetch from network
-        return response || fetch(event.request);
-      }
-    )
+        if (response) {
+          return response;
+        }
+        
+        return fetch(event.request).catch(() => {
+          // Fallback for offline
+          if (event.request.destination === 'document') {
+            return caches.match('/');
+          }
+        });
+      })
   );
 });
 

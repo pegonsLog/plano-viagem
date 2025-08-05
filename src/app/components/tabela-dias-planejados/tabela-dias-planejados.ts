@@ -81,7 +81,7 @@ export class TabelaDiasPlanejadosComponent implements OnInit {
   }
 
   editarDia(diaId: string) {
-    this.router.navigate(['/viagem', this.viagemId(), 'dia', diaId]);
+    this.router.navigate(['/viagem', this.viagemId(), 'dia', diaId, 'editar']);
   }
 
   visualizarDetalhes(dia: DiaViagem) {
@@ -93,6 +93,6 @@ export class TabelaDiasPlanejadosComponent implements OnInit {
   }
 
   voltarParaViagem() {
-    this.router.navigate(['/viagem', this.viagemId()]);
+    this.router.navigate(['/', this.viagemId()]);
   }
 }
