@@ -10,6 +10,7 @@ export interface DiaViagem {
   contatoHospedagem?: string;
   numeroReserva?: string;
   horarioChecks?: string;
+  linkHospedagem?: string;
   deslocamentoLocal?: string;
   detalhesVoo?: string;
   observacoes?: string;
@@ -34,6 +35,7 @@ export interface NovoDiaViagem {
   contatoHospedagem?: string;
   numeroReserva?: string;
   horarioChecks?: string;
+  linkHospedagem?: string;
   deslocamentoLocal?: string;
   detalhesVoo?: string;
   observacoes?: string;

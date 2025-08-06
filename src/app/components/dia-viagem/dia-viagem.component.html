@@ -67,6 +67,20 @@
         </span>
       </div>
       <div class="detalhe-item">
+        <strong>Links da Hospedagem:</strong>
+        <span class="links-hospedagem" [class.campo-vazio]="!detalhes.linkHospedagem">
+          @if (detalhes.linkHospedagem) {
+            @for (link of formatarLinksHospedagem(detalhes.linkHospedagem); track $index) {
+              <a [href]="link" target="_blank" rel="noopener noreferrer" class="link-hospedagem">
+                {{ link }}
+              </a>
+            }
+          } @else {
+            (Não informado)
+          }
+        </span>
+      </div>
+      <div class="detalhe-item">
         <strong>Observações:</strong> 
         <span [class.campo-vazio]="!detalhes.observacoes">
           {{ detalhes.observacoes || '(Nenhuma observação)' }}
@@ -125,6 +139,20 @@
         <strong>Horário Check-in/out:</strong> 
         <span class="preserve-lines" [class.campo-vazio]="!detalhes.horarioChecks">
           {{ detalhes.horarioChecks || '(Não informado)' }}
+        </span>
+      </div>
+      <div class="detalhe-item">
+        <strong>Links da Hospedagem:</strong>
+        <span class="links-hospedagem" [class.campo-vazio]="!detalhes.linkHospedagem">
+          @if (detalhes.linkHospedagem) {
+            @for (link of formatarLinksHospedagem(detalhes.linkHospedagem); track $index) {
+              <a [href]="link" target="_blank" rel="noopener noreferrer" class="link-hospedagem">
+                {{ link }}
+              </a>
+            }
+          } @else {
+            (Não informado)
+          }
         </span>
       </div>
       <div class="detalhe-item">

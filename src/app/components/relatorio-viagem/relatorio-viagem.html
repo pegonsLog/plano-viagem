@@ -210,6 +210,20 @@
                                     {{ dia.horarioChecks || '(Não informado)' }}
                                 </span>
                             </div>
+                            <div class="detalhe full-width">
+                                <label>Links da Hospedagem:</label>
+                                <span class="preserve-lines links-hospedagem" [class.campo-vazio]="!dia.linkHospedagem">
+                                    @if (dia.linkHospedagem) {
+                                    @for (link of formatarLinksHospedagem(dia.linkHospedagem); track $index) {
+                                    <a [href]="link" target="_blank" rel="noopener noreferrer" class="link-hospedagem">
+                                        {{ link }}
+                                    </a>
+                                    }
+                                    } @else {
+                                    (Não informado)
+                                    }
+                                </span>
+                            </div>
                         </div>
                     </div>
 

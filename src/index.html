@@ -12,6 +12,16 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Plano de Viagem">
   <meta name="mobile-web-app-capable" content="yes">
+  
+  <!-- Safari specific meta tags -->
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="apple-mobile-web-app-orientations" content="portrait">
+  
+  <!-- Prevent Safari from caching -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
 
   <!-- Google Fonts - Montserrat -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,27 +47,54 @@
   <app-root></app-root>
 
   <script>
-    // Register Service Worker
+    // Register Service Worker - Melhorado para Safari
     if ('serviceWorker' in navigator) {
+      // Detectar Safari
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
           .then(registration => {
             console.log('SW registered: ', registration);
-            // Forçar atualização se houver uma nova versão
-            registration.addEventListener('updatefound', () => {
-              const newWorker = registration.installing;
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  console.log('Nova versão do SW disponível, recarregando...');
-                  window.location.reload();
-                }
+            
+            // No Safari, ser mais conservador com atualizações
+            if (!isSafari) {
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    console.log('Nova versão do SW disponível, recarregando...');
+                    window.location.reload();
+                  }
+                });
               });
-            });
+            }
           })
           .catch(registrationError => {
             console.log('SW registration failed: ', registrationError);
+            // No Safari, falha no SW não deve impedir o app de funcionar
+            if (isSafari) {
+              console.log('Safari detectado - continuando sem Service Worker');
+            }
           });
       });
+    } else {
+      console.log('Service Worker não suportado neste browser');
+    }
+    
+    // Limpar cache do Safari se necessário
+    if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+      // Forçar reload sem cache no Safari
+      if (performance.navigation.type === 1) {
+        console.log('Safari: Reload detectado, limpando cache');
+        if ('caches' in window) {
+          caches.keys().then(names => {
+            names.forEach(name => {
+              caches.delete(name);
+            });
+          });
+        }
+      }
     }
   </script>
 </body>

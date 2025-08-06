@@ -173,6 +173,21 @@
           placeholder="Ex: Check-in 15h, Check-out 11h" class="form-control" rows="2"></textarea>
       </div>
 
+      <!-- Link da Hospedagem -->
+      <div class="form-group">
+        <div class="form-label-with-button">
+          <label for="linkHospedagem">Link da Hospedagem</label>
+          <button type="button" class="btn-idem-icon" (click)="preencherIdem('linkHospedagem')"
+            title="Idem dia anterior">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <textarea id="linkHospedagem" formControlName="linkHospedagem" rows="3"
+          class="form-control"></textarea>
+      </div>
+
       <!-- Deslocamento Local -->
       <div class="form-group">
         <div class="form-label-with-button">

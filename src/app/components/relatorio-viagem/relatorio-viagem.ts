@@ -109,6 +109,24 @@ export class RelatorioViagem implements OnInit {
     return transporteMap[transporte] || transporte;
   }
 
+  formatarLinksHospedagem(links: string): string[] {
+    if (!links || links.trim() === '') {
+      return [];
+    }
+    
+    return links
+      .split('\n')
+      .map(link => link.trim())
+      .filter(link => link.length > 0)
+      .filter(link => {
+        // Validar se é um link válido (começa com http/https ou www)
+        return link.startsWith('http://') || 
+               link.startsWith('https://') || 
+               link.startsWith('www.') ||
+               link.includes('.');
+      });
+  }
+
   formatarValorParcela(valor: any): string {
     // Se o valor já está formatado como string (ex: "R$ 123,45"), retornar como está
     if (typeof valor === 'string' && valor.includes('R$')) {
