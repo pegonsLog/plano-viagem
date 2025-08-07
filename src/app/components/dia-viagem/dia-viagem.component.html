@@ -17,9 +17,10 @@
         </svg>
         Planejado
       </div>
-      
+
       @if (diaCalculado().detalhes?.status === 'Pendente') {
-      <div class="status-badge pendencia" [title]="diaCalculado().detalhes?.motivoPendencia || 'Pendência sem motivo especificado'">
+      <div class="status-badge pendencia"
+        [title]="diaCalculado().detalhes?.motivoPendencia || 'Pendência sem motivo especificado'">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10" />
           <path d="M12 8v4l3 3" />

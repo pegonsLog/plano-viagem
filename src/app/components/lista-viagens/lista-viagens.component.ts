@@ -43,6 +43,10 @@ export class ListaViagensComponent {
     this.router.navigate(['/viagem', viagemId, 'tabela-dias']);
   }
 
+  verRelatorio(viagemId: string) {
+    this.router.navigate(['/viagem', viagemId, 'relatorio']);
+  }
+
   editarViagem(viagem: Viagem) {
     this.viagemParaEditar = viagem;
     this.mostrarFormulario = true;

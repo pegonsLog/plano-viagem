@@ -25,6 +25,7 @@ export class RelatorioViagem implements OnInit {
   viagem = signal<Viagem | null>(null);
   dias = signal<DiaViagem[]>([]);
   gerandoPdf = signal(false);
+  carregando = signal(true);
 
   diasOrdenados = computed(() => {
     return this.dias().sort((a, b) => a.data.getTime() - b.data.getTime());
@@ -61,23 +62,54 @@ export class RelatorioViagem implements OnInit {
   dataAtual = new Date();
   horaAtual = new Date().toLocaleTimeString('pt-BR');
 
-  ngOnInit() {
+  async ngOnInit(): Promise<void> {
     const viagemId = this.route.snapshot.paramMap.get('id');
     if (viagemId) {
-      const viagemData = this.viagemService.obterViagem(viagemId);
-      if (viagemData) {
-        this.viagem.set(viagemData);
-        const diasViagem = this.diaViagemService.obterDiasPorViagem(viagemId);
-        this.dias.set(diasViagem);
-      }
+      await this.carregarDadosRelatorio(viagemId);
+    } else {
+      await this.router.navigate(['/']);
     }
   }
 
-  voltarParaViagem() {
-    const viagemData = this.viagem();
-    if (viagemData) {
-      this.router.navigate(['/viagem', viagemData.id]);
+  private async carregarDadosRelatorio(viagemId: string): Promise<void> {
+    try {
+      this.carregando.set(true);
+      
+      // Primeiro, tentar obter do cache
+      let viagemData: Viagem | undefined | null = this.viagemService.obterViagem(viagemId);
+      
+      // Se não encontrou no cache, buscar no Firebase
+      if (!viagemData) {
+        viagemData = await this.viagemService.obterViagemPorId(viagemId);
+      }
+      
+      if (viagemData) {
+        this.viagem.set(viagemData);
+        
+        // Carregar dias da viagem
+        let diasViagem = this.diaViagemService.obterDiasPorViagem(viagemId);
+        
+        // Se não há dias no cache, carregar do Firebase
+        if (diasViagem.length === 0) {
+          await this.diaViagemService.carregarDiasPorViagem(viagemId);
+          diasViagem = this.diaViagemService.obterDiasPorViagem(viagemId);
+        }
+        
+        this.dias.set(diasViagem);
+      } else {
+        // Se não encontrou a viagem, redirecionar
+        await this.router.navigate(['/']);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar dados do relatório:', error);
+      await this.router.navigate(['/']);
+    } finally {
+      this.carregando.set(false);
     }
+  }
+
+  voltarParaViagem(): void {
+    this.router.navigate(['/']);
   }
 
   formatarData(data: Date): string {
@@ -127,7 +159,7 @@ export class RelatorioViagem implements OnInit {
       });
   }
 
-  formatarValorParcela(valor: any): string {
+  formatarValorParcela(valor: string | number | undefined | null): string {
     // Se o valor já está formatado como string (ex: "R$ 123,45"), retornar como está
     if (typeof valor === 'string' && valor.includes('R$')) {
       return valor;
@@ -135,7 +167,7 @@ export class RelatorioViagem implements OnInit {
 
     // Se é um número válido, formatar
     const numeroValor = typeof valor === 'string' ? parseFloat(valor) : valor;
-    if (!isNaN(numeroValor) && numeroValor > 0) {
+    if (numeroValor && !isNaN(numeroValor) && numeroValor > 0) {
       return this.formatarMoeda(numeroValor);
     }
 
@@ -159,7 +191,7 @@ export class RelatorioViagem implements OnInit {
     return viagemData.orcamento >= totalGastos;
   }
 
-  async gerarPDF() {
+  async gerarPDF(): Promise<void> {
     this.gerandoPdf.set(true);
 
     try {
