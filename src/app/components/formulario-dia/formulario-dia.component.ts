@@ -1,7 +1,7 @@
 import { Component, input, output, signal, computed, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DiaViagem, NovoDiaViagem, TIPOS_TRANSPORTE } from '../../models/dia-viagem.model';
+import { DiaViagem, NovoDiaViagem, TIPOS_TRANSPORTE, FORMAS_PAGAMENTO } from '../../models/dia-viagem.model';
 import { DiaViagemService } from '../../services/dia-viagem.service';
 import { DateService } from '../../utils/date.service';
 
@@ -39,13 +39,17 @@ export class FormularioDiaComponent implements OnInit {
     deslocamentoLocal: ['', [Validators.required]],
     detalhesVoo: [''],
     observacoes: [''],
-    formaPagamento: ['', [Validators.required]],
+    formaPagamento: [''],
+    formaPagamentoTransporte: [''],
     titularCartao: [''],
     finalCartao: [''],
-    quantidadeParcelas: [null]
+    quantidadeParcelas: [null],
+    temPendencia: [false],
+    motivoPendencia: ['']
   });
 
   tiposTransporte = TIPOS_TRANSPORTE;
+  formasPagamento = FORMAS_PAGAMENTO;
 
   modoEdicao = computed(() => !!this.diaViagem());
 
@@ -86,9 +90,12 @@ export class FormularioDiaComponent implements OnInit {
         detalhesVoo: dia.detalhesVoo || '',
         observacoes: dia.observacoes || '',
         formaPagamento: dia.formaPagamento || '',
+        formaPagamentoTransporte: dia.formaPagamentoTransporte || '',
         titularCartao: dia.titularCartao || '',
         finalCartao: dia.finalCartao || '',
-        quantidadeParcelas: dia.quantidadeParcelas
+        quantidadeParcelas: dia.quantidadeParcelas,
+        temPendencia: dia.status === 'Pendente',
+        motivoPendencia: dia.motivoPendencia || ''
       });
     }
   }
@@ -137,9 +144,12 @@ export class FormularioDiaComponent implements OnInit {
           detalhesVoo: formValue.detalhesVoo,
           observacoes: formValue.observacoes,
           formaPagamento: formValue.formaPagamento,
+          formaPagamentoTransporte: formValue.formaPagamentoTransporte,
           titularCartao: formValue.titularCartao,
           finalCartao: formValue.finalCartao,
-          quantidadeParcelas: formValue.quantidadeParcelas
+          quantidadeParcelas: formValue.quantidadeParcelas,
+          status: formValue.temPendencia ? 'Pendente' : 'Concluído',
+          motivoPendencia: formValue.temPendencia ? formValue.motivoPendencia : ''
         });
 
         const diaAtualizado: DiaViagem = {
@@ -163,9 +173,12 @@ export class FormularioDiaComponent implements OnInit {
           detalhesVoo: formValue.detalhesVoo,
           observacoes: formValue.observacoes,
           formaPagamento: formValue.formaPagamento,
+          formaPagamentoTransporte: formValue.formaPagamentoTransporte,
           titularCartao: formValue.titularCartao,
           finalCartao: formValue.finalCartao,
-          quantidadeParcelas: formValue.quantidadeParcelas
+          quantidadeParcelas: formValue.quantidadeParcelas,
+          status: formValue.temPendencia ? 'Pendente' : 'Concluído',
+          motivoPendencia: formValue.temPendencia ? formValue.motivoPendencia : ''
         });
 
         const novoDia: NovoDiaViagem = {

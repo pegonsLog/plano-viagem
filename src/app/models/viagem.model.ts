@@ -7,6 +7,9 @@ export interface Viagem {
   orcamento: number;
   descricao?: string;
   status: 'planejada' | 'em-andamento' | 'concluida' | 'cancelada';
+  temPendencia?: boolean;
+  motivoPendencia?: string;
+  lembretesImportantes?: string;
   criadaEm: Date;
   atualizadaEm: Date;
   totalDias?: number;
@@ -20,4 +23,7 @@ export interface NovaViagem {
   dataFim: Date;
   orcamento: number;
   descricao?: string;
+  temPendencia?: boolean;
+  motivoPendencia?: string;
+  lembretesImportantes?: string;
 }

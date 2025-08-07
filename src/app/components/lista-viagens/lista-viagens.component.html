@@ -27,7 +27,26 @@
           <h3>{{ viagem.titulo }}</h3>
           <span class="clique-detalhes">Clique para ver detalhes</span>
         </div>
-        <span class="status-badge">{{ getStatusLabel(viagem.status) }}</span>
+        <div class="status-badges">
+          <span class="status-badge">{{ getStatusLabel(viagem.status) }}</span>
+          @if (viagem.temPendencia) {
+          <span class="status-badge pendencia" [title]="viagem.motivoPendencia || 'Pendência sem motivo especificado'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v4l3 3" />
+            </svg>
+            Pendente
+          </span>
+          } @else {
+          <span class="status-badge concluido">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 12l2 2 4-4" />
+              <circle cx="12" cy="12" r="10" />
+            </svg>
+            Concluído
+          </span>
+          }
+        </div>
       </div>
 
       <div class="viagem-info">
@@ -36,6 +55,18 @@
         <p><strong>Orçamento:</strong> {{ formatarMoeda(viagem.orcamento) }}</p>
         @if (viagem.descricao) {
         <p><strong>Descrição:</strong> {{ viagem.descricao }}</p>
+        }
+        @if (viagem.lembretesImportantes) {
+        <div class="campo-multiline">
+          <strong>Lembretes:</strong>
+          <div class="preserve-lines">{{ viagem.lembretesImportantes }}</div>
+        </div>
+        }
+        @if (viagem.temPendencia && viagem.motivoPendencia) {
+        <div class="campo-multiline">
+          <strong>Motivo da Pendência:</strong>
+          <div class="preserve-lines pendencia-text">{{ viagem.motivoPendencia }}</div>
+        </div>
         }
       </div>
 

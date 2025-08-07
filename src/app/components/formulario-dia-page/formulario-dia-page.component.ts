@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DiaViagem, NovoDiaViagem, TIPOS_TRANSPORTE } from '../../models/dia-viagem.model';
+import { DiaViagem, NovoDiaViagem, TIPOS_TRANSPORTE, FORMAS_PAGAMENTO } from '../../models/dia-viagem.model';
 import { DiaViagemService } from '../../services/dia-viagem.service';
 import { ViagemService } from '../../services/viagem.service';
 import { DateService } from '../../utils/date.service';
@@ -42,16 +42,20 @@ export class FormularioDiaPageComponent implements OnInit {
         deslocamentoLocal: ['', [Validators.required]],
         detalhesVoo: [''],
         observacoes: [''],
-        formaPagamento: ['', [Validators.required]],
+        formaPagamento: [''],
+        formaPagamentoTransporte: [''],
         titularCartao: [''],
         finalCartao: [''],
         quantidadeParcelas: [null],
         valorHospedagem: [null, [Validators.min(0)]],
         valorParcela: [null, [Validators.min(0)]],
-        custoTransporte: [null, [Validators.min(0)]]
+        custoTransporte: [null, [Validators.min(0)]],
+        temPendencia: [false],
+        motivoPendencia: ['']
     });
 
     tiposTransporte = TIPOS_TRANSPORTE;
+    formasPagamento = FORMAS_PAGAMENTO;
 
     modoEdicao = computed(() => !!this.diaId());
 
@@ -120,12 +124,15 @@ export class FormularioDiaPageComponent implements OnInit {
                     detalhesVoo: dia.detalhesVoo || '',
                     observacoes: dia.observacoes || '',
                     formaPagamento: dia.formaPagamento || '',
+                    formaPagamentoTransporte: dia.formaPagamentoTransporte || '',
                     titularCartao: dia.titularCartao || '',
                     finalCartao: dia.finalCartao || '',
                     quantidadeParcelas: dia.quantidadeParcelas,
                     valorHospedagem: dia.valorHospedagem,
                     valorParcela: dia.valorParcela,
-                    custoTransporte: dia.custoTransporte
+                    custoTransporte: dia.custoTransporte,
+                    temPendencia: dia.status === 'Pendente',
+                    motivoPendencia: dia.motivoPendencia || ''
                 });
 
 
@@ -200,12 +207,15 @@ export class FormularioDiaPageComponent implements OnInit {
                     detalhesVoo: formValues.detalhesVoo || '',
                     observacoes: formValues.observacoes || '',
                     formaPagamento: formValues.formaPagamento || '',
+                    formaPagamentoTransporte: formValues.formaPagamentoTransporte || '',
                     titularCartao: formValues.titularCartao || '',
                     finalCartao: formValues.finalCartao || '',
                     quantidadeParcelas: formValues.quantidadeParcelas || null,
                     valorHospedagem: formValues.valorHospedagem || null,
                     valorParcela: formValues.valorParcela || null,
-                    custoTransporte: formValues.custoTransporte || null
+                    custoTransporte: formValues.custoTransporte || null,
+                    status: formValues.temPendencia ? 'Pendente' : 'Concluído',
+                    motivoPendencia: formValues.temPendencia ? formValues.motivoPendencia : ''
                 };
 
 
@@ -226,12 +236,15 @@ export class FormularioDiaPageComponent implements OnInit {
                     detalhesVoo: formValues.detalhesVoo,
                     observacoes: formValues.observacoes,
                     formaPagamento: formValues.formaPagamento,
+                    formaPagamentoTransporte: formValues.formaPagamentoTransporte,
                     titularCartao: formValues.titularCartao,
                     finalCartao: formValues.finalCartao,
                     quantidadeParcelas: formValues.quantidadeParcelas,
                     valorHospedagem: formValues.valorHospedagem,
                     valorParcela: formValues.valorParcela,
-                    custoTransporte: formValues.custoTransporte
+                    custoTransporte: formValues.custoTransporte,
+                    status: formValues.temPendencia ? 'Pendente' : 'Concluído',
+                    motivoPendencia: formValues.temPendencia ? formValues.motivoPendencia : ''
                 });
 
                 const novoDia: NovoDiaViagem = {

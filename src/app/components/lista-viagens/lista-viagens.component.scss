@@ -33,7 +33,7 @@
 
 .viagens-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
   gap: 20px;
 }
 
@@ -127,6 +127,15 @@
   }
 }
 
+.status-badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+  z-index: 1;
+  position: relative;
+}
+
 .status-badge {
   background: #e9ecef;
   color: #495057;
@@ -134,9 +143,19 @@
   border-radius: 12px;
   font-size: 0.8em;
   font-weight: 500;
-  flex-shrink: 0; /* Impede que o badge seja comprimido */
-  z-index: 1; /* Garante que fique acima da seta */
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &.concluido {
+    background: #cce7ff;
+    color: #004085;
+  }
+
+  &.pendencia {
+    background: #fff3cd;
+    color: #856404;
+  }
 }
 
 .viagem-info {
@@ -144,6 +163,33 @@
     margin: 8px 0;
     color: #666;
     line-height: 1.4;
+  }
+
+  .campo-multiline {
+    margin: 12px 0;
+    
+    strong {
+      display: block;
+      color: #333;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    
+    div {
+      color: #666;
+      line-height: 1.4;
+      padding-left: 8px;
+    }
+  }
+
+  .preserve-lines {
+    white-space: pre-line;
+    word-wrap: break-word;
+  }
+
+  .pendencia-text {
+    color: #856404;
+    font-style: italic;
   }
 }
 
@@ -240,4 +286,18 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+// Ajustes para mobile
+@media (max-width: 768px) {
+  .viagens-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0 16px;
+  }
+  
+  .viagem-card {
+    max-width: calc(100vw - 32px); // Largura da tela menos padding lateral
+    margin: 0 auto;
+  }
 }

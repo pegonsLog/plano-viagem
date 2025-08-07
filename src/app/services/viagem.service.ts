@@ -35,7 +35,7 @@ export class ViagemService {
       
       this.firebaseService.getAll<Viagem>(
         this.COLLECTION_NAME,
-        orderBy('criadaEm', 'desc')
+        orderBy('dataFim', 'desc')
       ).subscribe({
         next: (viagens) => {
           // Converter timestamps do Firebase para Date

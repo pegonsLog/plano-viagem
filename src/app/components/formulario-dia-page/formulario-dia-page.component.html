@@ -68,7 +68,7 @@
       <!-- Detalhes do Voo -->
       <div class="form-group">
         <div class="form-label-with-button">
-          <label for="detalhesVoo">Detalhes do Voo</label>
+          <label for="detalhesVoo">Detalhes do Transporte</label>
           <button type="button" class="btn-idem-icon" (click)="preencherIdem('detalhesVoo')" title="Idem dia anterior">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 12h18m-9-9l9 9-9 9" />
@@ -96,6 +96,20 @@
         @if (formulario.get('custoTransporte')?.invalid && formulario.get('custoTransporte')?.touched) {
         <div class="error">Valor deve ser maior ou igual a zero</div>
         }
+      </div>
+
+      <div class="form-group">
+        <div class="form-label-with-button">
+          <label for="formaPagamentoTransporte">Forma de Pagamento do Transporte</label>
+          <button type="button" class="btn-idem-icon" (click)="preencherIdem('formaPagamentoTransporte')"
+            title="Idem dia anterior">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12h18m-9-9l9 9-9 9" />
+            </svg>
+          </button>
+        </div>
+        <input type="text" id="formaPagamentoTransporte" formControlName="formaPagamentoTransporte"
+          placeholder="Ex: Cartão de crédito, dinheiro, PIX" class="form-control">
       </div>
 
       <!-- Hospedagem -->
@@ -221,7 +235,7 @@
 
       <!-- Informações de Pagamento -->
       <div class="form-section">
-        <h4>Informações de Pagamento</h4>
+        <h4>Informações de Pagamento da Hospedagem</h4>
 
         <div class="form-group">
           <div class="form-label-with-button">
@@ -233,9 +247,15 @@
               </svg>
             </button>
           </div>
-          <input type="text" id="formaPagamento" formControlName="formaPagamento"
-            placeholder="Ex: Cartão de Crédito, Dinheiro, PIX" class="form-control">
+          <select id="formaPagamento" formControlName="formaPagamento" class="form-control">
+            <option value="">Selecione a forma de pagamento</option>
+            @for (forma of formasPagamento; track forma.value) {
+            <option [value]="forma.value">{{ forma.label }}</option>
+            }
+          </select>
         </div>
+
+
 
         <div class="form-row">
           <div class="form-group">
@@ -316,6 +336,42 @@
             }
           </div>
         </div>
+      </div>
+
+      <!-- Status e Pendência -->
+      <div class="form-section">
+        <h4>Status</h4>
+        
+        <div class="form-group">
+          <div class="checkbox-group">
+            <input type="checkbox" id="temPendencia" formControlName="temPendencia" class="form-checkbox">
+            <label for="temPendencia" class="checkbox-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 8v8" />
+                <path d="M8 12h8" />
+              </svg>
+              Marcar como pendente
+            </label>
+          </div>
+        </div>
+
+        @if (formulario.get('temPendencia')?.value) {
+        <div class="form-group">
+          <div class="form-label-with-button">
+            <label for="motivoPendencia">Motivo da Pendência</label>
+            <button type="button" class="btn-idem-icon" (click)="preencherIdem('motivoPendencia')"
+              title="Idem dia anterior">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18m-9-9l9 9-9 9" />
+              </svg>
+            </button>
+          </div>
+          <textarea id="motivoPendencia" formControlName="motivoPendencia" rows="3"
+            placeholder="Descreva o motivo da pendência..." class="form-control">
+          </textarea>
+        </div>
+        }
       </div>
 
       <!-- Indicador de Fim de Semana -->

@@ -87,21 +87,38 @@ export class DiaViagemComponent {
     }).format(valor);
   }
 
-  formatarLinksHospedagem(links: string): string[] {
+  formatarValorParcela(valor: number | string): string {
+    // Se já é uma string formatada, retorna como está
+    if (typeof valor === 'string') {
+      return valor;
+    }
+    // Se é um número, formata como moeda
+    if (typeof valor === 'number') {
+      return this.formatarMoeda(valor);
+    }
+    return '(Não informado)';
+  }
+
+  formatarLinksHospedagem(links: string): { url: string; texto: string }[] {
     if (!links || links.trim() === '') {
       return [];
     }
-    
-    return links
+
+    const linksValidos = links
       .split('\n')
       .map(link => link.trim())
       .filter(link => link.length > 0)
       .filter(link => {
         // Validar se é um link válido (começa com http/https ou www)
-        return link.startsWith('http://') || 
-               link.startsWith('https://') || 
-               link.startsWith('www.') ||
-               link.includes('.');
+        return link.startsWith('http://') ||
+          link.startsWith('https://') ||
+          link.startsWith('www.') ||
+          link.includes('.');
       });
+
+    return linksValidos.map((link, index) => ({
+      url: link.startsWith('http://') || link.startsWith('https://') ? link : 'https://' + link,
+      texto: linksValidos.length === 1 ? 'Acesse aqui' : `Acesse aqui link ${index + 1}`
+    }));
   }
 }

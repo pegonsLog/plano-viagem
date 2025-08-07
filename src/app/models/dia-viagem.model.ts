@@ -15,12 +15,15 @@ export interface DiaViagem {
   detalhesVoo?: string;
   observacoes?: string;
   formaPagamento?: string;
+  formaPagamentoTransporte?: string;
   titularCartao?: string;
   finalCartao?: string;
   quantidadeParcelas?: number;
   valorHospedagem?: number;
   valorParcela?: number;
   custoTransporte?: number;
+  status?: string;
+  motivoPendencia?: string;
   criadoEm: Date;
   atualizadoEm: Date;
 }
@@ -40,12 +43,15 @@ export interface NovoDiaViagem {
   detalhesVoo?: string;
   observacoes?: string;
   formaPagamento?: string;
+  formaPagamentoTransporte?: string;
   titularCartao?: string;
   finalCartao?: string;
   quantidadeParcelas?: number;
   valorHospedagem?: number;
   valorParcela?: number;
   custoTransporte?: number;
+  status?: string;
+  motivoPendencia?: string;
 }
 
 export interface DiaCalculado {
@@ -92,4 +98,55 @@ export const TIPOS_TRANSPORTE: { value: TipoTransporte; label: string }[] = [
 export const DIAS_SEMANA = [
   'Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira',
   'Quinta-feira', 'Sexta-feira', 'Sábado'
+];
+
+export type FormaPagamento =
+  | 'Cartão de Crédito'
+  | 'Cartão de Débito'
+  | 'Dinheiro'
+  | 'PIX'
+  | 'Transferência Bancária'
+  | 'Boleto'
+  | 'Cheque'
+  | 'Outro';
+
+export const FORMAS_PAGAMENTO: { value: FormaPagamento; label: string }[] = [
+  { value: 'Cartão de Crédito', label: 'Cartão de Crédito' },
+  { value: 'Cartão de Débito', label: 'Cartão de Débito' },
+  { value: 'Dinheiro', label: 'Dinheiro' },
+  { value: 'PIX', label: 'PIX' },
+  { value: 'Transferência Bancária', label: 'Transferência Bancária' },
+  { value: 'Boleto', label: 'Boleto' },
+  { value: 'Cheque', label: 'Cheque' },
+  { value: 'Outro', label: 'Outro' }
+];
+
+export type StatusDia =
+  | 'Pendente'
+  | 'Concluído';
+
+export const STATUS_DIA: { value: StatusDia; label: string }[] = [
+  { value: 'Pendente', label: 'Pendente' },
+  { value: 'Concluído', label: 'Concluído' }
+];
+
+export type MotivoPendencia =
+  | 'Aguardando Confirmação'
+  | 'Aguardando Pagamento'
+  | 'Aguardando Documentação'
+  | 'Problema com Reserva'
+  | 'Cancelamento Pendente'
+  | 'Reagendamento Necessário'
+  | 'Falta de Disponibilidade'
+  | 'Outro';
+
+export const MOTIVOS_PENDENCIA: { value: MotivoPendencia; label: string }[] = [
+  { value: 'Aguardando Confirmação', label: 'Aguardando Confirmação' },
+  { value: 'Aguardando Pagamento', label: 'Aguardando Pagamento' },
+  { value: 'Aguardando Documentação', label: 'Aguardando Documentação' },
+  { value: 'Problema com Reserva', label: 'Problema com Reserva' },
+  { value: 'Cancelamento Pendente', label: 'Cancelamento Pendente' },
+  { value: 'Reagendamento Necessário', label: 'Reagendamento Necessário' },
+  { value: 'Falta de Disponibilidade', label: 'Falta de Disponibilidade' },
+  { value: 'Outro', label: 'Outro' }
 ];

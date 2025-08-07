@@ -45,6 +45,18 @@ export class DetalhesViagemComponent implements OnInit {
     return this.diasCalculados().filter(dia => !dia.temDetalhes).length;
   });
 
+  diasConcluidos = computed(() => {
+    return this.diasCalculados().filter(dia => 
+      dia.temDetalhes && dia.detalhes?.status !== 'Pendente'
+    ).length;
+  });
+
+  diasComPendencia = computed(() => {
+    return this.diasCalculados().filter(dia => 
+      dia.temDetalhes && dia.detalhes?.status === 'Pendente'
+    ).length;
+  });
+
   ngOnInit() {
     const viagemId = this.route.snapshot.paramMap.get('id');
     if (viagemId) {

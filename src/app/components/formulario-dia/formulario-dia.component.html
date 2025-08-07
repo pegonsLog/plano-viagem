@@ -37,8 +37,7 @@
             Idem
           </button>
         </div>
-        <input type="text" id="cidade" formControlName="cidade" 
-          placeholder="Ex: São Paulo, SP" class="form-control">
+        <input type="text" id="cidade" formControlName="cidade" placeholder="Ex: São Paulo, SP" class="form-control">
         @if (formulario.get('cidade')?.invalid && formulario.get('cidade')?.touched) {
         <div class="error">Cidade é obrigatória</div>
         }
@@ -60,11 +59,20 @@
 
       <!-- Detalhes do Voo -->
       <div class="form-group">
-        <label for="detalhesVoo">Detalhes do Voo</label>
+        <label for="detalhesVoo">Detalhes do Transporte</label>
         <textarea id="detalhesVoo" formControlName="detalhesVoo" rows="3"
           placeholder="Informações sobre voo, horários, companhia aérea" class="form-control">
         </textarea>
       </div>
+
+
+      <!-- Forma de Pagamento do Transporte -->
+      <div class="form-group">
+        <label for="formaPagamentoTransporte">Forma de Pagamento do Transporte</label>
+        <input type="text" id="formaPagamentoTransporte" formControlName="formaPagamentoTransporte"
+          placeholder="Ex: Cartão de crédito, dinheiro, PIX" class="form-control">
+      </div>
+
 
       <!-- Hospedagem -->
       <div class="form-section">
@@ -73,8 +81,8 @@
         <!-- Nome da Hospedagem -->
         <div class="form-group">
           <label for="nomeHospedagem">Nome da Hospedagem *</label>
-          <textarea id="nomeHospedagem" formControlName="nomeHospedagem"
-            placeholder="Ex: Hotel Copacabana Palace" class="form-control" rows="2"></textarea>
+          <textarea id="nomeHospedagem" formControlName="nomeHospedagem" placeholder="Ex: Hotel Copacabana Palace"
+            class="form-control" rows="2"></textarea>
           @if (formulario.get('nomeHospedagem')?.invalid && formulario.get('nomeHospedagem')?.touched) {
           <div class="error">Nome da hospedagem é obrigatório</div>
           }
@@ -101,27 +109,28 @@
         <!-- Número da Reserva -->
         <div class="form-group">
           <label for="numeroReserva">Número da Reserva</label>
-          <textarea id="numeroReserva" formControlName="numeroReserva"
-            placeholder="Número de confirmação da reserva" class="form-control" rows="2"></textarea>
+          <textarea id="numeroReserva" formControlName="numeroReserva" placeholder="Número de confirmação da reserva"
+            class="form-control" rows="2"></textarea>
         </div>
 
         <!-- Horário Check-in/out -->
         <div class="form-group">
           <label for="horarioChecks">Horário Check-in/out</label>
-          <textarea id="horarioChecks" formControlName="horarioChecks"
-            placeholder="Ex: Check-in 15h, Check-out 11h" class="form-control" rows="2"></textarea>
+          <textarea id="horarioChecks" formControlName="horarioChecks" placeholder="Ex: Check-in 15h, Check-out 11h"
+            class="form-control" rows="2"></textarea>
         </div>
 
         <!-- Link da Hospedagem -->
         <div class="form-group">
           <label for="linkHospedagem">Link da Hospedagem</label>
           <div class="input-with-button">
-            <button type="button" class="btn-idem" (click)="preencherIdem('linkHospedagem')" title="Copiar link do dia anterior">
+            <button type="button" class="btn-idem" (click)="preencherIdem('linkHospedagem')"
+              title="Copiar link do dia anterior">
               Idem
             </button>
           </div>
           <textarea id="linkHospedagem" formControlName="linkHospedagem" rows="3"
-            placeholder="Links para acessar a acomodação (Booking, Airbnb, site do hotel, etc.)&#10;&#10;Exemplo:&#10;https://www.booking.com/hotel/br/copacabana-palace.html&#10;https://www.airbnb.com.br/rooms/12345" 
+            placeholder="Links para acessar a acomodação (Booking, Airbnb, site do hotel, etc.)&#10;&#10;Exemplo:&#10;https://www.booking.com/hotel/br/copacabana-palace.html&#10;https://www.airbnb.com.br/rooms/12345"
             class="form-control"></textarea>
           <div class="field-help">
             💡 Adicione um ou mais links separados por linha para facilitar o acesso direto às reservas
@@ -143,37 +152,66 @@
       <!-- Observações -->
       <div class="form-group">
         <label for="observacoes">Observações</label>
-        <textarea id="observacoes" formControlName="observacoes" rows="3"
-          placeholder="Observações gerais sobre o dia" class="form-control">
+        <textarea id="observacoes" formControlName="observacoes" rows="3" placeholder="Observações gerais sobre o dia"
+          class="form-control">
         </textarea>
+      </div>
+
+      <!-- Status e Pendência -->
+      <div class="form-section">
+        <h4>Status</h4>
+
+        <div class="form-group">
+          <div class="checkbox-group">
+            <input type="checkbox" id="temPendencia" formControlName="temPendencia" class="form-checkbox">
+            <label for="temPendencia" class="checkbox-label">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 8v8" />
+                <path d="M8 12h8" />
+              </svg>
+              Marcar como pendente
+            </label>
+          </div>
+        </div>
+
+        @if (formulario.get('temPendencia')?.value) {
+        <div class="form-group">
+          <label for="motivoPendencia">Motivo da Pendência</label>
+          <textarea id="motivoPendencia" formControlName="motivoPendencia" rows="3"
+            placeholder="Descreva o motivo da pendência..." class="form-control">
+          </textarea>
+        </div>
+        }
       </div>
 
       <!-- Pagamento -->
       <div class="form-section">
-        <h4>Informações de Pagamento</h4>
+        <h4>Informações de Pagamento da Hospedagem</h4>
 
         <!-- Forma de Pagamento -->
         <div class="form-group">
-          <label for="formaPagamento">Forma de Pagamento *</label>
-          <input type="text" id="formaPagamento" formControlName="formaPagamento"
-            placeholder="Ex: Cartão de crédito, dinheiro, PIX" class="form-control">
-          @if (formulario.get('formaPagamento')?.invalid && formulario.get('formaPagamento')?.touched) {
-          <div class="error">Forma de pagamento é obrigatória</div>
-          }
+          <label for="formaPagamento">Forma de Pagamento</label>
+          <select id="formaPagamento" formControlName="formaPagamento" class="form-control">
+            <option value="">Selecione a forma de pagamento</option>
+            @for (forma of formasPagamento; track forma.value) {
+            <option [value]="forma.value">{{ forma.label }}</option>
+            }
+          </select>
         </div>
 
         <!-- Titular do Cartão -->
         <div class="form-group">
           <label for="titularCartao">Titular do Cartão</label>
-          <input type="text" id="titularCartao" formControlName="titularCartao"
-            placeholder="Nome do titular do cartão" class="form-control">
+          <input type="text" id="titularCartao" formControlName="titularCartao" placeholder="Nome do titular do cartão"
+            class="form-control">
         </div>
 
         <!-- Final do Cartão -->
         <div class="form-group">
           <label for="finalCartao">Final do Cartão</label>
-          <input type="text" id="finalCartao" formControlName="finalCartao"
-            placeholder="Ex: **** 1234" class="form-control">
+          <input type="text" id="finalCartao" formControlName="finalCartao" placeholder="Ex: **** 1234"
+            class="form-control">
         </div>
 
         <!-- Quantidade de Parcelas -->

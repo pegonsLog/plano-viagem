@@ -9,7 +9,7 @@
         </svg>
         Voltar
       </button>
-      
+
       <div class="actions-group">
         <button class="btn-relatorio" (click)="verRelatorio()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -21,7 +21,7 @@
           </svg>
           Relatório
         </button>
-        
+
         <button class="btn-tabela" (click)="verTabelaDias()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 3h18v18H3zM21 9H3M9 21V9" />
@@ -56,11 +56,19 @@
       </div>
       <div class="stat">
         <span class="stat-number">{{ diasComDetalhes() }}</span>
-        <span class="stat-label">Dias planejados</span>
+        <span class="stat-label">Incluídos</span>
       </div>
       <div class="stat">
         <span class="stat-number">{{ diasSemDetalhes() }}</span>
-        <span class="stat-label">Dias pendentes</span>
+        <span class="stat-label">Não incluídos</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">{{ diasConcluidos() }}</span>
+        <span class="stat-label">Concluídos</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">{{ diasComPendencia() }}</span>
+        <span class="stat-label">Com pendências</span>
       </div>
     </div>
   </div>

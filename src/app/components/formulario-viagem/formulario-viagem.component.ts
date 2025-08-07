@@ -27,7 +27,10 @@ export class FormularioViagemComponent implements OnInit {
     dataInicio: this.dateService.createBrazilDate(),
     dataFim: this.dateService.createBrazilDate(),
     orcamento: 0,
-    descricao: ''
+    descricao: '',
+    temPendencia: false,
+    motivoPendencia: '',
+    lembretesImportantes: ''
   };
 
   dataInicioString = '';
@@ -44,7 +47,10 @@ export class FormularioViagemComponent implements OnInit {
         dataInicio: viagemEdicao.dataInicio,
         dataFim: viagemEdicao.dataFim,
         orcamento: viagemEdicao.orcamento,
-        descricao: viagemEdicao.descricao || ''
+        descricao: viagemEdicao.descricao || '',
+        temPendencia: viagemEdicao.temPendencia || false,
+        motivoPendencia: viagemEdicao.motivoPendencia || '',
+        lembretesImportantes: viagemEdicao.lembretesImportantes || ''
       };
       this.dataInicioString = this.dateService.formatDateForInput(viagemEdicao.dataInicio);
       this.dataFimString = this.dateService.formatDateForInput(viagemEdicao.dataFim);
@@ -85,7 +91,10 @@ export class FormularioViagemComponent implements OnInit {
       dataInicio: this.dateService.createBrazilDate(),
       dataFim: this.dateService.createBrazilDate(),
       orcamento: 0,
-      descricao: ''
+      descricao: '',
+      temPendencia: false,
+      motivoPendencia: '',
+      lembretesImportantes: ''
     };
     this.dataInicioString = '';
     this.dataFimString = '';
