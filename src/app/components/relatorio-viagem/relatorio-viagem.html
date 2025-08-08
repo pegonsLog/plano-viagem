@@ -36,11 +36,25 @@
     <div class="loading-container">
         <div class="loading-spinner"></div>
         <p>Carregando dados do relatório...</p>
+        <p class="loading-detail">Aguarde enquanto buscamos todas as informações da viagem...</p>
     </div>
     }
 
-    <!-- Conteúdo do relatório -->
-    @if (!carregando()) {
+    <!-- Estado de erro -->
+    @if (erro() && !carregando()) {
+    <div class="error-container">
+        <div class="error-icon">⚠️</div>
+        <h3>Erro ao carregar relatório</h3>
+        <p>{{ erro() }}</p>
+        <p>Você será redirecionado automaticamente...</p>
+        <button class="btn-voltar" (click)="voltarParaViagem()">
+            Voltar agora
+        </button>
+    </div>
+    }
+
+    <!-- Conteúdo do relatório - só mostra quando dados estão completamente carregados -->
+    @if (dadosCarregados() && !carregando() && !erro()) {
     <div id="relatorio-content" class="relatorio-content">
         @if (viagem(); as viagemData) {
         <!-- Cabeçalho do relatório -->

@@ -20,6 +20,8 @@ export class ListaViagensComponent {
   mostrarFormulario = false;
   viagemParaEditar: Viagem | null = null;
 
+
+
   onViagemCriada() {
     this.mostrarFormulario = false;
     this.viagemParaEditar = null;
@@ -37,14 +39,6 @@ export class ListaViagensComponent {
 
   verDetalhesViagem(viagemId: string) {
     this.router.navigate(['/viagem', viagemId]);
-  }
-
-  verTabelaDias(viagemId: string) {
-    this.router.navigate(['/viagem', viagemId, 'tabela-dias']);
-  }
-
-  verRelatorio(viagemId: string) {
-    this.router.navigate(['/viagem', viagemId, 'relatorio']);
   }
 
   editarViagem(viagem: Viagem) {

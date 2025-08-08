@@ -26,6 +26,8 @@ export class RelatorioViagem implements OnInit {
   dias = signal<DiaViagem[]>([]);
   gerandoPdf = signal(false);
   carregando = signal(true);
+  erro = signal<string | null>(null);
+  dadosCarregados = signal(false);
 
   diasOrdenados = computed(() => {
     return this.dias().sort((a, b) => a.data.getTime() - b.data.getTime());
@@ -67,49 +69,95 @@ export class RelatorioViagem implements OnInit {
     if (viagemId) {
       await this.carregarDadosRelatorio(viagemId);
     } else {
-      await this.router.navigate(['/']);
+      this.erro.set('ID da viagem não encontrado');
+      setTimeout(() => this.router.navigate(['/']), 2000);
     }
   }
 
   private async carregarDadosRelatorio(viagemId: string): Promise<void> {
     try {
       this.carregando.set(true);
-      
-      // Primeiro, tentar obter do cache
-      let viagemData: Viagem | undefined | null = this.viagemService.obterViagem(viagemId);
-      
-      // Se não encontrou no cache, buscar no Firebase
+      this.erro.set(null);
+      this.dadosCarregados.set(false);
+
+      console.log('Iniciando carregamento dos dados do relatório para viagem:', viagemId);
+
+      // Sempre buscar dados frescos do Firebase para garantir consistência
+      const [viagemData, diasCarregados] = await Promise.all([
+        this.buscarViagemCompleta(viagemId),
+        this.buscarDiasCompletos(viagemId)
+      ]);
+
       if (!viagemData) {
-        viagemData = await this.viagemService.obterViagemPorId(viagemId);
+        throw new Error('Viagem não encontrada');
       }
-      
-      if (viagemData) {
-        this.viagem.set(viagemData);
-        
-        // Carregar dias da viagem
-        let diasViagem = this.diaViagemService.obterDiasPorViagem(viagemId);
-        
-        // Se não há dias no cache, carregar do Firebase
-        if (diasViagem.length === 0) {
-          await this.diaViagemService.carregarDiasPorViagem(viagemId);
-          diasViagem = this.diaViagemService.obterDiasPorViagem(viagemId);
-        }
-        
-        this.dias.set(diasViagem);
-      } else {
-        // Se não encontrou a viagem, redirecionar
-        await this.router.navigate(['/']);
-      }
+
+      // Definir os dados apenas quando ambos estiverem carregados
+      this.viagem.set(viagemData);
+      this.dias.set(diasCarregados);
+
+      console.log('Dados carregados com sucesso:', {
+        viagem: viagemData.titulo,
+        totalDias: diasCarregados.length
+      });
+
+      // Marcar como carregado apenas quando tudo estiver pronto
+      this.dadosCarregados.set(true);
+
     } catch (error) {
       console.error('Erro ao carregar dados do relatório:', error);
-      await this.router.navigate(['/']);
+      this.erro.set(error instanceof Error ? error.message : 'Erro desconhecido ao carregar dados');
+
+      // Aguardar um pouco antes de redirecionar para mostrar o erro
+      setTimeout(() => {
+        this.router.navigate(['/']);
+      }, 3000);
     } finally {
       this.carregando.set(false);
     }
   }
 
+  private async buscarViagemCompleta(viagemId: string): Promise<Viagem | null> {
+    try {
+      // Primeiro tentar do cache
+      let viagemData: Viagem | null = this.viagemService.obterViagem(viagemId) || null;
+
+      if (!viagemData) {
+        console.log('Viagem não encontrada no cache, buscando no Firebase...');
+        viagemData = await this.viagemService.obterViagemPorId(viagemId);
+      }
+
+      return viagemData;
+    } catch (error) {
+      console.error('Erro ao buscar viagem:', error);
+      throw new Error('Não foi possível carregar os dados da viagem');
+    }
+  }
+
+  private async buscarDiasCompletos(viagemId: string): Promise<DiaViagem[]> {
+    try {
+      // Sempre recarregar os dias do Firebase para garantir dados atualizados
+      console.log('Carregando dias da viagem do Firebase...');
+      await this.diaViagemService.carregarDiasPorViagem(viagemId);
+
+      const diasViagem = this.diaViagemService.obterDiasPorViagem(viagemId);
+      console.log(`Encontrados ${diasViagem.length} dias para a viagem`);
+
+      return diasViagem;
+    } catch (error) {
+      console.error('Erro ao buscar dias da viagem:', error);
+      // Não falhar se não conseguir carregar os dias, apenas retornar array vazio
+      return [];
+    }
+  }
+
   voltarParaViagem(): void {
-    this.router.navigate(['/']);
+    const viagemData = this.viagem();
+    if (viagemData) {
+      this.router.navigate(['/viagem', viagemData.id]);
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 
   formatarData(data: Date): string {
@@ -145,17 +193,17 @@ export class RelatorioViagem implements OnInit {
     if (!links || links.trim() === '') {
       return [];
     }
-    
+
     return links
       .split('\n')
       .map(link => link.trim())
       .filter(link => link.length > 0)
       .filter(link => {
         // Validar se é um link válido (começa com http/https ou www)
-        return link.startsWith('http://') || 
-               link.startsWith('https://') || 
-               link.startsWith('www.') ||
-               link.includes('.');
+        return link.startsWith('http://') ||
+          link.startsWith('https://') ||
+          link.startsWith('www.') ||
+          link.includes('.');
       });
   }
 

@@ -46,13 +46,13 @@ export class DetalhesViagemComponent implements OnInit {
   });
 
   diasConcluidos = computed(() => {
-    return this.diasCalculados().filter(dia => 
+    return this.diasCalculados().filter(dia =>
       dia.temDetalhes && dia.detalhes?.status !== 'Pendente'
     ).length;
   });
 
   diasComPendencia = computed(() => {
-    return this.diasCalculados().filter(dia => 
+    return this.diasCalculados().filter(dia =>
       dia.temDetalhes && dia.detalhes?.status === 'Pendente'
     ).length;
   });

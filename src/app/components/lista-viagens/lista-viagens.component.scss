@@ -41,13 +41,13 @@
   background: white;
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-left: 4px solid #007bff;
   transition: transform 0.2s, box-shadow 0.2s;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   }
 
   &.clickable {
@@ -86,7 +86,7 @@
 
 .titulo-container {
   flex: 1;
-  
+
   h3 {
     margin: 0 0 4px 0;
     color: #333;
@@ -102,7 +102,7 @@
   opacity: 0.8;
   transition: opacity 0.2s;
   white-space: nowrap;
-  
+
   .viagem-card.clickable:hover & {
     opacity: 1;
   }
@@ -127,18 +127,18 @@
   border-radius: 50%;
   margin-left: 12px;
   transition: all 0.3s ease;
-  
+
   svg {
     width: 18px;
     height: 18px;
     color: #007bff;
     transition: all 0.3s ease;
   }
-  
+
   .viagem-card.clickable:hover & {
     background: rgba(0, 123, 255, 0.2);
     transform: translateX(3px);
-    
+
     svg {
       color: #0056b3;
       transform: scale(1.1);
@@ -177,14 +177,14 @@
 
   .campo-multiline {
     margin: 12px 0;
-    
+
     strong {
       display: block;
       color: #333;
       margin-bottom: 4px;
       font-weight: 600;
     }
-    
+
     div {
       color: #666;
       line-height: 1.4;
@@ -211,7 +211,8 @@
   border-top: 1px solid #eee;
 }
 
-.btn-tabela, .btn-relatorio, .btn-editar, .btn-remover {
+.btn-editar,
+.btn-remover {
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
@@ -221,6 +222,15 @@
   display: flex;
   align-items: center;
   gap: 4px;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .spinner {
+    animation: spin 1s linear infinite;
+  }
 }
 
 .btn-editar {
@@ -236,24 +246,6 @@
   &:hover {
     background: #0056b3;
     box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
-  }
-}
-
-.btn-tabela {
-  background: #28a745;
-  color: white;
-
-  &:hover {
-    background: #218838;
-  }
-}
-
-.btn-relatorio {
-  background: #6f42c1;
-  color: white;
-
-  &:hover {
-    background: #5a2d91;
   }
 }
 
@@ -303,8 +295,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 // Ajustes para mobile
@@ -312,44 +308,45 @@
   .lista-viagens {
     padding: 10px 12px 20px 12px;
   }
-  
+
   .viagens-grid {
     display: block; // Muda para block em vez de grid
     padding: 0;
   }
-  
+
   .viagem-card {
     width: calc(100% - 24px); // Largura total menos margens laterais
     max-width: none;
     margin: 0 12px 16px 12px; // Margem lateral de 12px
     padding: 16px;
     box-sizing: border-box;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
   }
-  
+
   .viagem-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
-    
+
     .titulo-container {
       width: 100%;
     }
-    
+
     .status-badges {
       align-self: flex-end;
     }
   }
-  
+
   .viagem-acoes {
     flex-wrap: wrap;
     gap: 6px;
   }
-  
-  .btn-tabela, .btn-relatorio, .btn-editar, .btn-remover {
+
+  .btn-editar,
+  .btn-remover {
     font-size: 0.75em;
     padding: 8px 12px; // Aumenta altura dos botões
     flex: 1;
