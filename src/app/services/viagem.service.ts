@@ -33,7 +33,7 @@ export class ViagemService {
     try {
       this.loadingSignal.set(true);
       
-      this.firebaseService.getAll<Viagem>(
+      this.firebaseService.getAllSnapshot<Viagem>(
         this.COLLECTION_NAME,
         orderBy('dataFim', 'desc')
       ).subscribe({

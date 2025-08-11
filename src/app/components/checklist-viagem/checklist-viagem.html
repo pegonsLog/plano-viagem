@@ -1,0 +1,118 @@
+<div class="checklist-container">
+  <div class="checklist-page-container">
+    <div class="header">
+      <div class="header-content">
+        <button class="btn-voltar" (click)="voltarParaLista()" title="Voltar para a lista de viagens">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M19 12H5"/>
+            <path d="M12 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <h2>Checklist da Viagem</h2>
+      </div>
+      <button class="btn-adicionar" (click)="abrirFormulario()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 5v14" />
+          <path d="M5 12h14" />
+        </svg>
+        Adicionar Item
+      </button>
+    </div>
+
+    <div *ngIf="loading()" class="loading-container">
+      <p>Carregando itens...</p>
+    </div>
+
+    <ng-container *ngIf="!loading()">
+      <div class="tabela-wrapper">
+        <table class="tabela-checklist">
+          <thead>
+            <tr>
+              <th class="col-status">Status</th>
+              <th class="col-descricao">Item</th>
+              <th class="col-acoes">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of checklistItems$ | async; trackBy: trackById" [class.concluido]="item.concluido">
+              <td class="col-status">
+                <input type="checkbox" [checked]="item.concluido" (change)="toggleConcluido(item.id, !item.concluido)" (click)="$event.stopPropagation()">
+              </td>
+              <td class="col-descricao">
+                <span>{{ item.descricao }}</span>
+              </td>
+              <td class="col-acoes">
+                <button class="btn-acao editar" (click)="abrirFormulario(item)" title="Editar item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                </button>
+                <button class="btn-acao remover" (click)="abrirConfirmacaoRemover(item.id)" title="Remover item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    <line x1="10" y1="11" x2="10" y2="17" />
+                    <line x1="14" y1="11" x2="14" y2="17" />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="(checklistItems$ | async)?.length === 0" class="sem-dados">
+        <h3>Nenhum item no checklist</h3>
+        <p>Clique em "Adicionar Item" para começar.</p>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Modal para Adicionar/Editar Item -->
+  <div *ngIf="isFormularioAberto()" class="modal-overlay" (click)="fecharFormulario()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ itemSelecionado() ? 'Editar Item' : 'Adicionar Item' }}</h3>
+        <button class="btn-fechar" (click)="fecharFormulario()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6L6 18" />
+            <path d="M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-content">
+        <form [formGroup]="itemForm" (ngSubmit)="salvarItem()">
+          <div class="form-group">
+            <label for="descricao">Descrição do item</label>
+            <input type="text" id="descricao" formControlName="descricao" required cdkFocusInitial>
+            <div *ngIf="itemForm.get('descricao')?.invalid && itemForm.get('descricao')?.touched" class="error-message">
+              A descrição é obrigatória.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-cancelar" (click)="fecharFormulario()">Cancelar</button>
+            <button type="submit" class="btn-salvar" [disabled]="itemForm.invalid">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmação para Remover Item -->
+  <div *ngIf="isConfirmacaoRemoverAberto()" class="modal-overlay" (click)="fecharConfirmacaoRemover()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Confirmar Remoção</h3>
+        <button class="btn-fechar" (click)="fecharConfirmacaoRemover()">×</button>
+      </div>
+      <div class="modal-content">
+        <p>Você tem certeza de que deseja remover este item do checklist?</p>
+        <p>Esta ação não pode ser desfeita.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancelar" (click)="fecharConfirmacaoRemover()">Cancelar</button>
+        <button type="button" class="btn-remover-confirmar" (click)="confirmarRemocao()">Sim, Remover</button>
+      </div>
+    </div>
+  </div>
+</div>

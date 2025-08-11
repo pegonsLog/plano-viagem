@@ -12,7 +12,8 @@ import {
   where,
   orderBy,
   DocumentData,
-  QueryConstraint
+  QueryConstraint,
+  collectionData
 } from '@angular/fire/firestore';
 import { Observable, from, map } from 'rxjs';
 
@@ -29,7 +30,7 @@ export class FirebaseBaseService {
     return docRef.id;
   }
 
-  // Obter todos os documentos
+  // Obter todos os documentos (leitura única)
   getAll<T>(collectionName: string, ...constraints: QueryConstraint[]): Observable<T[]> {
     const collectionRef = collection(this.firestore, collectionName);
     const q = constraints.length > 0 ? query(collectionRef, ...constraints) : collectionRef;
@@ -42,6 +43,14 @@ export class FirebaseBaseService {
         } as T))
       )
     );
+  }
+
+  // Obter todos os documentos e escutar mudanças (real-time)
+  getAllSnapshot<T>(collectionName: string, ...constraints: QueryConstraint[]): Observable<T[]> {
+    const collectionRef = collection(this.firestore, collectionName);
+    const q = constraints.length > 0 ? query(collectionRef, ...constraints) : collectionRef;
+    
+    return collectionData(q, { idField: 'id' }) as Observable<T[]>;
   }
 
   // Obter documento por ID
@@ -92,6 +101,21 @@ export class FirebaseBaseService {
         } as T))
       )
     );
+  }
+
+  // Obter documentos com filtro e escutar mudanças (real-time)
+  getWhereSnapshot<T>(
+    collectionName: string, 
+    field: string, 
+    operator: any, 
+    value: any,
+    ...additionalConstraints: QueryConstraint[]
+  ): Observable<T[]> {
+    const collectionRef = collection(this.firestore, collectionName);
+    const constraints = [where(field, operator, value), ...additionalConstraints];
+    const q = query(collectionRef, ...constraints);
+    
+    return collectionData(q, { idField: 'id' }) as Observable<T[]>;
   }
 
   // Converter Timestamp do Firebase para Date

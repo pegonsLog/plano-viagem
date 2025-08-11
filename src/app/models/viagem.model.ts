@@ -10,10 +10,13 @@ export interface Viagem {
   temPendencia?: boolean;
   motivoPendencia?: string;
   lembretesImportantes?: string;
+  observacoesViagem?: string;
   criadaEm: Date;
   atualizadaEm: Date;
   totalDias?: number;
   diasDetalhados?: number;
+  totalChecklistItems?: number;
+  checklistItemsConcluidos?: number;
 }
 
 export interface NovaViagem {
@@ -26,4 +29,5 @@ export interface NovaViagem {
   temPendencia?: boolean;
   motivoPendencia?: string;
   lembretesImportantes?: string;
+  observacoesViagem?: string;
 }

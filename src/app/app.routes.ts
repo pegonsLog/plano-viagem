@@ -36,6 +36,13 @@ export const routes: Routes = [
     data: { prerender: false }
   },
   {
+    path: 'viagem/:id/checklist',
+    loadComponent: () => import('./components/checklist-viagem/checklist-viagem').then(m => m.ChecklistViagemComponent),
+    canActivate: [viagemExistsGuard],
+    title: 'Checklist da Viagem',
+    data: { prerender: false }
+  },
+  {
     path: 'viagem/:id/relatorio',
     loadComponent: () => import('./components/relatorio-viagem/relatorio-viagem').then(m => m.RelatorioViagem),
     canActivate: [viagemExistsGuard],

@@ -29,16 +29,16 @@
         </div>
         <div class="status-badges">
           <span class="status-badge">{{ getStatusLabel(viagem.status) }}</span>
-          @if (viagem.temPendencia) {
-          <span class="status-badge pendencia" [title]="viagem.motivoPendencia || 'Pendência sem motivo especificado'">
+          @if ((viagem.totalChecklistItems ?? 0) > (viagem.checklistItemsConcluidos ?? 0)) {
+          <span class="status-badge pendencia" title="Checklist com itens pendentes">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10" />
               <path d="M12 8v4l3 3" />
             </svg>
-            Pendente
+            Pendente ({{ (viagem.totalChecklistItems ?? 0) - (viagem.checklistItemsConcluidos ?? 0) }})
           </span>
           } @else {
-          <span class="status-badge concluido">
+          <span class="status-badge concluido" title="Checklist concluído">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M9 12l2 2 4-4" />
               <circle cx="12" cy="12" r="10" />
@@ -68,15 +68,15 @@
           <div class="preserve-lines">{{ viagem.lembretesImportantes }}</div>
         </div>
         }
-        @if (viagem.temPendencia && viagem.motivoPendencia) {
         <div class="campo-multiline">
-          <strong>Motivo da Pendência:</strong>
-          <div class="preserve-lines pendencia-text">{{ viagem.motivoPendencia }}</div>
+          <strong>Observações:</strong>
+          <div class="preserve-lines">{{ viagem.observacoesViagem || 'Nenhuma observação' }}</div>
         </div>
-        }
+
       </div>
 
       <div class="viagem-acoes" (click)="$event.stopPropagation()">
+        <button class="btn-checklist" (click)="verChecklist(viagem.id)">Checklist</button>
         <button class="btn-editar" (click)="editarViagem(viagem)">Editar</button>
         <button class="btn-remover" (click)="removerViagem(viagem.id)">Remover</button>
       </div>

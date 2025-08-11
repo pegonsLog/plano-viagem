@@ -166,6 +166,8 @@
     background: #fff3cd;
     color: #856404;
   }
+
+
 }
 
 .viagem-info {
@@ -211,6 +213,7 @@
   border-top: 1px solid #eee;
 }
 
+.btn-checklist,
 .btn-editar,
 .btn-remover {
   padding: 6px 12px;
@@ -230,6 +233,15 @@
 
   .spinner {
     animation: spin 1s linear infinite;
+  }
+}
+
+.btn-checklist {
+  background-color: #6f42c1; // Roxo
+  color: white;
+
+  &:hover {
+    background-color: #5a349e; // Tom mais escuro de roxo
   }
 }
 

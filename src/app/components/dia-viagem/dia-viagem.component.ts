@@ -23,14 +23,14 @@ export class DiaViagemComponent {
   private router = inject(Router);
   private diaViagemService = inject(DiaViagemService);
   private errorHandler = inject(ErrorHandlerService);
-  private dateService = inject(DateService);
-
-  isFimDeSemana(): boolean {
-    return this.diaViagemService.isFimDeSemana(this.diaCalculado().data);
-  }
+  private readonly dateService = inject(DateService);
 
   toggleExpansao(): void {
     this.expandido.update(value => !value);
+  }
+
+  isFimDeSemana(): boolean {
+    return this.diaViagemService.isFimDeSemana(this.diaCalculado().data);
   }
 
   adicionarDetalhes(): void {

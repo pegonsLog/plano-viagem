@@ -51,12 +51,13 @@
   <!-- Conteúdo do Dia -->
   @if (diaCalculado().temDetalhes && diaCalculado().detalhes; as detalhes) {
   <div class="dia-conteudo">
-    @if (!expandido()) {
-    <!-- Visualização Resumida -->
+    <!-- Visualização Resumida (Sempre visível) -->
     <div class="resumo-detalhes">
       <div class="detalhe-item">
         <strong>Cidade:</strong> {{ detalhes.cidade }}
       </div>
+
+      <h4>Transporte e Deslocamento</h4>
       <div class="detalhe-item">
         <strong>Transporte:</strong>
         <span [class.campo-vazio]="!detalhes.transporte">
@@ -69,10 +70,18 @@
           {{ detalhes.detalhesVoo || '(Não informado)' }}
         </span>
       </div>
+
+      <h4>Hospedagem</h4>
       <div class="detalhe-item">
-        <strong>Hospedagem:</strong>
+        <strong>Nome:</strong>
         <span class="preserve-lines" [class.campo-vazio]="!detalhes.nomeHospedagem">
           {{ detalhes.nomeHospedagem || '(Não informado)' }}
+        </span>
+      </div>
+      <div class="detalhe-item">
+        <strong>Endereço:</strong>
+        <span class="preserve-lines" [class.campo-vazio]="!detalhes.enderecoHospedagem">
+          {{ detalhes.enderecoHospedagem || '(Não informado)' }}
         </span>
       </div>
       <div class="detalhe-item">
@@ -94,175 +103,87 @@
         </span>
       </div>
       <div class="detalhe-item">
-        <strong>Links da Hospedagem:</strong>
+        <strong>Links:</strong>
         <span class="links-hospedagem" [class.campo-vazio]="!detalhes.linkHospedagem">
           @if (detalhes.linkHospedagem) {
-          @for (linkObj of formatarLinksHospedagem(detalhes.linkHospedagem); track $index) {
-          <a [href]="linkObj.url" target="_blank" rel="noopener noreferrer" class="link-hospedagem">
-            {{ linkObj.texto }}
-          </a>
-          }
+            @for (linkObj of formatarLinksHospedagem(detalhes.linkHospedagem); track $index) {
+              <a [href]="linkObj.url" target="_blank" rel="noopener noreferrer" class="link-hospedagem">
+                {{ linkObj.texto }}
+              </a>
+            }
           } @else {
-          (Não informado)
+            (Não informado)
           }
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Observações:</strong>
-        <span [class.campo-vazio]="!detalhes.observacoes">
-          {{ detalhes.observacoes || '(Nenhuma observação)' }}
         </span>
       </div>
     </div>
-    } @else {
-    <!-- Visualização Expandida -->
-    <div class="detalhes-completos">
-      <div class="detalhe-item">
-        <strong>Cidade:</strong> {{ detalhes.cidade }}
+
+    <!-- Visualização Expandida (Condicional) -->
+    @if (expandido()) {
+      <div class="detalhes-completos">
+        <h4>Pagamento</h4>
+        <div class="detalhe-item">
+          <strong>Forma de Pagamento:</strong>
+          <span [class.campo-vazio]="!detalhes.formaPagamento">
+            {{ detalhes.formaPagamento || '(Não informado)' }}
+          </span>
+        </div>
+        <div class="detalhe-item">
+          <strong>Titular do Cartão:</strong>
+          <span [class.campo-vazio]="!detalhes.titularCartao">
+            {{ detalhes.titularCartao || '(Não informado)' }}
+          </span>
+        </div>
+        <div class="detalhe-item">
+          <strong>Final do Cartão:</strong>
+          <span [class.campo-vazio]="!detalhes.finalCartao">
+            {{ detalhes.finalCartao ? ('**** ' + detalhes.finalCartao) : '(Não informado)' }}
+          </span>
+        </div>
+        <div class="detalhe-item">
+          <strong>Valor:</strong>
+          <span [class.campo-vazio]="!detalhes.valorHospedagem">
+            {{ detalhes.valorHospedagem ? formatarMoeda(detalhes.valorHospedagem) : '(Não informado)' }}
+          </span>
+        </div>
+        <div class="detalhe-item">
+          <strong>Parcelas:</strong>
+          <span [class.campo-vazio]="!detalhes.quantidadeParcelas">
+            {{ (detalhes.quantidadeParcelas && detalhes.valorParcela) ? (detalhes.quantidadeParcelas + 'x de ' + formatarValorParcela(detalhes.valorParcela)) : '(Não informado)' }}
+          </span>
+        </div>
+
+        <h4>Observações</h4>
+        <div class="detalhe-item">
+          <span class="preserve-lines" [class.campo-vazio]="!detalhes.observacoes">
+            {{ detalhes.observacoes || '(Nenhuma observação)' }}
+          </span>
+        </div>
+
+        @if (detalhes.status === 'Pendente') {
+          <h4>Status</h4>
+          <div class="detalhe-item pendencia-info">
+            <strong>Motivo da Pendência:</strong>
+            <span class="preserve-lines" [class.campo-vazio]="!detalhes.motivoPendencia">
+              {{ detalhes.motivoPendencia || '(Motivo não especificado)' }}
+            </span>
+          </div>
+        }
       </div>
-      <div class="detalhe-item">
-        <strong>Transporte:</strong>
-        <span [class.campo-vazio]="!detalhes.transporte">
-          {{ detalhes.transporte ? formatarTransporte(detalhes.transporte) : '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Detalhes do Transporte:</strong>
-        <span [class.campo-vazio]="!detalhes.detalhesVoo">
-          {{ detalhes.detalhesVoo || '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Custo do Transporte:</strong>
-        <span [class.campo-vazio]="!detalhes.custoTransporte">
-          {{ detalhes.custoTransporte ? formatarMoeda(detalhes.custoTransporte) : '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Forma de Pagamento do Transporte:</strong>
-        <span [class.campo-vazio]="!detalhes.formaPagamentoTransporte">
-          {{ detalhes.formaPagamentoTransporte || '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Hospedagem:</strong>
-        <span class="preserve-lines" [class.campo-vazio]="!detalhes.nomeHospedagem">
-          {{ detalhes.nomeHospedagem || '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Endereço:</strong>
-        <span class="preserve-lines" [class.campo-vazio]="!detalhes.enderecoHospedagem">
-          {{ detalhes.enderecoHospedagem || '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Contato Hospedagem:</strong>
-        <span class="preserve-lines" [class.campo-vazio]="!detalhes.contatoHospedagem">
-          {{ detalhes.contatoHospedagem || '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Número Reserva:</strong>
-        <span class="preserve-lines" [class.campo-vazio]="!detalhes.numeroReserva">
-          {{ detalhes.numeroReserva || '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Horário Check-in/out:</strong>
-        <span class="preserve-lines" [class.campo-vazio]="!detalhes.horarioChecks">
-          {{ detalhes.horarioChecks || '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Links da Hospedagem:</strong>
-        <span class="links-hospedagem" [class.campo-vazio]="!detalhes.linkHospedagem">
-          @if (detalhes.linkHospedagem) {
-          @for (linkObj of formatarLinksHospedagem(detalhes.linkHospedagem); track $index) {
-          <a [href]="linkObj.url" target="_blank" rel="noopener noreferrer" class="link-hospedagem">
-            {{ linkObj.texto }}
-          </a>
-          }
-          } @else {
-          (Não informado)
-          }
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Deslocamento Local:</strong>
-        <span [class.campo-vazio]="!detalhes.deslocamentoLocal">
-          {{ detalhes.deslocamentoLocal || '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Observações:</strong>
-        <span [class.campo-vazio]="!detalhes.observacoes">
-          {{ detalhes.observacoes || '(Nenhuma observação)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Forma de Pagamento da Hospedagem:</strong>
-        <span [class.campo-vazio]="!detalhes.formaPagamento">
-          {{ detalhes.formaPagamento || '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Titular do Cartão:</strong>
-        <span [class.campo-vazio]="!detalhes.titularCartao">
-          {{ detalhes.titularCartao || '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Final do Cartão:</strong>
-        <span [class.campo-vazio]="!detalhes.finalCartao">
-          {{ detalhes.finalCartao ? ('**** ' + detalhes.finalCartao) : '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Parcelas:</strong>
-        <span [class.campo-vazio]="!detalhes.quantidadeParcelas">
-          {{ detalhes.quantidadeParcelas ? (detalhes.quantidadeParcelas + 'x') : '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Valor da Hospedagem:</strong>
-        <span [class.campo-vazio]="!detalhes.valorHospedagem">
-          {{ detalhes.valorHospedagem ? formatarMoeda(detalhes.valorHospedagem) : '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Valor da Parcela:</strong>
-        <span [class.campo-vazio]="!detalhes.valorParcela">
-          {{ detalhes.valorParcela ? formatarValorParcela(detalhes.valorParcela) : '(Não informado)' }}
-        </span>
-      </div>
-      @if (detalhes.status === 'Pendente') {
-      <div class="detalhe-item pendencia-info">
-        <strong>Status:</strong>
-        <span class="status-pendente">Pendente</span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Motivo da Pendência:</strong>
-        <span class="preserve-lines" [class.campo-vazio]="!detalhes.motivoPendencia">
-          {{ detalhes.motivoPendencia || '(Motivo não especificado)' }}
-        </span>
-      </div>
-      }
-    </div>
     }
 
     <!-- Botão Expandir/Colapsar -->
     <button class="btn-expandir" (click)="toggleExpansao()">
       @if (!expandido()) {
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="m6 9 6 6 6-6" />
-      </svg>
-      Ver mais
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+        Ver mais
       } @else {
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="m18 15-6-6-6 6" />
-      </svg>
-      Ver menos
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m18 15-6-6-6 6" />
+        </svg>
+        Ver menos
       }
     </button>
   </div>

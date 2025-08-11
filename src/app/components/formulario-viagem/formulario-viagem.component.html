@@ -51,46 +51,26 @@
 
     <div class="form-group">
       <label for="descricao">Descrição</label>
-      <textarea id="descricao" name="descricao" [(ngModel)]="viagem.descricao" rows="3"
+      <textarea id="descricao" name="descricao" [(ngModel)]="viagem.descricao" rows="6"
         placeholder="Descreva sua viagem (opcional)">
       </textarea>
     </div>
 
     <div class="form-group">
+      <label for="observacoesViagem">Observações da Viagem</label>
+      <textarea id="observacoesViagem" name="observacoesViagem" [(ngModel)]="viagem.observacoesViagem" rows="6"
+        placeholder="Anote observações gerais sobre a viagem...">
+      </textarea>
+    </div>
+
+    <div class="form-group">
       <label for="lembretesImportantes">Lembretes Importantes</label>
-      <textarea id="lembretesImportantes" name="lembretesImportantes" [(ngModel)]="viagem.lembretesImportantes" rows="3"
+      <textarea id="lembretesImportantes" name="lembretesImportantes" [(ngModel)]="viagem.lembretesImportantes" rows="6"
         placeholder="Anote lembretes importantes para esta viagem...">
       </textarea>
     </div>
 
-    <!-- Status e Pendência -->
-    <div class="form-section">
-      <h4>Status</h4>
 
-      <div class="form-group">
-        <div class="checkbox-group">
-          <input type="checkbox" id="temPendencia" name="temPendencia" [(ngModel)]="viagem.temPendencia"
-            class="form-checkbox">
-          <label for="temPendencia" class="checkbox-label">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 8v8" />
-              <path d="M8 12h8" />
-            </svg>
-            Marcar como pendente
-          </label>
-        </div>
-      </div>
-
-      @if (viagem.temPendencia) {
-      <div class="form-group">
-        <label for="motivoPendencia">Motivo da Pendência</label>
-        <textarea id="motivoPendencia" name="motivoPendencia" [(ngModel)]="viagem.motivoPendencia" rows="3"
-          placeholder="Descreva o motivo da pendência..." class="form-control">
-        </textarea>
-      </div>
-      }
-    </div>
 
     <div class="form-actions">
       <button type="button" class="btn-cancelar" (click)="onCancelar()">

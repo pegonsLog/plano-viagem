@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ViagemService } from '../../services/viagem.service';
 import { Viagem } from '../../models/viagem.model';
 import { FormularioViagemComponent } from '../formulario-viagem/formulario-viagem.component';
+
 import { DateService } from '../../utils/date.service';
 
 @Component({
@@ -39,6 +40,10 @@ export class ListaViagensComponent {
 
   verDetalhesViagem(viagemId: string) {
     this.router.navigate(['/viagem', viagemId]);
+  }
+
+  verChecklist(viagemId: string) {
+    this.router.navigate(['/viagem', viagemId, 'checklist']);
   }
 
   editarViagem(viagem: Viagem) {
