@@ -1,0 +1,356 @@
+import { Injectable } from '@angular/core';
+import { Observable, BehaviorSubject, of, map } from 'rxjs';
+import { Gasto, NovoGasto, StatusGasto, CategoriaGasto, FormaPagamento, ResumoGastos, Moeda } from '../models/gasto.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class GastoService {
+  private gastosSubject = new BehaviorSubject<Gasto[]>([]);
+  private nextId = 1;
+  private gastos: Gasto[] = [];
+
+  constructor() {
+    this.inicializarDadosExemplo();
+  }
+
+  // Simular métodos básicos de CRUD sem Firebase
+  async create(data: Omit<Gasto, 'id'>): Promise<string> {
+    const id = this.nextId.toString();
+    this.nextId++;
+    
+    const novoGasto: Gasto = {
+      ...data,
+      id,
+      status: data.status || 'Confirmado',
+      moeda: data.moeda || 'BRL',
+      criadoEm: new Date(),
+      atualizadoEm: new Date()
+    };
+    
+    this.gastos.push(novoGasto);
+    this.gastosSubject.next([...this.gastos]);
+    return id;
+  }
+
+  async update(id: string, data: Partial<Gasto>): Promise<void> {
+    const index = this.gastos.findIndex(g => g.id === id);
+    if (index !== -1) {
+      this.gastos[index] = {
+        ...this.gastos[index],
+        ...data,
+        atualizadoEm: new Date()
+      };
+      this.gastosSubject.next([...this.gastos]);
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    this.gastos = this.gastos.filter(g => g.id !== id);
+    this.gastosSubject.next([...this.gastos]);
+  }
+
+  getByField(field: keyof Gasto, value: any): Observable<Gasto[]> {
+    return of(this.gastos.filter(gasto => gasto[field] === value));
+  }
+
+  getById(id: string): Observable<Gasto | null> {
+    const gasto = this.gastos.find(g => g.id === id);
+    return of(gasto || null);
+  }
+
+  // Métodos específicos do serviço de gastos
+  public gastos$ = this.gastosSubject.asObservable();
+
+  async criarGasto(novoGasto: NovoGasto): Promise<string> {
+    const gasto: Omit<Gasto, 'id'> = {
+      ...novoGasto,
+      status: novoGasto.status || 'Confirmado',
+      moeda: novoGasto.moeda || 'BRL',
+      criadoEm: new Date(),
+      atualizadoEm: new Date()
+    };
+
+    const id = await this.create(gasto);
+    this.carregarGastosPorViagem(novoGasto.viagemId);
+    return id;
+  }
+
+  async atualizarGasto(id: string, gasto: Partial<Gasto>): Promise<void> {
+    const gastoAtualizado = {
+      ...gasto,
+      atualizadoEm: new Date()
+    };
+
+    await this.update(id, gastoAtualizado);
+    
+    // Recarregar gastos se temos o viagemId
+    if (gasto.viagemId) {
+      this.carregarGastosPorViagem(gasto.viagemId);
+    }
+  }
+
+  async excluirGasto(id: string, viagemId: string): Promise<void> {
+    await this.delete(id);
+    this.carregarGastosPorViagem(viagemId);
+  }
+
+  carregarGastosPorViagem(viagemId: string): void {
+    this.getByField('viagemId', viagemId).subscribe(gastos => {
+      const gastosOrdenados = gastos.sort((a, b) => 
+        new Date(b.data).getTime() - new Date(a.data).getTime()
+      );
+      this.gastosSubject.next(gastosOrdenados);
+    });
+  }
+
+  getGastosPorViagem(viagemId: string): Observable<Gasto[]> {
+    return this.getByField('viagemId', viagemId);
+  }
+
+  getGastosPorDia(diaViagemId: string): Observable<Gasto[]> {
+    return this.getByField('diaViagemId', diaViagemId);
+  }
+
+  calcularResumoGastos(viagemId: string): Observable<ResumoGastos> {
+    return this.getGastosPorViagem(viagemId).pipe(
+      map((gastos: Gasto[]) => {
+        const gastosConfirmados = gastos.filter((g: Gasto) => g.status === 'Confirmado');
+        const totalGasto = gastosConfirmados.reduce((total: number, gasto: Gasto) => total + gasto.valor, 0);
+
+        // Calcular totais por categoria
+        const categorias = Object.values(CategoriaGasto);
+        const totalPorCategoria: { [categoria: string]: number } = {};
+        categorias.forEach(cat => {
+          totalPorCategoria[cat.value] = gastosConfirmados
+            .filter((g: Gasto) => g.categoria === cat.value)
+            .reduce((total: number, gasto: Gasto) => total + gasto.valor, 0);
+        });
+
+        // Calcular totais por forma de pagamento
+        const totalPorFormaPagamento: { [forma: string]: number } = {};
+        gastosConfirmados.forEach((gasto: Gasto) => {
+          const forma = gasto.formaPagamento;
+          totalPorFormaPagamento[forma] = (totalPorFormaPagamento[forma] || 0) + gasto.valor;
+        });
+
+        // Calcular gastos por status
+        const gastosPorStatus: { [status: string]: number } = {};
+        gastosConfirmados.forEach((gasto: Gasto) => {
+          const status = gasto.status;
+          gastosPorStatus[status] = (gastosPorStatus[status] || 0) + gasto.valor;
+        });
+
+        // Calcular totais por moeda
+        const totalPorMoeda: { [moeda: string]: number } = {};
+        gastosConfirmados.forEach((gasto: Gasto) => {
+          const moeda = gasto.moeda;
+          totalPorMoeda[moeda] = (totalPorMoeda[moeda] || 0) + gasto.valor;
+        });
+
+        const quantidadeGastos = gastosConfirmados.length;
+        const gastoMedio = quantidadeGastos > 0 ? totalGasto / quantidadeGastos : 0;
+        const gastosRecentes = gastosConfirmados
+          .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime())
+          .slice(0, 5);
+
+        // Assumir orçamento padrão para cálculo de percentual
+        const orcamentoTotal = 5000; // Valor padrão
+        const percentualDoOrcamento = orcamentoTotal > 0 ? (totalGasto / orcamentoTotal) * 100 : 0;
+
+        return {
+          totalGasto,
+          totalPorCategoria,
+          totalPorFormaPagamento,
+          totalPorMoeda,
+          gastosPorStatus,
+          quantidadeGastos,
+          gastoMedio,
+          gastosRecentes,
+          percentualDoOrcamento
+        };
+      })
+    );
+  }
+
+  filtrarGastos(
+    viagemId: string,
+    filtros: {
+      categoria?: CategoriaGasto;
+      status?: StatusGasto;
+      formaPagamento?: FormaPagamento;
+      dataInicio?: Date;
+      dataFim?: Date;
+      valorMinimo?: number;
+      valorMaximo?: number;
+    }
+  ): Observable<Gasto[]> {
+    return this.getGastosPorViagem(viagemId).pipe(
+      map(gastos => {
+        return gastos.filter(gasto => {
+          if (filtros.categoria && gasto.categoria !== filtros.categoria) return false;
+          if (filtros.status && gasto.status !== filtros.status) return false;
+          if (filtros.formaPagamento && gasto.formaPagamento !== filtros.formaPagamento) return false;
+          if (filtros.dataInicio && new Date(gasto.data) < filtros.dataInicio) return false;
+          if (filtros.dataFim && new Date(gasto.data) > filtros.dataFim) return false;
+          if (filtros.valorMinimo && gasto.valor < filtros.valorMinimo) return false;
+          if (filtros.valorMaximo && gasto.valor > filtros.valorMaximo) return false;
+          return true;
+        });
+      })
+    );
+  }
+
+  async duplicarGasto(gastoId: string): Promise<string> {
+    const gasto = this.gastos.find(g => g.id === gastoId);
+    if (!gasto) throw new Error('Gasto não encontrado');
+    
+    const novoGasto: NovoGasto = {
+      viagemId: gasto.viagemId,
+      diaViagemId: gasto.diaViagemId,
+      titulo: `${gasto.titulo} (Cópia)`,
+      descricao: gasto.descricao,
+      valor: gasto.valor,
+      categoria: gasto.categoria,
+      subcategoria: gasto.subcategoria,
+      formaPagamento: gasto.formaPagamento,
+      moeda: gasto.moeda,
+      data: gasto.data,
+      local: gasto.local,
+      observacoes: gasto.observacoes,
+      tags: gasto.tags,
+      anexos: gasto.anexos
+    };
+
+    return await this.criarGasto(novoGasto);
+  }
+
+  exportarGastosCSV(viagemId: string): Observable<string> {
+    return this.getGastosPorViagem(viagemId).pipe(
+      map(gastos => {
+        const headers = ['Data', 'Título', 'Categoria', 'Valor', 'Forma de Pagamento', 'Status', 'Local'];
+        const csvContent = [
+          headers.join(','),
+          ...gastos.map(gasto => [
+            new Date(gasto.data).toLocaleDateString('pt-BR'),
+            `"${gasto.titulo}"`,
+            gasto.categoria,
+            gasto.valor.toFixed(2),
+            gasto.formaPagamento,
+            gasto.status,
+            `"${gasto.local || ''}"`
+          ].join(','))
+        ].join('\n');
+        
+        return csvContent;
+      })
+    );
+  }
+
+  private inicializarDadosExemplo(): void {
+    const gastosExemplo: Gasto[] = [
+      {
+        id: '1',
+        viagemId: 'viagem-1',
+        diaViagemId: 'dia-1',
+        titulo: 'Almoço no restaurante',
+        valor: 45.50,
+        categoria: 'Alimentação',
+        formaPagamento: 'Cartão de Crédito',
+        moeda: 'BRL',
+        data: new Date('2024-01-15'),
+        local: 'Centro da cidade',
+        status: 'Confirmado',
+        criadoEm: new Date(),
+        atualizadoEm: new Date()
+      },
+      {
+        id: '2',
+        viagemId: 'viagem-1',
+        diaViagemId: 'dia-1',
+        titulo: 'Transporte público',
+        valor: 12.00,
+        categoria: 'Transporte',
+        formaPagamento: 'Dinheiro',
+        moeda: 'BRL',
+        data: new Date('2024-01-15'),
+        local: 'Estação de metrô',
+        status: 'Confirmado',
+        criadoEm: new Date(),
+        atualizadoEm: new Date()
+      },
+      {
+        id: '3',
+        viagemId: 'viagem-1',
+        diaViagemId: 'dia-2',
+        titulo: 'Hotel - 1 diária',
+        valor: 150.00,
+        categoria: 'Hospedagem',
+        formaPagamento: 'Cartão de Crédito',
+        moeda: 'BRL',
+        data: new Date('2024-01-16'),
+        local: 'Hotel Central',
+        status: 'Confirmado',
+        criadoEm: new Date(),
+        atualizadoEm: new Date()
+      }
+    ];
+
+    this.gastos = gastosExemplo;
+    this.nextId = 4;
+    this.gastosSubject.next([...this.gastos]);
+  }
+        };
+      })
+    );
+  }
+
+  // Buscar gastos por texto
+  buscarGastos(viagemId: string, termo: string): Observable<Gasto[]> {
+    return this.getGastosPorViagem(viagemId).pipe(
+      map(gastos => {
+        const termoBusca = termo.toLowerCase();
+        return gastos.filter(gasto =>
+          gasto.titulo.toLowerCase().includes(termoBusca) ||
+          gasto.descricao?.toLowerCase().includes(termoBusca) ||
+          gasto.categoria.toLowerCase().includes(termoBusca) ||
+          gasto.subcategoria?.toLowerCase().includes(termoBusca) ||
+          gasto.localGasto?.toLowerCase().includes(termoBusca) ||
+          gasto.tags?.some(tag => tag.toLowerCase().includes(termoBusca))
+        );
+      })
+    );
+  }
+
+  // Exportar gastos para CSV
+  exportarGastosCSV(viagemId: string): Observable<string> {
+    return this.getGastosPorViagem(viagemId).pipe(
+      map(gastos => {
+        const headers = [
+          'Data', 'Título', 'Descrição', 'Categoria', 'Subcategoria', 
+          'Valor', 'Moeda', 'Forma de Pagamento', 'Local', 'Status', 'Observações'
+        ];
+
+        const linhas = gastos.map(gasto => [
+          new Date(gasto.data).toLocaleDateString('pt-BR'),
+          gasto.titulo,
+          gasto.descricao || '',
+          gasto.categoria,
+          gasto.subcategoria || '',
+          gasto.valor.toFixed(2),
+          gasto.moeda,
+          gasto.formaPagamento,
+          gasto.localGasto || '',
+          gasto.status,
+          gasto.observacoes || ''
+        ]);
+
+        const csv = [headers, ...linhas]
+          .map(linha => linha.map(campo => `"${campo}"`).join(','))
+          .join('\n');
+
+        return csv;
+      })
+    );
+  }
+}

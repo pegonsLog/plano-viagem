@@ -1,0 +1,309 @@
+<div class="gastos-demo">
+  <a routerLink="/lista-viagens" class="back-button">&larr; Voltar para Viagens</a>
+
+  <!-- Header -->
+  <header class="header">
+    <h1>💰 Gerenciamento de Gastos</h1>
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="abrirFormulario()">
+        ➕ Adicionar Gasto
+      </button>
+      <button class="btn btn-secondary" (click)="exportarGastos()">
+        📥 Exportar
+      </button>
+    </div>
+  </header>
+
+  <!-- Resumo -->
+  <div class="resumo-section" *ngIf="resumoGastos">
+    <div class="resumo-cards">
+      <div class="resumo-card">
+        <div class="resumo-icon">🧾</div>
+        <div class="resumo-content">
+          <div class="resumo-value">{{ gastos.length }}</div>
+          <div class="resumo-label">Total de Gastos</div>
+        </div>
+      </div>
+      
+      <div class="resumo-card">
+        <div class="resumo-icon">💰</div>
+        <div class="resumo-content">
+          <div class="resumo-value">{{ formatarValor(resumoGastos.totalGasto, 'BRL') }}</div>
+          <div class="resumo-label">Valor Total</div>
+        </div>
+      </div>
+      
+      <div class="resumo-card">
+        <div class="resumo-icon">📊</div>
+        <div class="resumo-content">
+          <div class="resumo-value">{{ formatarValor(resumoGastos.gastoMedio, 'BRL') }}</div>
+          <div class="resumo-label">Gasto Médio</div>
+        </div>
+      </div>
+      
+      <div class="resumo-card" *ngIf="resumoGastos.categoriaComMaiorGasto">
+        <div class="resumo-icon">🏆</div>
+        <div class="resumo-content">
+          <div class="resumo-value">{{ resumoGastos.categoriaComMaiorGasto }}</div>
+          <div class="resumo-label">Categoria Principal</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filtros-section">
+    <h3>🔍 Filtros</h3>
+    <div class="filtros-grid">
+      <div class="form-group">
+        <label>Buscar</label>
+        <input 
+          type="text" 
+          [(ngModel)]="termoBusca"
+          (input)="onBuscaChange()"
+          placeholder="Buscar por título, descrição..."
+          class="form-control">
+      </div>
+      
+      <div class="form-group">
+        <label>Categoria</label>
+        <select [(ngModel)]="filtroCategoria" (change)="onFiltroChange()" class="form-control">
+          <option value="todas">Todas as categorias</option>
+          <option *ngFor="let categoria of categorias" [value]="categoria.value">
+            {{ categoria.label }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Status</label>
+        <select [(ngModel)]="filtroStatus" (change)="onFiltroChange()" class="form-control">
+          <option value="todos">Todos os status</option>
+          <option *ngFor="let status of statusGasto" [value]="status.value">
+            {{ status.label }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <button class="btn btn-outline" (click)="limparFiltros()">
+          🔄 Limpar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-section">
+    <div class="spinner"></div>
+    <p>Carregando gastos...</p>
+  </div>
+
+  <!-- Lista de Gastos -->
+  <div *ngIf="!isLoading" class="gastos-section">
+    <h3>📋 Lista de Gastos ({{ gastosFiltrados.length }})</h3>
+    
+    <!-- Empty State -->
+    <div *ngIf="gastosFiltrados.length === 0" class="empty-state">
+      <div class="empty-icon">🧾</div>
+      <h4 *ngIf="gastos.length > 0">Nenhum gasto encontrado com os filtros atuais.</h4>
+      <h4 *ngIf="gastos.length === 0">Ainda não há gastos para esta viagem.</h4>
+      <p *ngIf="gastos.length === 0">Que tal adicionar o primeiro?</p>
+      <p *ngIf="gastos.length > 0">Tente limpar ou ajustar os filtros para ver seus gastos.</p>
+      <button *ngIf="gastos.length === 0" class="btn btn-primary" (click)="abrirFormulario()">
+        ➕ Adicionar Primeiro Gasto
+      </button>
+    </div>
+
+    <!-- Lista -->
+    <div *ngIf="gastosFiltrados.length > 0" class="gastos-list">
+      <div 
+        *ngFor="let gasto of gastosFiltrados; trackBy: trackByGastoId" 
+        class="gasto-item">
+        
+        <div class="gasto-header">
+          <div class="gasto-categoria">
+            <span class="material-icons categoria-icon">{{ getIconeCategoria(gasto.categoria) }}</span>
+            <span class="categoria-nome">{{ gasto.categoria }}</span>
+          </div>
+          <div class="gasto-valor">{{ formatarValor(gasto.valor, gasto.moeda) }}</div>
+        </div>
+        
+        <div class="gasto-content">
+          <h4 class="gasto-titulo">{{ gasto.titulo }}</h4>
+          <p *ngIf="gasto.descricao" class="gasto-descricao">{{ gasto.descricao }}</p>
+          
+          <div class="gasto-meta">
+            <span class="meta-item">📅 {{ formatarData(gasto.data) }}</span>
+            <span class="meta-item">💳 {{ gasto.formaPagamento }}</span>
+            <span *ngIf="gasto.localGasto" class="meta-item">📍 {{ gasto.localGasto }}</span>
+          </div>
+          
+          <div class="gasto-status">
+            <span class="status-badge" [class]="'status-' + gasto.status.toLowerCase()">
+              {{ gasto.status }}
+            </span>
+          </div>
+          
+          <div *ngIf="gasto.tags && gasto.tags.length > 0" class="gasto-tags">
+            <span *ngFor="let tag of gasto.tags" class="tag">{{ tag }}</span>
+          </div>
+        </div>
+        
+        <div class="gasto-actions">
+          <button class="btn-action btn-edit" (click)="editarGasto(gasto)" title="Editar">
+            ✏️
+          </button>
+          <button class="btn-action btn-duplicate" (click)="duplicarGasto(gasto)" title="Duplicar">
+            📋
+          </button>
+          <button class="btn-action btn-delete" (click)="excluirGasto(gasto)" title="Excluir">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal do Formulário -->
+  <div *ngIf="mostrarFormulario" class="modal-overlay" (click)="fecharFormulario()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ editandoGasto ? '✏️ Editar Gasto' : '➕ Adicionar Gasto' }}</h3>
+        <button class="btn-close" (click)="fecharFormulario()">✖️</button>
+      </div>
+      
+      <div class="modal-body">
+        <form (ngSubmit)="salvarGasto()" #gastoForm="ngForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="titulo">Título *</label>
+              <input 
+                type="text" 
+                id="titulo"
+                [(ngModel)]="novoGasto.titulo"
+                name="titulo"
+                required
+                minlength="3"
+                maxlength="100"
+                class="form-control"
+                placeholder="Ex: Almoço no restaurante"
+                #tituloInput="ngModel">
+              <div *ngIf="tituloInput.invalid && tituloInput.touched" class="error-message">
+                <small *ngIf="tituloInput.errors?.['required']">Título é obrigatório</small>
+                <small *ngIf="tituloInput.errors?.['minlength']">Título deve ter pelo menos 3 caracteres</small>
+                <small *ngIf="tituloInput.errors?.['maxlength']">Título deve ter no máximo 100 caracteres</small>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="valor">Valor *</label>
+              <input 
+                type="number" 
+                id="valor"
+                [(ngModel)]="novoGasto.valor"
+                name="valor"
+                required
+                min="0.01"
+                step="0.01"
+                class="form-control"
+                placeholder="0,00"
+                #valorInput="ngModel">
+              <div *ngIf="valorInput.invalid && valorInput.touched" class="error-message">
+                <small *ngIf="valorInput.errors?.['required']">Valor é obrigatório</small>
+                <small *ngIf="valorInput.errors?.['min']">Valor deve ser maior que zero</small>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="categoria">Categoria *</label>
+              <select 
+                id="categoria"
+                [(ngModel)]="novoGasto.categoria"
+                name="categoria"
+                required
+                class="form-control">
+                <option *ngFor="let categoria of categorias" [value]="categoria.value">
+                  {{ categoria.label }}
+                </option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="data">Data *</label>
+              <input 
+                type="date" 
+                id="data"
+                [(ngModel)]="novoGasto.data"
+                name="data"
+                required
+                class="form-control">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="formaPagamento">Forma de Pagamento *</label>
+              <select 
+                id="formaPagamento"
+                [(ngModel)]="novoGasto.formaPagamento"
+                name="formaPagamento"
+                required
+                class="form-control">
+                <option *ngFor="let forma of formasPagamento" [value]="forma.value">
+                  {{ forma.label }}
+                </option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="status">Status</label>
+              <select 
+                id="status"
+                [(ngModel)]="novoGasto.status"
+                name="status"
+                class="form-control">
+                <option *ngFor="let status of statusGasto" [value]="status.value">
+                  {{ status.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="gasto-descricao">Descrição</label>
+            <textarea 
+              id="gasto-descricao"
+              [(ngModel)]="novoGasto.descricao"
+              name="descricao"
+              class="form-control"
+              rows="3"
+              placeholder="Detalhes adicionais sobre o gasto..."></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="localGasto">Local</label>
+            <input 
+              type="text" 
+              id="localGasto"
+              [(ngModel)]="novoGasto.localGasto"
+              name="localGasto"
+              class="form-control"
+              placeholder="Ex: Centro da cidade">
+          </div>
+          
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" (click)="fecharFormulario()">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="!gastoForm.form.valid">
+              {{ editandoGasto ? 'Atualizar' : 'Adicionar' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

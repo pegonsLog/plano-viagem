@@ -214,6 +214,7 @@
 }
 
 .btn-checklist,
+.btn-gastos,
 .btn-editar,
 .btn-remover {
   padding: 6px 12px;
@@ -245,6 +246,15 @@
   }
 }
 
+.btn-gastos {
+  background-color: #28a745; // Verde
+  color: white;
+
+  &:hover {
+    background-color: #218838; // Tom mais escuro de verde
+  }
+}
+
 .btn-editar {
   background: #007bff;
   color: white;
@@ -267,6 +277,29 @@
 
   &:hover {
     background: #c82333;
+  }
+}
+
+.btn-remover-icon {
+  margin-left: auto;
+  background-color: transparent;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
   }
 }
 

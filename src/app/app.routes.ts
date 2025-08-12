@@ -43,6 +43,13 @@ export const routes: Routes = [
     data: { prerender: false }
   },
   {
+    path: 'viagem/:id/gastos',
+    loadComponent: () => import('./components/gastos-demo/gastos-demo.component').then(m => m.GastosDemoComponent),
+    canActivate: [viagemExistsGuard],
+    title: 'Gastos da Viagem',
+    data: { prerender: false }
+  },
+  {
     path: 'viagem/:id/relatorio',
     loadComponent: () => import('./components/relatorio-viagem/relatorio-viagem').then(m => m.RelatorioViagem),
     canActivate: [viagemExistsGuard],

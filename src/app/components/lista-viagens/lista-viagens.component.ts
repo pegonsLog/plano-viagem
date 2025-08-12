@@ -46,6 +46,10 @@ export class ListaViagensComponent {
     this.router.navigate(['/viagem', viagemId, 'checklist']);
   }
 
+  verGastos(viagemId: string) {
+    this.router.navigate(['/viagem', viagemId, 'gastos']);
+  }
+
   editarViagem(viagem: Viagem) {
     this.viagemParaEditar = viagem;
     this.mostrarFormulario = true;
