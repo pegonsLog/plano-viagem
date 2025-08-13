@@ -16,8 +16,6 @@ export class GastoService {
 
   // Métodos básicos CRUD
   criarGasto(novoGasto: NovoGasto, viagemId: string): Promise<any> {
-    // console.log('[Debug Service] Criando gasto com viagemId:', viagemId);
-    // console.log('[Debug Service] Dados do novoGasto:', novoGasto);
     
     const gastoParaSalvar = {
       ...novoGasto,
@@ -28,11 +26,10 @@ export class GastoService {
       atualizadoEm: Timestamp.now(),
     };
     
-    // console.log('[Debug Service] Objeto final para salvar:', gastoParaSalvar);
     
     return addDoc(this.gastosCollection, gastoParaSalvar)
       .then((docRef) => {
-        // console.log('[Debug Service] Gasto salvo com ID:', docRef.id);
+
         return docRef;
       })
       .catch((error) => {
@@ -67,11 +64,11 @@ export class GastoService {
 
   // Métodos de consulta
   getGastosPorViagem(viagemId: string): Observable<Gasto[]> {
-    // console.log('[Debug Service] Consultando gastos para viagemId:', viagemId);
+
     
     // Verifica se já existe no cache
     if (this.gastosCache.has(viagemId)) {
-      // console.log('[Debug Service] Retornando dados do cache para:', viagemId);
+
       return this.gastosCache.get(viagemId)!;
     }
     
@@ -79,32 +76,16 @@ export class GastoService {
     const q = query(this.gastosCollection, where('viagemId', '==', viagemId));
     const gastos$ = collectionData(q, { idField: 'id' }).pipe(
       map(gastos => {
-        // console.log('[Debug Service] Gastos encontrados na consulta:', gastos);
-        // console.log('[Debug Service] Detalhes dos gastos:', gastos.map(g => ({
-          // id: g['id'],
-          // titulo: g['titulo'],
-          // valor: g['valor'],
-          // viagemId: g['viagemId'],
-          // data: g['data'],
-          // dataType: typeof g['data']
-        // })));
+
         const gastosConvertidos = gastos.map(gasto => this.converterTimestampParaDate(gasto));
-        // console.log('[Debug Service] Gastos após conversão:', gastosConvertidos);
+
         return gastosConvertidos;
       }),
       filter(arr => arr.length > 0),
       map(gastos => {
-        // console.log('[Debug Service] Gastos encontrados na consulta:', gastos);
-        // console.log('[Debug Service] Detalhes dos gastos:', gastos.map(g => ({
-          // id: g['id'],
-          // titulo: g['titulo'],
-          // valor: g['valor'],
-          // viagemId: g['viagemId'],
-          // data: g['data'],
-          // dataType: typeof g['data']
-        // })));
+    
         const gastosConvertidos = gastos.map(gasto => this.converterTimestampParaDate(gasto));
-        // console.log('[Debug Service] Gastos após conversão:', gastosConvertidos);
+
         return gastosConvertidos;
       }),
       distinctUntilChanged((prev, curr) => {
@@ -116,7 +97,7 @@ export class GastoService {
     
     // Adiciona ao cache
     this.gastosCache.set(viagemId, gastos$);
-    // console.log('[Debug Service] Adicionado ao cache:', viagemId);
+
     
     return gastos$;
   }

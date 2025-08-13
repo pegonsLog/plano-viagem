@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil, timeout, catchError, of } from 'rxjs';
@@ -34,6 +34,10 @@ export class GastosDemoComponent implements OnInit, OnDestroy {
   
   // Formulário
   mostrarFormulario = false;
+
+  // Modal de Exclusão
+  mostrarModalExclusao = false;
+  gastoParaExcluir: Gasto | null = null;
   editandoGasto: Gasto | null = null;
   novoGasto: NovoGasto = this.criarGastoVazio();
   
@@ -55,7 +59,8 @@ export class GastosDemoComponent implements OnInit, OnDestroy {
   constructor(
     private gastoService: GastoService, 
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -67,6 +72,10 @@ export class GastosDemoComponent implements OnInit, OnDestroy {
       console.error('ID da viagem não encontrado na rota!');
       alert('Erro: ID da viagem não encontrado. Não é possível carregar ou salvar gastos.');
     }
+  }
+
+  voltarParaViagens() {
+    this.router.navigate(['/lista-viagens']);
   }
 
   ngOnDestroy() {
@@ -245,15 +254,28 @@ export class GastosDemoComponent implements OnInit, OnDestroy {
     }
   }
 
-  async excluirGasto(gasto: Gasto) {
-    if (confirm(`Tem certeza que deseja excluir o gasto "${gasto.titulo}"?`)) {
-      try {
-        await this.gastoService.excluirGasto(gasto.id);
-        // console.log('Gasto excluído com sucesso!');
-      } catch (error) {
-        console.error('Erro ao excluir gasto:', error);
-        alert('Erro ao excluir gasto');
-      }
+  abrirModalExclusao(gasto: Gasto) {
+    this.gastoParaExcluir = gasto;
+    this.mostrarModalExclusao = true;
+  }
+
+  fecharModalExclusao() {
+    this.gastoParaExcluir = null;
+    this.mostrarModalExclusao = false;
+    this.cdr.detectChanges(); // Força a atualização da view
+  }
+
+  async confirmarExclusao() {
+    if (!this.gastoParaExcluir) return;
+
+    try {
+      await this.gastoService.excluirGasto(this.gastoParaExcluir.id);
+      // console.log('Gasto excluído com sucesso!');
+    } catch (error) {
+      console.error('Erro ao excluir gasto:', error);
+      alert('Erro ao excluir gasto');
+    } finally {
+      this.fecharModalExclusao();
     }
   }
 
@@ -297,7 +319,7 @@ export class GastosDemoComponent implements OnInit, OnDestroy {
   }
 
   private downloadCSV(csv: string, filename: string) {
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
