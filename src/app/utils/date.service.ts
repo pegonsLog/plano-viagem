@@ -4,96 +4,112 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DateService {
-  private readonly BRAZIL_TIMEZONE = 'America/Sao_Paulo';
   private readonly BRAZIL_LOCALE = 'pt-BR';
 
   /**
-   * Cria uma nova data no fuso horário do Brasil
+   * Cria uma nova data local (sem conversão de fuso horário)
    */
-  createBrazilDate(date?: string | number | Date): Date {
+  createLocalDate(date?: string | number | Date): Date {
     if (!date) {
-      // Retorna a data atual no fuso horário do Brasil
-      return new Date(new Date().toLocaleString('en-US', { timeZone: this.BRAZIL_TIMEZONE }));
+      return new Date();
     }
     
-    if (typeof date === 'string' && date.includes('T')) {
-      // Se é uma string ISO, converte para o fuso horário do Brasil
-      return new Date(new Date(date).toLocaleString('en-US', { timeZone: this.BRAZIL_TIMEZONE }));
+    if (typeof date === 'string' && date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      // String no formato YYYY-MM-DD - cria data local sem ajuste de timezone
+      const [year, month, day] = date.split('-').map(Number);
+      return new Date(year, month - 1, day);
     }
     
     return new Date(date);
   }
 
   /**
-   * Formata uma data para exibição no padrão brasileiro
+   * Alias para createLocalDate - mantido para compatibilidade
    */
-  formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString(this.BRAZIL_LOCALE, {
-      timeZone: this.BRAZIL_TIMEZONE
-    });
+  createBrazilDate(date?: string | number | Date): Date {
+    return this.createLocalDate(date);
+  }
+
+  /**
+   * Formata uma data para exibição no padrão brasileiro (DD/MM/YYYY)
+   * Usa a data local sem conversão de timezone
+   */
+  formatDate(date: Date | string): string {
+    if (typeof date === 'string') {
+      // Se for string YYYY-MM-DD, formata diretamente
+      if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        const [year, month, day] = date.split('-');
+        return `${day}/${month}/${year}`;
+      }
+      date = new Date(date);
+    }
+    
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
   }
 
   /**
    * Formata uma data com dia da semana para exibição
    */
-  formatDateWithWeekday(date: Date): string {
-    return new Date(date).toLocaleDateString(this.BRAZIL_LOCALE, {
-      timeZone: this.BRAZIL_TIMEZONE,
-      weekday: 'long',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
+  formatDateWithWeekday(date: Date | string): string {
+    const d = typeof date === 'string' ? this.createLocalDate(date) : new Date(date);
+    const weekday = this.getWeekdayName(d);
+    const formatted = this.formatDate(d);
+    return `${weekday}, ${formatted}`;
   }
 
   /**
    * Formata uma data para input HTML (YYYY-MM-DD)
    */
   formatDateForInput(date: Date): string {
-    // Converte para o fuso horário do Brasil antes de formatar
-    const brazilDate = new Date(date.toLocaleString('en-US', { timeZone: this.BRAZIL_TIMEZONE }));
-    const year = brazilDate.getFullYear();
-    const month = String(brazilDate.getMonth() + 1).padStart(2, '0');
-    const day = String(brazilDate.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
 
   /**
    * Cria uma data a partir de uma string de input (YYYY-MM-DD)
+   * Retorna a data local sem ajuste de timezone
    */
   createDateFromInput(dateString: string): Date {
-    // Cria a data assumindo o fuso horário do Brasil
     const [year, month, day] = dateString.split('-').map(Number);
     return new Date(year, month - 1, day);
+  }
+
+  /**
+   * Retorna a data de hoje no formato YYYY-MM-DD
+   */
+  getTodayString(): string {
+    return this.formatDateForInput(new Date());
   }
 
   /**
    * Calcula o dia da semana em português
    */
   getWeekdayName(date: Date): string {
-    return new Date(date).toLocaleDateString(this.BRAZIL_LOCALE, {
-      timeZone: this.BRAZIL_TIMEZONE,
-      weekday: 'long'
-    });
+    const weekdays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+    return weekdays[date.getDay()];
   }
 
   /**
    * Verifica se é fim de semana
    */
   isWeekend(date: Date): boolean {
-    const brazilDate = new Date(date.toLocaleString('en-US', { timeZone: this.BRAZIL_TIMEZONE }));
-    const dayOfWeek = brazilDate.getDay();
-    return dayOfWeek === 0 || dayOfWeek === 6; // Domingo ou Sábado
+    const dayOfWeek = date.getDay();
+    return dayOfWeek === 0 || dayOfWeek === 6;
   }
 
   /**
    * Calcula a diferença em dias entre duas datas
    */
   getDaysDifference(startDate: Date, endDate: Date): number {
-    const start = new Date(startDate.toLocaleString('en-US', { timeZone: this.BRAZIL_TIMEZONE }));
-    const end = new Date(endDate.toLocaleString('en-US', { timeZone: this.BRAZIL_TIMEZONE }));
+    const start = new Date(startDate);
+    const end = new Date(endDate);
     
-    // Normaliza as datas para meia-noite
     start.setHours(0, 0, 0, 0);
     end.setHours(0, 0, 0, 0);
     
@@ -106,10 +122,9 @@ export class DateService {
    */
   getDateRange(startDate: Date, endDate: Date): Date[] {
     const dates: Date[] = [];
-    const current = new Date(startDate.toLocaleString('en-US', { timeZone: this.BRAZIL_TIMEZONE }));
-    const end = new Date(endDate.toLocaleString('en-US', { timeZone: this.BRAZIL_TIMEZONE }));
+    const current = new Date(startDate);
+    const end = new Date(endDate);
     
-    // Normaliza as datas
     current.setHours(0, 0, 0, 0);
     end.setHours(0, 0, 0, 0);
     
@@ -122,11 +137,11 @@ export class DateService {
   }
 
   /**
-   * Normaliza uma data para meia-noite no fuso horário do Brasil
+   * Normaliza uma data para meia-noite
    */
   normalizeDate(date: Date): Date {
-    const brazilDate = new Date(date.toLocaleString('en-US', { timeZone: this.BRAZIL_TIMEZONE }));
-    brazilDate.setHours(0, 0, 0, 0);
-    return brazilDate;
+    const normalized = new Date(date);
+    normalized.setHours(0, 0, 0, 0);
+    return normalized;
   }
 }

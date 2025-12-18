@@ -67,17 +67,23 @@
       </div>
 
       <div class="viagem-acoes" (click)="$event.stopPropagation()">
-        <button class="btn-checklist" (click)="verChecklist(viagem.id)">
-          <app-icon name="clipboard-list" [size]="16"></app-icon> Checklist
+        <button class="btn-checklist" (click)="verChecklist(viagem.id)" title="Checklist">
+          <app-icon name="clipboard-list" [size]="14"></app-icon> Checklist
         </button>
-        <button class="btn-gastos" (click)="verGastos(viagem.id)">
-          <app-icon name="currency-dollar" [size]="16"></app-icon> Gastos
+        <button class="btn-gastos" (click)="verGastos(viagem.id)" title="Gastos">
+          <app-icon name="currency-dollar" [size]="14"></app-icon> Gastos
         </button>
-        <button class="btn-editar" (click)="editarViagem(viagem)">
-          <app-icon name="pencil" [size]="16"></app-icon> Editar
+        <button class="btn-fotos" (click)="abrirGaleria(viagem)" title="Fotos">
+          <app-icon name="photo" [size]="14"></app-icon> Fotos
         </button>
-        <button class="btn-remover" (click)="removerViagem(viagem.id)">
-          <app-icon name="trash" [size]="16"></app-icon> Remover
+        <button class="btn-camera" (click)="abrirCaptura(viagem)" title="Câmera">
+          <app-icon name="camera" [size]="14"></app-icon> Câmera
+        </button>
+        <button class="btn-editar" (click)="editarViagem(viagem)" title="Editar">
+          <app-icon name="pencil" [size]="14"></app-icon> Editar
+        </button>
+        <button class="btn-remover" (click)="removerViagem(viagem.id)" title="Remover">
+          <app-icon name="trash" [size]="14"></app-icon> Remover
         </button>
       </div>
     </div>
@@ -90,3 +96,18 @@
     }
   </div>
 </div>
+
+<!-- Componentes de fotos -->
+@if (viagemIdParaFoto) {
+  <app-image-capture 
+    #imageCapture
+    [viagemId]="viagemIdParaFoto"
+    (imageUploaded)="onFotoSalva($event)"
+  />
+  <app-galeria-fotos 
+    #galeriaFotos
+    [viagemId]="viagemIdParaFoto"
+    [viagemTitulo]="viagemTituloParaFoto"
+    (addPhoto)="onGaleriaAddPhoto($event)"
+  />
+}
