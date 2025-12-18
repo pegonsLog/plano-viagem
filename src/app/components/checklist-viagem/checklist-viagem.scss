@@ -1,258 +1,375 @@
 :host {
   display: block;
-  padding: 1rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  padding: 24px;
+  background: transparent;
 }
 
 .checklist-page-container {
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
 
-    .header-content {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
+.checklist-page-container .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  padding: 24px 28px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
 
-    .btn-voltar {
-      background: none;
-      border: 1px solid transparent;
-      border-radius: 50%;
-      padding: 0.5rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #495057;
-      transition: background-color 0.2s, color 0.2s;
+.checklist-page-container .header .header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 
-      &:hover {
-        background-color: #f1f3f5;
-        color: #007bff;
-      }
+.checklist-page-container .header .btn-voltar {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4b5563;
+  transition: all 200ms ease;
+}
 
-      svg {
-        display: block;
-      }
-    }
+.checklist-page-container .header .btn-voltar:hover {
+  background: #e5e7eb;
+  color: #6366f1;
+  transform: translateX(-2px);
+}
 
-    h2 {
-      margin: 0;
-      font-size: 1.8rem;
-      font-weight: 600;
-    }
+.checklist-page-container .header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
-    .btn-adicionar {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 6px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.2s;
-
-      &:hover {
-        background-color: #0056b3;
-      }
-    }
-  }
-
-  .loading-container, .sem-dados {
-    text-align: center;
-    padding: 3rem;
-    color: #6c757d;
-
-    h3 {
-      margin-top: 1rem;
-    }
-  }
-
-  .tabela-wrapper {
-    overflow-x: auto;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-
-  .tabela-checklist {
-    width: 100%;
-    border-collapse: collapse;
-
-    th, td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid #dee2e6;
-    }
-
-    th {
-      background-color: #f8f9fa;
-      font-weight: 600;
-    }
-
-    .col-status { width: 5%; }
-    .col-descricao { width: 75%; }
-    .col-acoes { width: 20%; text-align: center; }
-
-    tr.concluido .col-descricao span {
-      text-decoration: line-through;
-      color: #6c757d;
-    }
-
-    .col-acoes {
-      display: flex;
-      gap: 0.5rem;
-      justify-content: center;
-
-      .btn-acao {
-        background: none;
-        border: 1px solid transparent;
-        border-radius: 4px;
-        padding: 0.4rem;
-        cursor: pointer;
-        transition: background-color 0.2s, color 0.2s;
-
-        svg {
-          display: block;
-        }
-
-        &.editar {
-          color: #17a2b8;
-          &:hover { background-color: #e2f6f8; }
-        }
-
-        &.remover {
-          color: #dc3545;
-          &:hover { background-color: #f8d7da; }
-        }
-      }
-    }
+  app-icon {
+    color: #6366f1;
   }
 }
 
-/* Estilos para o Modal */
+.checklist-page-container .header .btn-adicionar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+.checklist-page-container .header .btn-adicionar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+
+.loading-container, .sem-dados {
+  text-align: center;
+  padding: 60px 40px;
+  color: #6b7280;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  app-icon {
+    animation: spin 1s linear infinite;
+  }
+
+  h3 {
+    margin: 0;
+    color: #374151;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.sem-dados app-icon {
+  animation: none;
+  opacity: 0.5;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.tabela-wrapper {
+  overflow-x: auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.tabela-checklist {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-checklist th, .tabela-checklist td {
+  padding: 18px 20px;
+  text-align: left;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.tabela-checklist th {
+  background: linear-gradient(180deg, #f9fafb 0%, white 100%);
+  font-weight: 700;
+  color: #374151;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 0.5px;
+}
+
+.tabela-checklist .col-status { width: 60px; }
+.tabela-checklist .col-descricao { width: auto; }
+.tabela-checklist .col-acoes { width: 120px; text-align: center; }
+
+.tabela-checklist tbody tr {
+  transition: background 200ms ease;
+}
+
+.tabela-checklist tbody tr:hover {
+  background: #f9fafb;
+}
+
+.tabela-checklist tr.concluido .col-descricao span {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+.tabela-checklist input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  accent-color: #10b981;
+}
+
+.tabela-checklist .col-acoes {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.tabela-checklist .col-acoes .btn-acao {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.tabela-checklist .col-acoes .btn-acao.editar {
+  color: #3b82f6;
+}
+
+.tabela-checklist .col-acoes .btn-acao.editar:hover {
+  background: #dbeafe;
+  transform: translateY(-1px);
+}
+
+.tabela-checklist .col-acoes .btn-acao.remover {
+  color: #ef4444;
+}
+
+.tabela-checklist .col-acoes .btn-acao.remover:hover {
+  background: #fee2e2;
+  transform: translateY(-1px);
+}
+
+/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 24px;
 }
 
 .modal-container {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  width: 90%;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  width: 100%;
   max-width: 500px;
-  animation: fadeIn 0.3s ease-out;
+  animation: slideUp 0.3s ease;
+  overflow: hidden;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e9ecef;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f3f4f6;
+  background: #f9fafb;
+}
 
-  h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-  }
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111827;
+}
 
-  .btn-fechar {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #6c757d;
-    padding: 0;
-    line-height: 1;
+.modal-header .btn-fechar {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 10px;
+  padding: 8px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 200ms ease;
+}
 
-    &:hover {
-      color: #343a40;
-    }
-  }
+.modal-header .btn-fechar:hover {
+  background: #e5e7eb;
+  color: #374151;
 }
 
 .modal-content {
-  padding: 1.5rem;
+  padding: 24px;
+}
 
-  p {
-    margin-top: 0;
-    line-height: 1.6;
-  }
+.modal-content p {
+  margin: 0 0 12px 0;
+  line-height: 1.6;
+  color: #4b5563;
 }
 
 .modal-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 0.75rem;
-  padding: 1rem 1.5rem;
-  border-top: 1px solid #e9ecef;
-
-  button {
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s, box-shadow 0.2s;
-
-    &.btn-cancelar {
-      background-color: #f1f3f5;
-      color: #495057;
-
-      &:hover {
-        background-color: #e9ecef;
-      }
-    }
-
-    &.btn-salvar {
-      background-color: #007bff;
-      color: white;
-
-      &:hover {
-        background-color: #0056b3;
-      }
-
-      &:disabled {
-        background-color: #a0cfff;
-        cursor: not-allowed;
-      }
-    }
-
-    &.btn-remover-confirmar {
-      background-color: #dc3545;
-      color: white;
-
-      &:hover {
-        background-color: #c82333;
-      }
-    }
-  }
+  gap: 12px;
+  padding: 20px 24px;
+  border-top: 1px solid #f3f4f6;
+  background: #f9fafb;
 }
 
-@keyframes fadeIn {
+.modal-footer .btn-cancelar {
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.modal-footer .btn-cancelar:hover {
+  background: #e5e7eb;
+}
+
+.modal-footer .btn-salvar {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+}
+
+.modal-footer .btn-salvar:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+.modal-footer .btn-salvar:disabled {
+  background: #d1d5db;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.modal-footer .btn-remover-confirmar {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+}
+
+.modal-footer .btn-remover-confirmar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+@keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(20px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  :host {
+    padding: 16px;
+  }
+
+  .checklist-page-container .header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .checklist-page-container .header h2 {
+    font-size: 1.3rem;
+  }
+
+  .checklist-page-container .header .btn-adicionar {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modal-overlay {
+    padding: 16px;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer button {
+    width: 100%;
   }
 }

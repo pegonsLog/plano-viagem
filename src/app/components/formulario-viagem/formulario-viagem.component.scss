@@ -1,147 +1,199 @@
 .formulario-container {
   background: white;
-  border-radius: 8px;
-  padding: 24px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  border: 1px solid #e9ecef;
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--gray-100);
+  animation: slideUp 0.3s ease-out;
 
   h3 {
-    margin: 0 0 20px 0;
-    color: #333;
-    font-size: 1.3em;
+    margin: 0 0 28px 0;
+    color: var(--gray-900);
+    font-size: 1.5em;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--gray-100);
+
+    &::before {
+      content: '📝';
+      font-size: 1.1em;
+    }
   }
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  gap: 20px;
 }
 
 label {
   display: block;
-  margin-bottom: 6px;
-  font-weight: 500;
-  color: #555;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--gray-700);
+  font-size: 0.9em;
+  letter-spacing: 0.3px;
 }
 
 input, textarea {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 14px 18px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius);
+  font-size: 15px;
+  transition: all var(--transition);
   box-sizing: border-box;
+  background: var(--gray-50);
+
+  &:hover {
+    border-color: var(--gray-300);
+  }
 
   &:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    background: white;
+  }
+
+  &::placeholder {
+    color: var(--gray-400);
   }
 }
 
 textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 120px;
+  line-height: 1.6;
 }
 
 .error {
-  color: #dc3545;
-  font-size: 0.875em;
-  margin-top: 4px;
+  color: var(--danger);
+  font-size: 0.85em;
+  margin-top: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &::before {
+    content: '⚠️';
+    font-size: 0.9em;
+  }
 }
 
 .form-actions {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   justify-content: flex-end;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 2px solid var(--gray-100);
 }
 
 .btn-cancelar, .btn-salvar {
-  padding: 10px 20px;
+  padding: 14px 28px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius);
   cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-cancelar {
-  background: #6c757d;
-  color: white;
+  background: var(--gray-100);
+  color: var(--gray-700);
 
   &:hover {
-    background: #5a6268;
+    background: var(--gray-200);
+    transform: translateY(-1px);
   }
 }
 
 .btn-salvar {
-  background: #28a745;
+  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
   color: white;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
 
   &:hover:not(:disabled) {
-    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
   }
 
   &:disabled {
-    background: #6c757d;
+    background: var(--gray-300);
+    box-shadow: none;
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: 0.7;
   }
 }
 
-// Seção de Status
 .form-section {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 2px solid var(--gray-100);
 
   h4 {
-    margin: 0 0 16px 0;
-    color: #333;
+    margin: 0 0 20px 0;
+    color: var(--gray-800);
     font-size: 1.1em;
-    font-weight: 600;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 }
 
-// Checkbox e Label
 .checkbox-group {
   display: flex;
   align-items: center;
-  gap: 8px; // Espaçamento reduzido entre checkbox e label
-  margin-bottom: 12px;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: var(--gray-50);
+  border-radius: var(--radius);
+  transition: background var(--transition);
+
+  &:hover {
+    background: var(--gray-100);
+  }
 }
 
 .form-checkbox {
-  width: 18px;
-  height: 18px;
-  margin: 0; // Remove margem padrão
+  width: 22px;
+  height: 22px;
+  margin: 0;
   cursor: pointer;
-  accent-color: #007bff; // Cor do checkbox quando marcado
+  accent-color: var(--primary);
+  border-radius: var(--radius-sm);
 }
 
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 6px; // Espaçamento entre ícone e texto
-  margin: 0; // Remove margem padrão do label
+  gap: 8px;
+  margin: 0;
   cursor: pointer;
   font-weight: 500;
-  color: #555;
-  user-select: none; // Impede seleção do texto
+  color: var(--gray-700);
+  user-select: none;
 
   svg {
-    opacity: 0.7;
-    transition: opacity 0.2s;
+    opacity: 0.6;
+    transition: opacity var(--transition);
   }
 
   &:hover svg {
@@ -149,12 +201,34 @@ textarea {
   }
 }
 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 768px) {
+  .formulario-container {
+    padding: 24px 20px;
+    margin-bottom: 24px;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
+    gap: 0;
   }
-  
+
   .form-actions {
     flex-direction: column;
+  }
+
+  .btn-cancelar, .btn-salvar {
+    width: 100%;
+    justify-content: center;
   }
 }

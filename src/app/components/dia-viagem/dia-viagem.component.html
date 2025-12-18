@@ -4,6 +4,9 @@
     <div class="dia-info">
       <h3 class="dia-data">{{ formatarData(diaCalculado().data) }}</h3>
       <span class="dia-semana" [class.fim-semana]="isFimDeSemana()">
+        @if (isFimDeSemana()) {
+          <app-icon name="sun" [size]="14"></app-icon>
+        }
         {{ diaCalculado().diaSemana }}
       </span>
     </div>
@@ -11,37 +14,25 @@
     <div class="status-badges">
       @if (diaCalculado().temDetalhes) {
       <div class="status-badge preenchido">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M9 12l2 2 4-4" />
-          <circle cx="12" cy="12" r="10" />
-        </svg>
+        <app-icon name="check-circle" [size]="16"></app-icon>
         Planejado
       </div>
 
       @if (diaCalculado().detalhes?.status === 'Pendente') {
       <div class="status-badge pendencia"
         [title]="diaCalculado().detalhes?.motivoPendencia || 'Pendência sem motivo especificado'">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 8v4l3 3" />
-        </svg>
+        <app-icon name="clock" [size]="16"></app-icon>
         Pendente
       </div>
       } @else {
       <div class="status-badge concluido">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M9 12l2 2 4-4" />
-          <circle cx="12" cy="12" r="10" />
-        </svg>
+        <app-icon name="check-circle" [size]="16"></app-icon>
         Concluído
       </div>
       }
       } @else {
       <div class="status-badge vazio">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 8v4l3 3" />
-        </svg>
+        <app-icon name="clock" [size]="16"></app-icon>
         Pendente
       </div>
       }
@@ -51,13 +42,12 @@
   <!-- Conteúdo do Dia -->
   @if (diaCalculado().temDetalhes && diaCalculado().detalhes; as detalhes) {
   <div class="dia-conteudo">
-    <!-- Visualização Resumida (Sempre visível) -->
     <div class="resumo-detalhes">
       <div class="detalhe-item">
-        <strong>Cidade:</strong> {{ detalhes.cidade }}
+        <strong><app-icon name="map-pin" [size]="16"></app-icon> Cidade:</strong> {{ detalhes.cidade }}
       </div>
 
-      <h4>Transporte e Deslocamento</h4>
+      <h4><app-icon name="truck" [size]="18"></app-icon> Transporte e Deslocamento</h4>
       <div class="detalhe-item">
         <strong>Transporte:</strong>
         <span [class.campo-vazio]="!detalhes.transporte">
@@ -65,13 +55,13 @@
         </span>
       </div>
       <div class="detalhe-item">
-        <strong>Detalhes do Transporte:</strong>
+        <strong>Detalhes:</strong>
         <span class="preserve-lines" [class.campo-vazio]="!detalhes.detalhesVoo">
           {{ detalhes.detalhesVoo || '(Não informado)' }}
         </span>
       </div>
 
-      <h4>Hospedagem</h4>
+      <h4><app-icon name="building" [size]="18"></app-icon> Hospedagem</h4>
       <div class="detalhe-item">
         <strong>Nome:</strong>
         <span class="preserve-lines" [class.campo-vazio]="!detalhes.nomeHospedagem">
@@ -85,25 +75,13 @@
         </span>
       </div>
       <div class="detalhe-item">
-        <strong>Contato:</strong>
-        <span class="preserve-lines" [class.campo-vazio]="!detalhes.contatoHospedagem">
-          {{ detalhes.contatoHospedagem || '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
-        <strong>Reserva:</strong>
-        <span class="preserve-lines" [class.campo-vazio]="!detalhes.numeroReserva">
-          {{ detalhes.numeroReserva || '(Não informado)' }}
-        </span>
-      </div>
-      <div class="detalhe-item">
         <strong>Check-in/out:</strong>
         <span class="preserve-lines" [class.campo-vazio]="!detalhes.horarioChecks">
           {{ detalhes.horarioChecks || '(Não informado)' }}
         </span>
       </div>
       <div class="detalhe-item">
-        <strong>Links:</strong>
+        <strong><app-icon name="link" [size]="14"></app-icon> Links:</strong>
         <span class="links-hospedagem" [class.campo-vazio]="!detalhes.linkHospedagem">
           @if (detalhes.linkHospedagem) {
             @for (linkObj of formatarLinksHospedagem(detalhes.linkHospedagem); track $index) {
@@ -118,26 +96,20 @@
       </div>
     </div>
 
-    <!-- Visualização Expandida (Condicional) -->
+    <!-- Visualização Expandida -->
     @if (expandido()) {
       <div class="detalhes-completos">
-        <h4>Pagamento</h4>
+        <h4><app-icon name="credit-card" [size]="18"></app-icon> Pagamento</h4>
         <div class="detalhe-item">
-          <strong>Forma de Pagamento:</strong>
+          <strong>Forma:</strong>
           <span [class.campo-vazio]="!detalhes.formaPagamento">
             {{ detalhes.formaPagamento || '(Não informado)' }}
           </span>
         </div>
         <div class="detalhe-item">
-          <strong>Titular do Cartão:</strong>
+          <strong>Titular:</strong>
           <span [class.campo-vazio]="!detalhes.titularCartao">
             {{ detalhes.titularCartao || '(Não informado)' }}
-          </span>
-        </div>
-        <div class="detalhe-item">
-          <strong>Final do Cartão:</strong>
-          <span [class.campo-vazio]="!detalhes.finalCartao">
-            {{ detalhes.finalCartao ? ('**** ' + detalhes.finalCartao) : '(Não informado)' }}
           </span>
         </div>
         <div class="detalhe-item">
@@ -146,14 +118,8 @@
             {{ detalhes.valorHospedagem ? formatarMoeda(detalhes.valorHospedagem) : '(Não informado)' }}
           </span>
         </div>
-        <div class="detalhe-item">
-          <strong>Parcelas:</strong>
-          <span [class.campo-vazio]="!detalhes.quantidadeParcelas">
-            {{ (detalhes.quantidadeParcelas && detalhes.valorParcela) ? (detalhes.quantidadeParcelas + 'x de ' + formatarValorParcela(detalhes.valorParcela)) : '(Não informado)' }}
-          </span>
-        </div>
 
-        <h4>Observações</h4>
+        <h4><app-icon name="chat-bubble" [size]="18"></app-icon> Observações</h4>
         <div class="detalhe-item">
           <span class="preserve-lines" [class.campo-vazio]="!detalhes.observacoes">
             {{ detalhes.observacoes || '(Nenhuma observação)' }}
@@ -161,9 +127,9 @@
         </div>
 
         @if (detalhes.status === 'Pendente') {
-          <h4>Status</h4>
+          <h4><app-icon name="exclamation-circle" [size]="18"></app-icon> Status</h4>
           <div class="detalhe-item pendencia-info">
-            <strong>Motivo da Pendência:</strong>
+            <strong>Motivo:</strong>
             <span class="preserve-lines" [class.campo-vazio]="!detalhes.motivoPendencia">
               {{ detalhes.motivoPendencia || '(Motivo não especificado)' }}
             </span>
@@ -175,34 +141,23 @@
     <!-- Botão Expandir/Colapsar -->
     <button class="btn-expandir" (click)="toggleExpansao()">
       @if (!expandido()) {
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="m6 9 6 6 6-6" />
-        </svg>
+        <app-icon name="chevron-down" [size]="16"></app-icon>
         Ver mais
       } @else {
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="m18 15-6-6-6 6" />
-        </svg>
+        <app-icon name="chevron-up" [size]="16"></app-icon>
         Ver menos
       }
     </button>
   </div>
 
-  <!-- Ações para Dia com Detalhes -->
+  <!-- Ações -->
   <div class="dia-acoes">
     <button class="btn-acao editar" (click)="editarDia()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-      </svg>
+      <app-icon name="pencil" [size]="16"></app-icon>
       Editar
     </button>
     <button class="btn-acao remover" (click)="removerDia()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 6h18" />
-        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-        <path d="M8 6V4c0-1 1-2 2-2h4c-1 0 2 1 2 2v2" />
-      </svg>
+      <app-icon name="trash" [size]="16"></app-icon>
       Remover
     </button>
   </div>
@@ -210,18 +165,13 @@
   <!-- Estado Vazio -->
   <div class="estado-vazio">
     <div class="vazio-icon">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 8v8" />
-        <path d="M8 12h8" />
-      </svg>
+      <app-icon name="plus-circle" [size]="48" color="#9ca3af"></app-icon>
     </div>
     <p>Nenhum detalhe planejado para este dia</p>
     <button class="btn-adicionar" (click)="adicionarDetalhes()">
+      <app-icon name="plus" [size]="18"></app-icon>
       Adicionar Detalhes
     </button>
   </div>
   }
-
-
 </div>

@@ -1,118 +1,194 @@
 .app-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
   color: white;
-  padding: 40px 0;
-  text-align: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 24px 0 48px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3), 0 4px 16px rgba(118, 75, 162, 0.2);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    animation: shimmer 15s ease-in-out infinite;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(10%, 10%) rotate(5deg); }
+}
+
+.header-glow {
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .app-header .container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 24px;
+  position: relative;
+  z-index: 2;
 }
 
 .header-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 16px;
 }
 
-.mobile-logo {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  display: none; /* Hidden by default (desktop) */
+.header-icon {
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  padding: 6px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
 }
 
 .header-text {
-  flex: 1;
+  text-align: left;
 }
 
 .app-header h1 {
-  margin: 0 0 10px 0;
-  font-size: 2.5em;
-  font-weight: 600;
+  margin: 0;
+  font-size: 1.6em;
+  font-weight: 800;
   font-family: 'Montserrat', sans-serif;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 .app-header p {
-  margin: 0;
-  font-size: 1.1em;
-  opacity: 0.9;
+  margin: 4px 0 0;
+  font-size: 0.9em;
+  opacity: 0.95;
   font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.header-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  z-index: 1;
+
+  svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 28px;
+
+    path {
+      fill: var(--bg-cool-light, #f0f4ff);
+    }
+  }
 }
 
 /* Mobile styles */
 @media (max-width: 768px) {
   .app-header {
-    padding: 0; /* Remove all padding */
-    position: relative;
+    padding: 20px 0 40px;
   }
-  
-  .mobile-logo {
-    display: block; /* Show only on mobile */
-    width: 100vw; /* Full viewport width */
-    height: auto; /* Maintain aspect ratio */
-    max-width: none; /* Remove size limit */
-    border-radius: 0; /* No border radius */
-    margin: 0; /* Remove margins */
-    padding: 0; /* Remove padding */
-    object-fit: cover; /* Better scaling */
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-  }
-  
-  .app-header .container {
-    padding: 15px 20px; /* Padding only for text content */
-    max-width: 1200px; /* Keep container limit for text */
-  }
-  
-  .header-content {
-    flex-direction: column;
-    gap: 0;
-    width: 100%;
-  }
-  
-  .header-text {
-    text-align: center;
-  }
-  
-  .app-header h1 {
-    font-size: 1.5em;
-    margin: 0 0 5px 0;
-  }
-  
-  .app-header p {
-    font-size: 0.9em;
-    margin: 0;
-  }
-}
 
-/* Extra small mobile */
-@media (max-width: 480px) {
+  .header-content {
+    gap: 12px;
+  }
+
+  .header-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+
+    svg {
+      width: 22px;
+      height: 22px;
+    }
+  }
+
   .app-header h1 {
     font-size: 1.3em;
   }
-  
+
+  .app-header p {
+    font-size: 0.85em;
+  }
+
+  .header-wave svg {
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    padding: 16px 0 36px;
+  }
+
+  .header-icon {
+    width: 38px;
+    height: 38px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .app-header h1 {
+    font-size: 1.15em;
+  }
+
   .app-header p {
     font-size: 0.8em;
   }
-  
+
   .app-header .container {
-    padding: 10px 15px;
+    padding: 0 16px;
   }
 }
 
 .app-main {
-  min-height: calc(100vh - 200px);
-  background: #f8f9fa;
+  min-height: calc(100vh - 100px);
+  background: transparent;
   padding-top: 0;
 }

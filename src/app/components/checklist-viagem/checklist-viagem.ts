@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { ChecklistItem } from '../../models/checklist-item.model';
 import { ChecklistService } from '../../services/checklist';
+import { IconComponent } from '../icons/icon.component';
 
 @Component({
   selector: 'app-checklist-viagem',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent],
   templateUrl: './checklist-viagem.html',
   styleUrls: ['./checklist-viagem.scss']
 })

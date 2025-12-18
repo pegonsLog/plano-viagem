@@ -5,11 +5,12 @@ import { DiaCalculado, DiaViagem } from '../../models/dia-viagem.model';
 import { DiaViagemService } from '../../services/dia-viagem.service';
 import { ErrorHandlerService } from '../../utils/error-handler.service';
 import { DateService } from '../../utils/date.service';
+import { IconComponent } from '../icons/icon.component';
 
 @Component({
   selector: 'app-dia-viagem',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dia-viagem.component.html',
   styleUrl: './dia-viagem.component.scss'

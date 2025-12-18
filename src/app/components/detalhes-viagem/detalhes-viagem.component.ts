@@ -6,12 +6,13 @@ import { DiaViagemService } from '../../services/dia-viagem.service';
 import { Viagem } from '../../models/viagem.model';
 import { DiaCalculado } from '../../models/dia-viagem.model';
 import { ListaDiasComponent } from '../lista-dias/lista-dias.component';
+import { IconComponent } from '../icons/icon.component';
 import { DateService } from '../../utils/date.service';
 
 @Component({
   selector: 'app-detalhes-viagem',
   standalone: true,
-  imports: [CommonModule, ListaDiasComponent],
+  imports: [CommonModule, ListaDiasComponent, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './detalhes-viagem.component.html',
   styleUrl: './detalhes-viagem.component.scss'

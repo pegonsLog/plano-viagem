@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 import { ViagemService } from '../../services/viagem.service';
 import { Viagem } from '../../models/viagem.model';
 import { FormularioViagemComponent } from '../formulario-viagem/formulario-viagem.component';
-
+import { IconComponent } from '../icons/icon.component';
 import { DateService } from '../../utils/date.service';
 
 @Component({
   selector: 'app-lista-viagens',
   standalone: true,
-  imports: [CommonModule, FormularioViagemComponent],
+  imports: [CommonModule, FormularioViagemComponent, IconComponent],
   templateUrl: './lista-viagens.component.html',
   styleUrl: './lista-viagens.component.scss'
 })

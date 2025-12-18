@@ -1,46 +1,50 @@
 .lista-dias {
-  padding: 0 20px 20px 20px;
+  padding: 0 24px 24px;
 }
 
 .dias-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-width: 800px;
+  gap: 20px;
+  max-width: 900px;
   margin: 0 auto;
   scroll-behavior: smooth;
-
-  // Performance: will-change para animações
-  > * {
-    will-change: transform;
-  }
 }
 
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
-  color: #666;
+  padding: 80px 40px;
+  color: #6b7280;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+
+  &::before {
+    content: '📅';
+    font-size: 4em;
+    display: block;
+    margin-bottom: 24px;
+    opacity: 0.6;
+  }
 
   p {
     margin: 0;
     font-size: 1.1em;
+    font-weight: 500;
   }
 }
 
-/* Mobile Optimizations */
+/* Mobile */
 @media (max-width: 768px) {
   .lista-dias {
-    padding: 0 16px 16px 16px;
+    padding: 0 16px 16px;
   }
 
   .dias-container {
-    gap: 12px;
+    gap: 16px;
   }
 
   .empty-state {
-    padding: 40px 16px;
+    padding: 60px 24px;
   }
 }

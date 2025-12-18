@@ -3,27 +3,24 @@
     <div class="header">
       <div class="header-content">
         <button class="btn-voltar" (click)="voltarParaLista()" title="Voltar para a lista de viagens">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M19 12H5"/>
-            <path d="M12 19l-7-7 7-7"/>
-          </svg>
+          <app-icon name="arrow-left" [size]="20"></app-icon>
         </button>
-        <h2>Checklist da Viagem</h2>
+        <h2><app-icon name="clipboard-list" [size]="24"></app-icon> Checklist da Viagem</h2>
       </div>
       <button class="btn-adicionar" (click)="abrirFormulario()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M12 5v14" />
-          <path d="M5 12h14" />
-        </svg>
+        <app-icon name="plus" [size]="18"></app-icon>
         Adicionar Item
       </button>
     </div>
 
-    <div *ngIf="loading()" class="loading-container">
+    @if (loading()) {
+    <div class="loading-container">
+      <app-icon name="arrow-path" [size]="32" color="#6b7280"></app-icon>
       <p>Carregando itens...</p>
     </div>
+    }
 
-    <ng-container *ngIf="!loading()">
+    @if (!loading()) {
       <div class="tabela-wrapper">
         <table class="tabela-checklist">
           <thead>
@@ -34,7 +31,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of checklistItems$ | async; trackBy: trackById" [class.concluido]="item.concluido">
+            @for (item of checklistItems$ | async; track item.id) {
+            <tr [class.concluido]="item.concluido">
               <td class="col-status">
                 <input type="checkbox" [checked]="item.concluido" (change)="toggleConcluido(item.id, !item.concluido)" (click)="$event.stopPropagation()">
               </td>
@@ -43,41 +41,35 @@
               </td>
               <td class="col-acoes">
                 <button class="btn-acao editar" (click)="abrirFormulario(item)" title="Editar item">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                  </svg>
+                  <app-icon name="pencil" [size]="16"></app-icon>
                 </button>
                 <button class="btn-acao remover" (click)="abrirConfirmacaoRemover(item.id)" title="Remover item">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="3 6 5 6 21 6" />
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                    <line x1="10" y1="11" x2="10" y2="17" />
-                    <line x1="14" y1="11" x2="14" y2="17" />
-                  </svg>
+                  <app-icon name="trash" [size]="16"></app-icon>
                 </button>
               </td>
             </tr>
+            }
           </tbody>
         </table>
       </div>
-      <div *ngIf="(checklistItems$ | async)?.length === 0" class="sem-dados">
+      @if ((checklistItems$ | async)?.length === 0) {
+      <div class="sem-dados">
+        <app-icon name="clipboard-list" [size]="48" color="#9ca3af"></app-icon>
         <h3>Nenhum item no checklist</h3>
         <p>Clique em "Adicionar Item" para começar.</p>
       </div>
-    </ng-container>
+      }
+    }
   </div>
 
   <!-- Modal para Adicionar/Editar Item -->
-  <div *ngIf="isFormularioAberto()" class="modal-overlay" (click)="fecharFormulario()">
+  @if (isFormularioAberto()) {
+  <div class="modal-overlay" (click)="fecharFormulario()">
     <div class="modal-container" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>{{ itemSelecionado() ? 'Editar Item' : 'Adicionar Item' }}</h3>
         <button class="btn-fechar" (click)="fecharFormulario()">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M18 6L6 18" />
-            <path d="M6 6l12 12" />
-          </svg>
+          <app-icon name="x-mark" [size]="20"></app-icon>
         </button>
       </div>
       <div class="modal-content">
@@ -85,25 +77,31 @@
           <div class="form-group">
             <label for="descricao">Descrição do item</label>
             <input type="text" id="descricao" formControlName="descricao" required cdkFocusInitial>
-            <div *ngIf="itemForm.get('descricao')?.invalid && itemForm.get('descricao')?.touched" class="error-message">
-              A descrição é obrigatória.
-            </div>
+            @if (itemForm.get('descricao')?.invalid && itemForm.get('descricao')?.touched) {
+            <div class="error-message">A descrição é obrigatória.</div>
+            }
           </div>
           <div class="modal-footer">
             <button type="button" class="btn-cancelar" (click)="fecharFormulario()">Cancelar</button>
-            <button type="submit" class="btn-salvar" [disabled]="itemForm.invalid">Salvar</button>
+            <button type="submit" class="btn-salvar" [disabled]="itemForm.invalid">
+              <app-icon name="check" [size]="18"></app-icon> Salvar
+            </button>
           </div>
         </form>
       </div>
     </div>
   </div>
+  }
 
   <!-- Modal de Confirmação para Remover Item -->
-  <div *ngIf="isConfirmacaoRemoverAberto()" class="modal-overlay" (click)="fecharConfirmacaoRemover()">
+  @if (isConfirmacaoRemoverAberto()) {
+  <div class="modal-overlay" (click)="fecharConfirmacaoRemover()">
     <div class="modal-container" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>Confirmar Remoção</h3>
-        <button class="btn-fechar" (click)="fecharConfirmacaoRemover()">×</button>
+        <h3><app-icon name="exclamation-circle" [size]="20"></app-icon> Confirmar Remoção</h3>
+        <button class="btn-fechar" (click)="fecharConfirmacaoRemover()">
+          <app-icon name="x-mark" [size]="20"></app-icon>
+        </button>
       </div>
       <div class="modal-content">
         <p>Você tem certeza de que deseja remover este item do checklist?</p>
@@ -111,8 +109,11 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-cancelar" (click)="fecharConfirmacaoRemover()">Cancelar</button>
-        <button type="button" class="btn-remover-confirmar" (click)="confirmarRemocao()">Sim, Remover</button>
+        <button type="button" class="btn-remover-confirmar" (click)="confirmarRemocao()">
+          <app-icon name="trash" [size]="16"></app-icon> Sim, Remover
+        </button>
       </div>
     </div>
   </div>
+  }
 </div>

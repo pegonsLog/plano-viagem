@@ -1,7 +1,8 @@
 <div class="lista-viagens">
   <div class="header">
-    <h2>Minhas Viagens</h2>
+    <h2><app-icon name="plane" [size]="28"></app-icon> Minhas Viagens</h2>
     <button class="btn-adicionar" (click)="mostrarFormulario = !mostrarFormulario; viagemParaEditar = null">
+      <app-icon [name]="mostrarFormulario ? 'x-mark' : 'plus'" [size]="20"></app-icon>
       {{ mostrarFormulario ? 'Cancelar' : 'Nova Viagem' }}
     </button>
   </div>
@@ -31,34 +32,25 @@
           <span class="status-badge">{{ getStatusLabel(viagem.status) }}</span>
           @if ((viagem.totalChecklistItems ?? 0) > (viagem.checklistItemsConcluidos ?? 0)) {
           <span class="status-badge pendencia" title="Checklist com itens pendentes">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 8v4l3 3" />
-            </svg>
+            <app-icon name="clock" [size]="14"></app-icon>
             Pendente ({{ (viagem.totalChecklistItems ?? 0) - (viagem.checklistItemsConcluidos ?? 0) }})
           </span>
           } @else {
           <span class="status-badge concluido" title="Checklist concluído">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 12l2 2 4-4" />
-              <circle cx="12" cy="12" r="10" />
-            </svg>
+            <app-icon name="check-circle" [size]="14"></app-icon>
             Concluído
           </span>
           }
           <div class="seta-navegacao">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path d="m9 18 6-6-6-6" />
-            </svg>
+            <app-icon name="chevron-right" [size]="18"></app-icon>
           </div>
         </div>
       </div>
 
       <div class="viagem-info">
-        <p><strong>Destino:</strong> {{ viagem.destino }}</p>
-        <p><strong>Data:</strong> {{ formatarData(viagem.dataInicio) }} - {{ formatarData(viagem.dataFim) }}</p>
-        <p><strong>Orçamento:</strong> {{ formatarMoeda(viagem.orcamento) }}</p>
+        <p><app-icon name="map-pin" [size]="16"></app-icon> <strong>Destino:</strong> {{ viagem.destino }}</p>
+        <p><app-icon name="calendar" [size]="16"></app-icon> <strong>Data:</strong> {{ formatarData(viagem.dataInicio) }} - {{ formatarData(viagem.dataFim) }}</p>
+        <p><app-icon name="currency-dollar" [size]="16"></app-icon> <strong>Orçamento:</strong> {{ formatarMoeda(viagem.orcamento) }}</p>
         @if (viagem.descricao) {
         <p><strong>Descrição:</strong> {{ viagem.descricao }}</p>
         }
@@ -72,20 +64,26 @@
           <strong>Observações:</strong>
           <div class="preserve-lines">{{ viagem.observacoesViagem || 'Nenhuma observação' }}</div>
         </div>
-
       </div>
 
       <div class="viagem-acoes" (click)="$event.stopPropagation()">
-        <button class="btn-checklist" (click)="verChecklist(viagem.id)">Checklist</button>
-        <button class="btn-gastos" (click)="verGastos(viagem.id)">Gastos</button>
-        <button class="btn-editar" (click)="editarViagem(viagem)">Editar</button>
-        <button class="btn-remover-icon" (click)="removerViagem(viagem.id)" title="Remover Viagem">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+        <button class="btn-checklist" (click)="verChecklist(viagem.id)">
+          <app-icon name="clipboard-list" [size]="16"></app-icon> Checklist
+        </button>
+        <button class="btn-gastos" (click)="verGastos(viagem.id)">
+          <app-icon name="currency-dollar" [size]="16"></app-icon> Gastos
+        </button>
+        <button class="btn-editar" (click)="editarViagem(viagem)">
+          <app-icon name="pencil" [size]="16"></app-icon> Editar
+        </button>
+        <button class="btn-remover" (click)="removerViagem(viagem.id)">
+          <app-icon name="trash" [size]="16"></app-icon> Remover
         </button>
       </div>
     </div>
     } @empty {
     <div class="empty-state">
+      <app-icon name="globe-alt" [size]="64" color="#9ca3af"></app-icon>
       <p>Nenhuma viagem cadastrada ainda.</p>
       <p>Clique em "Nova Viagem" para começar!</p>
     </div>
