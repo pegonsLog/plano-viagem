@@ -8,13 +8,14 @@ import { IconComponent } from '../icons/icon.component';
 import { DateService } from '../../utils/date.service';
 import { ImageCaptureComponent } from '../image-capture/image-capture.component';
 import { GaleriaFotosComponent } from '../galeria-fotos/galeria-fotos.component';
+import { GaleriaGeralComponent } from '../galeria-geral/galeria-geral.component';
 import { FotoViagemService } from '../../services/foto-viagem.service';
 import { FotoViagem } from '../../models/foto-viagem.model';
 
 @Component({
   selector: 'app-lista-viagens',
   standalone: true,
-  imports: [CommonModule, FormularioViagemComponent, IconComponent, ImageCaptureComponent, GaleriaFotosComponent],
+  imports: [CommonModule, FormularioViagemComponent, IconComponent, ImageCaptureComponent, GaleriaFotosComponent, GaleriaGeralComponent],
   templateUrl: './lista-viagens.component.html',
   styleUrl: './lista-viagens.component.scss'
 })
@@ -33,6 +34,7 @@ export class ListaViagensComponent {
   
   imageCapture = viewChild<ImageCaptureComponent>('imageCapture');
   galeriaFotos = viewChild<GaleriaFotosComponent>('galeriaFotos');
+  galeriaGeral = viewChild<GaleriaGeralComponent>('galeriaGeral');
 
 
 
@@ -131,5 +133,9 @@ export class ListaViagensComponent {
       capture.open();
       capture.setFile(file);
     }
+  }
+
+  abrirGaleriaGeral(): void {
+    this.galeriaGeral()?.open();
   }
 }

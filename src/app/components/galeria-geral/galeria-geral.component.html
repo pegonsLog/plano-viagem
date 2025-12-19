@@ -1,0 +1,84 @@
+@if (isOpen()) {
+<div class="modal-overlay" (click)="close()">
+  <div class="modal-content galeria-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <app-icon name="photo" [size]="24"></app-icon>
+        Todas as Fotos
+      </h3>
+      <button class="btn-close" (click)="close()">
+        <app-icon name="x-mark" [size]="24"></app-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      @if (loading()) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Carregando fotos...</p>
+        </div>
+      } @else if (fotos().length === 0) {
+        <div class="empty-state">
+          <app-icon name="photo" [size]="64" color="#9ca3af"></app-icon>
+          <p>Nenhuma foto cadastrada</p>
+          <span>Adicione fotos nas suas viagens</span>
+        </div>
+      } @else {
+        <div class="fotos-grid">
+          @for (foto of fotos(); track foto.id) {
+            <div class="foto-card" (click)="abrirFoto(foto)">
+              <div class="foto-image">
+                <img [src]="foto.url" [alt]="foto.descricao" loading="lazy" />
+                <button class="btn-remove" (click)="confirmarRemocao(foto, $event)" title="Remover foto">
+                  <app-icon name="trash" [size]="16"></app-icon>
+                </button>
+              </div>
+              <div class="foto-info">
+                <span class="foto-data">
+                  <app-icon name="calendar" [size]="14"></app-icon>
+                  {{ formatarData(foto.data) }}
+                </span>
+                <p class="foto-descricao">{{ foto.descricao }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Modal de visualização da foto -->
+@if (fotoSelecionada()) {
+<div class="foto-viewer-overlay" (click)="fecharFoto()">
+  <div class="foto-viewer" (click)="$event.stopPropagation()">
+    <button class="btn-close-viewer" (click)="fecharFoto()">
+      <app-icon name="x-mark" [size]="28"></app-icon>
+    </button>
+    <img [src]="fotoSelecionada()!.url" [alt]="fotoSelecionada()!.descricao" />
+    <div class="foto-viewer-info">
+      <span class="viewer-data">
+        <app-icon name="calendar" [size]="18"></app-icon>
+        {{ formatarData(fotoSelecionada()!.data) }}
+      </span>
+      <p class="viewer-descricao">{{ fotoSelecionada()!.descricao }}</p>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Modal de confirmação de remoção -->
+@if (confirmandoRemocao()) {
+<div class="confirm-overlay" (click)="cancelarRemocao()">
+  <div class="confirm-modal" (click)="$event.stopPropagation()">
+    <app-icon name="exclamation-triangle" [size]="48" color="#ef4444"></app-icon>
+    <h4>Remover Foto?</h4>
+    <p>Esta ação não pode ser desfeita.</p>
+    <div class="confirm-actions">
+      <button class="btn-cancel" (click)="cancelarRemocao()">Cancelar</button>
+      <button class="btn-confirm-remove" (click)="removerFoto()">Remover</button>
+    </div>
+  </div>
+</div>
+}
+}

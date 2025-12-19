@@ -1,10 +1,16 @@
 <div class="lista-viagens">
   <div class="header">
     <h2><app-icon name="plane" [size]="28"></app-icon> Minhas Viagens</h2>
-    <button class="btn-adicionar" (click)="mostrarFormulario = !mostrarFormulario; viagemParaEditar = null">
-      <app-icon [name]="mostrarFormulario ? 'x-mark' : 'plus'" [size]="20"></app-icon>
-      {{ mostrarFormulario ? 'Cancelar' : 'Nova Viagem' }}
-    </button>
+    <div class="header-actions">
+      <button class="btn-galeria" (click)="abrirGaleriaGeral()">
+        <app-icon name="photo" [size]="20"></app-icon>
+        Todas as Fotos
+      </button>
+      <button class="btn-adicionar" (click)="mostrarFormulario = !mostrarFormulario; viagemParaEditar = null">
+        <app-icon [name]="mostrarFormulario ? 'x-mark' : 'plus'" [size]="20"></app-icon>
+        {{ mostrarFormulario ? 'Cancelar' : 'Nova Viagem' }}
+      </button>
+    </div>
   </div>
 
   @if (mostrarFormulario) {
@@ -111,3 +117,6 @@
     (addPhoto)="onGaleriaAddPhoto($event)"
   />
 }
+
+<!-- Galeria geral de todas as fotos -->
+<app-galeria-geral #galeriaGeral />

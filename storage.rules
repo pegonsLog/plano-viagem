@@ -1,0 +1,16 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Permite leitura e escrita para todos (ajuste conforme necessário para produção)
+    match /viagens/{viagemId}/fotos/{allPaths=**} {
+      allow read: if true;
+      allow write: if true;
+    }
+    
+    // Regra padrão - nega acesso a outros caminhos
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}
