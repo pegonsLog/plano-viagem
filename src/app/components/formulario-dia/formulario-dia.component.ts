@@ -29,14 +29,14 @@ export class FormularioDiaComponent implements OnInit {
 
   formulario: FormGroup = this.fb.group({
     cidade: ['', [Validators.required]],
-    transporte: ['', [Validators.required]],
-    nomeHospedagem: ['', [Validators.required]],
-    enderecoHospedagem: ['', [Validators.required]],
+    transporte: [''],
+    nomeHospedagem: [''],
+    enderecoHospedagem: [''],
     contatoHospedagem: [''],
     numeroReserva: [''],
     horarioChecks: [''],
     linkHospedagem: [''],
-    deslocamentoLocal: ['', [Validators.required]],
+    deslocamentoLocal: [''],
     detalhesVoo: [''],
     observacoes: [''],
     formaPagamento: [''],
